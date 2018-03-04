@@ -58,8 +58,10 @@ class NotificationModelDataMapper @Inject
         notificationModel.vSoft3 = notification.vSoft3
         notificationModel.workHours = notification.workHours
 
-        notificationModel.customer = customerModelDataMapper
-                .transform(notification.customer)
+        if (notification.customer != null){
+            notificationModel.customer = customerModelDataMapper
+                    .transform(notification.customer)
+        }
 
         var assignedMaterialModelCollection: Collection<AssignedMaterialModel> = this
                 .assignedMaterialModelDataMapper

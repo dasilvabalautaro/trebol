@@ -1,5 +1,6 @@
 package com.hiddenodds.trebolv2.presentation.presenter
 
+import com.hiddenodds.trebolv2.App
 import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.domain.data.MapperTypeNotification
 import com.hiddenodds.trebolv2.domain.interactor.GetRemoteDataUseCase
@@ -25,8 +26,13 @@ class TypeNotificationRemotePresenter @Inject constructor(private val getRemoteD
     }
 
     fun executeQueryRemote(){
-        getRemoteDataUseCase.sql = StatementSQL.getTypeNotification()
-        getRemoteDataUseCase.execute(ListObserver())
+        if ((context as App).connectionNetwork.isOnline()){
+            getRemoteDataUseCase.sql = StatementSQL.getTypeNotification()
+            getRemoteDataUseCase.execute(ListObserver())
+
+        }else{
+            showError(context.resources.getString(R.string.network_not_found))
+        }
     }
 
     private fun buildListMapper(jsonArray: JSONArray){

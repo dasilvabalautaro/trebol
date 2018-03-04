@@ -183,4 +183,47 @@ class PresenterModule {
         return TypeNotificationRemotePresenter(getRemoteDataUseCase,
                 saveListTypeNotificationUseCase)
     }
+
+    ////////////////////////
+
+    @Provides
+    fun provideNotificationExecutor(): NotificationExecutor{
+        return NotificationExecutor()
+    }
+
+    @Provides
+    fun provideINotificationRepository(notificationExecutor:
+                                       NotificationExecutor):
+            INotificationRepository{
+        return notificationExecutor
+    }
+
+    @Provides
+    fun provideSaveListNotificationUseCase(uiThread: UIThread,
+                                           jobExecutor: JobExecutor,
+                                           notificationExecutor:
+                                           NotificationExecutor):
+            SaveListNotificationUseCase{
+        return SaveListNotificationUseCase(jobExecutor, uiThread,
+                notificationExecutor)
+    }
+
+    @Provides
+    fun provideAddNotificationToTechnicalUseCase(uiThread: UIThread,
+                                                 jobExecutor: JobExecutor,
+                                                 notificationExecutor:
+                                                 NotificationExecutor): AddNotificationToTechnicalUseCase{
+        return AddNotificationToTechnicalUseCase(jobExecutor, uiThread,
+                notificationExecutor)
+    }
+
+    @Provides
+    fun provideNotificationRemotePresenter(getRemoteDataUseCase:
+                                           GetRemoteDataUseCase,
+                                           saveListNotificationUseCase:
+                                           SaveListNotificationUseCase):
+            NotificationRemotePresenter{
+        return NotificationRemotePresenter(getRemoteDataUseCase,
+                saveListNotificationUseCase)
+    }
 }

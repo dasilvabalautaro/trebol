@@ -10,9 +10,12 @@
     <string name="lbl_password">Password</string>
     <string name="task_complete">Task Complete</string>
     <string name="list_not_found">List not found</string>
+    <string name="network_not_found">Network not found</string>
     <string name="technicals_save">Success Save Technical</string>
     <string name="input_error">Fields empty, verify please</string>
     <string name="welcome">Welcome </string>
     <string name="material_save">Success Save Material</string>
+    <string name="notification_save">Success Save Notification</string>
     <string name="type_notification_save">Success Type Notification</string>
+    <string name="wait_task">Wait, all tasks should be completed.</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.hiddenodds.trebolv2.model.persistent.database
 
 import android.os.Parcel
+import com.hiddenodds.trebolv2.model.data.Notification
 import com.hiddenodds.trebolv2.model.data.Technical
 import com.hiddenodds.trebolv2.model.interfaces.IDataContent
 import com.hiddenodds.trebolv2.model.interfaces.IRepository
@@ -106,6 +107,32 @@ abstract class CRUDRealm: IRepository {
 
         }catch (e: Throwable){
             println(e.message!!)
+            return false
+        }
+
+        return true
+    }
+
+    fun addListNotificationToTechnical(code: String,
+                                       listener: ITaskCompleteListener): Boolean{
+        val realm: Realm = Realm.getDefaultInstance()
+        try {
+            realm.executeTransaction {
+                val technical = realm.where(Technical::class.java).equalTo(
+                        "code", code).findFirst()
+                val listNotify: RealmResults<Notification> = realm
+                        .where(Notification::class.java).equalTo(
+                        "idTech", code).findAll()
+                if (technical != null && !listNotify.isEmpty()){
+                    for (notify: Notification in listNotify){
+                        technical.notifications.add(notify)
+                    }
+                }
+                listener.onSaveSucceeded()
+            }
+
+        }catch (e: Throwable){
+            listener.onSaveFailed(e.message!!)
             return false
         }
 

@@ -2,6 +2,7 @@ package com.hiddenodds.trebolv2.tools
 
 object Constants {
     val SQLSERVER = "213.37.130.240:36000"
+    val URL_SERVER = "213.37.130.240:36000"
     val DATABASE = "TREBOLDATA"
     val USER = "ALBERTO"
     val PASSWORD = "Alb23erto23manza\$%AO451"

@@ -5,6 +5,7 @@ import com.hiddenodds.trebolv2.App
 import com.hiddenodds.trebolv2.model.interfaces.IPersistent
 import com.hiddenodds.trebolv2.model.persistent.database.InstanceRealm
 import com.hiddenodds.trebolv2.model.persistent.network.ServiceRemote
+import com.hiddenodds.trebolv2.tools.ConnectionNetwork
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -25,5 +26,10 @@ class AppModule(private val app: App) {
     @Provides
     fun provideServiceRemote(): ServiceRemote {
         return ServiceRemote()
+    }
+
+    @Provides
+    fun provideConnectionNetwork(): ConnectionNetwork {
+        return ConnectionNetwork(app as Context)
     }
 }

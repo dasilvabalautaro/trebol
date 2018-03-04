@@ -1,15 +1,9 @@
-package com.hiddenodds.trebolv2.model.data
+package com.hiddenodds.trebolv2.domain.data
 
 import android.os.Parcel
 import com.hiddenodds.trebolv2.model.interfaces.IDataContent
-import io.realm.RealmList
-import io.realm.RealmObject
-import io.realm.annotations.PrimaryKey
 
-open class Notification: RealmObject(), IDataContent {
-
-    @PrimaryKey
-    var id: String = ""
+class MapperNotification: IDataContent {
     var code: String = ""
     var machine: String = ""
     var dateInit: String = ""
@@ -21,7 +15,6 @@ open class Notification: RealmObject(), IDataContent {
     var duration: String = ""
     var displacement: String = ""
     var trbPartTwo: String = ""
-    var customer: Customer? = null
     var state: String = ""
     var satd: String = ""
     var satdk: String = ""
@@ -36,19 +29,17 @@ open class Notification: RealmObject(), IDataContent {
     var trade: String = ""
     var peaje: String = ""
     var idTech: String = ""
-    var vSoft1: String = "0"
-    var vSoft2: String = "0"
-    var vSoft3: String = "0"
-    var hours: String = "0"
-    var totalTeam: String = "0"
-    var lastAmount: String = "0"
+    var vSoft1: String = ""
+    var vSoft2: String = ""
+    var vSoft3: String = ""
+    var hours: String = ""
+    var totalTeam: String = ""
+    var lastAmount: String = ""
     var reportTechnical: String = ""
     var diet: String = ""
-    var workHours: String = "0"
-    var inside: String = "00:00"
-    var outside: String = "00:00"
-    var materialUse: RealmList<AssignedMaterial> = RealmList()
-    var materialOut: RealmList<AssignedMaterial> = RealmList()
+    var workHours: String = ""
+    var inside: String = ""
+    var outside: String = ""
 
     override fun setContent(parcel: Parcel) {
         code = parcel.readString()
@@ -130,6 +121,7 @@ open class Notification: RealmObject(), IDataContent {
         parcel.writeString(outside)
 
         return parcel
+
     }
 
 }

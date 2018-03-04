@@ -22,7 +22,6 @@ class MapperCustomer: IDataContent {
         return parcel
     }
 
-    var id: String = ""
     var code: String = ""
     var name: String = ""
     var phone: String = ""

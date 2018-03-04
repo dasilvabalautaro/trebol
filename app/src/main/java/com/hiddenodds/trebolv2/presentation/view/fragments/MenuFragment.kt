@@ -6,7 +6,10 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.Toast
+import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import com.hiddenodds.trebolv2.App
@@ -15,23 +18,40 @@ import com.hiddenodds.trebolv2.dagger.PresenterModule
 import com.hiddenodds.trebolv2.presentation.interfaces.ILoadDataView
 import com.hiddenodds.trebolv2.presentation.presenter.MaterialRemotePresenter
 import com.hiddenodds.trebolv2.presentation.presenter.TypeNotificationRemotePresenter
+import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
 
 
 class MenuFragment: Fragment(), ILoadDataView {
+    @BindView(R.id.pb_download)
+    @JvmField var pbDownload: ProgressBar? = null
+    @BindView(R.id.btn_update_water)
+    @JvmField var btUpdateWater: Button? = null
+    @BindView(R.id.btn_get)
+    @JvmField var btGetNotification: Button? = null
+    @BindView(R.id.btn_update_thinks)
+    @JvmField var btGetDataGeneral: Button? = null
+    @BindView(R.id.btn_ots)
+    @JvmField var btShowOTS: Button? = null
+
     @OnClick(R.id.btn_update_water)
     fun updateDataInWater(){
 
     }
+
     @OnClick(R.id.btn_get)
     fun updateDataNotification(){
 
     }
+
     @OnClick(R.id.btn_update_thinks)
     fun updateDataGeneral(){
+        setViewForTransferData()
+        launch {
+            typeNotificationRemotePresenter.executeQueryRemote()
+            materialRemotePresenter.executeQueryRemote()
+        }
 
-        typeNotificationRemotePresenter.executeQueryRemote()
-        materialRemotePresenter.executeQueryRemote()
     }
     @OnClick(R.id.btn_ots)
     fun viewOTS(){
@@ -75,13 +95,29 @@ class MenuFragment: Fragment(), ILoadDataView {
     }
 
     override fun showError(message: String) {
+        pbDownload!!.visibility = View.INVISIBLE
+        enabledButton(true)
         context.toast(message)
     }
 
     override fun executeTask() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        pbDownload!!.visibility = View.INVISIBLE
+        enabledButton(true)
     }
 
     private fun Context.toast(message: CharSequence) =
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+
+    private fun enabledButton(value: Boolean){
+        btGetDataGeneral!!.isEnabled = value
+        btGetNotification!!.isEnabled = value
+        btShowOTS!!.isEnabled = value
+        btUpdateWater!!.isEnabled = value
+    }
+
+    private fun setViewForTransferData(){
+        enabledButton(false)
+        context.toast(context.resources.getString(R.string.wait_task))
+        pbDownload!!.visibility = View.VISIBLE
+    }
 }

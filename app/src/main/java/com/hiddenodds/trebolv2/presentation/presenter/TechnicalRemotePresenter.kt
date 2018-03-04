@@ -1,5 +1,6 @@
 package com.hiddenodds.trebolv2.presentation.presenter
 
+import com.hiddenodds.trebolv2.App
 import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.domain.data.MapperTechnical
 import com.hiddenodds.trebolv2.domain.interactor.GetRemoteDataUseCase
@@ -35,8 +36,13 @@ class TechnicalRemotePresenter @Inject constructor(private val getRemoteDataUseC
     }
 
     fun executeQueryRemote(){
-        getRemoteDataUseCase.sql = StatementSQL.getTechnical()
-        getRemoteDataUseCase.execute(ListObserver())
+        if ((context as App).connectionNetwork.isOnline()){
+            getRemoteDataUseCase.sql = StatementSQL.getTechnical()
+            getRemoteDataUseCase.execute(ListObserver())
+
+        }else{
+            showError(context.resources.getString(R.string.network_not_found))
+        }
     }
 
     private fun buildDependentTechnicians(jsonArray: JSONArray){
