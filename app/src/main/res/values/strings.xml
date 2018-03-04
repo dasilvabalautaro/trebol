@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Trébol</string>
+    <string name="database">trebol.realm</string>
+    <string name="save_data">Data was successfully saved</string>
+    <string name="delete_data">Data was successfully deleted</string>
+    <string name="update_data">Data was updated correctly</string>
+    <string name="value_null">Cannot transform a null value</string>
+    <string name="description_image">Image</string>
+    <string name="lbl_usuario">Usuario</string>
+    <string name="lbl_password">Password</string>
+    <string name="task_complete">Task Complete</string>
+    <string name="list_not_found">List not found</string>
+    <string name="technicals_save">Success Save Technical</string>
+    <string name="input_error">Fields empty, verify please</string>
+    <string name="welcome">Welcome </string>
+    <string name="material_save">Success Save Material</string>
+    <string name="type_notification_save">Success Type Notification</string>
+</resources>

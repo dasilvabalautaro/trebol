@@ -1,0 +1,25 @@
+package com.hiddenodds.trebolv2.tools
+
+object Constants {
+    val SQLSERVER = "213.37.130.240:36000"
+    val DATABASE = "TREBOLDATA"
+    val USER = "ALBERTO"
+    val PASSWORD = "Alb23erto23manza\$%AO451"
+    val SUCCESS = "success"
+    val TBL_CUSTOMER = "DATEN01"
+    val TBL_MACHINE = "DATOFIMACHINE01"
+    val TBL_TECHNICAL = "DATOFITECH01"
+    val TBL_NOTIFICATION = "DATOFIWARNING01"
+    val TBL_CONTACTS = "DATCTTO01"
+    val TBL_AGENT = "DATVD01"
+    val TBL_CONTRACT = "DATOFIMACHCONTRACT01"
+    val TBL_ITEMS = "DATIN01"
+    val TBL_ADD_PIECES = "DATOFIPIECES01"
+    val TBL_DEL_PIECES = "DATAS01"
+    val TBL_TYPE_NOTIFICATION = "CONVERSIONAVISOS01"
+    val TBL_TEAM_TECHNICAL = "CONVERSIONTRD"
+    val PREFERENCE_TREBOL = "trebol"
+    val TECHNICAL_DB = "db_tech"
+    val CACHE_TECHNICAL_MASTER = "tech_master"
+    val TECHNICAL_KEY = "key_master"
+}

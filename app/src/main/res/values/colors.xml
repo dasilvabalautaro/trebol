@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#709d00</color>
+    <color name="colorPrimaryDark">#295a23</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="colorLblTitle">#000167</color>
+    <color name="colorLblSubTitle">#347600</color>
+    <color name="colorTxt">#4a4a4a</color>
+    <color name="colorSpinner">#FFFFFF</color>
+</resources>
