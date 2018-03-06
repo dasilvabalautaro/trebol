@@ -7,9 +7,13 @@ import com.hiddenodds.trebolv2.domain.data.MapperTechnical
 import com.hiddenodds.trebolv2.model.data.Technical
 import com.hiddenodds.trebolv2.model.exception.DatabaseOperationException
 import com.hiddenodds.trebolv2.model.interfaces.ITechnicalRepository
+import com.hiddenodds.trebolv2.model.persistent.caching.CachingLruRepository
 import com.hiddenodds.trebolv2.model.persistent.database.CRUDRealm
 import com.hiddenodds.trebolv2.presentation.mapper.TechnicalModelDataMapper
 import com.hiddenodds.trebolv2.presentation.model.TechnicalModel
+import com.hiddenodds.trebolv2.tools.Constants
+import com.hiddenodds.trebolv2.tools.PreferenceHelper
+import com.hiddenodds.trebolv2.tools.PreferenceHelper.set
 import io.reactivex.Observable
 import java.util.*
 import javax.inject.Inject
@@ -113,21 +117,57 @@ class TechnicalExecutor @Inject constructor(): CRUDRealm(),
 
     override fun getMasterTechnical(code: String,
                                     password: String): Observable<TechnicalModel>{
+
+
         return Observable.create { subscriber ->
-
-            val newTechnical: List<Technical>? = this.getTechnicalMaster(code,
-                    password)
-            if (newTechnical!!.isNotEmpty()){
-                val technicalModel = this.technicalModelDataMapper
-                        .transform(newTechnical[0])
-
+            var technicalModel: TechnicalModel? = null
+            technicalModel = getTechMasterOfCache()
+            if (technicalModel != null){
                 subscriber.onNext(technicalModel)
                 subscriber.onComplete()
             }else{
-                subscriber.onError(Throwable())
+                val newTechnical: List<Technical>? = this.getTechnicalMaster(code,
+                        password)
+                if (newTechnical!!.isNotEmpty()){
+                    technicalModel = this.technicalModelDataMapper
+                            .transform(newTechnical[0])
+                    CachingLruRepository.instance.getLru()
+                            .put(Constants.CACHE_TECHNICAL_MASTER, technicalModel)
+                    val prefs = PreferenceHelper.customPrefs(context,
+                            Constants.PREFERENCE_TREBOL)
+                    prefs[Constants.TECHNICAL_KEY] = technicalModel.code
+                    prefs[Constants.TECHNICAL_PASSWORD] = technicalModel.password
+                    subscriber.onNext(technicalModel)
+                    subscriber.onComplete()
+                }else{
+                    subscriber.onError(Throwable())
+                }
             }
 
         }
     }
+
+    override fun deleteNotifications(code: String):
+            Observable<Boolean> {
+
+        return Observable.create{subscriber ->
+            if (this.deleteNotificationsOfTechnical(code,
+                            taskListenerExecutor)){
+                subscriber.onNext(true)
+                subscriber.onComplete()
+            }else{
+                subscriber.onError(Throwable())
+            }
+        }
+    }
+
+
+    private fun getTechMasterOfCache(): TechnicalModel?{
+        return CachingLruRepository
+                .instance
+                .getLru()
+                .get(Constants.CACHE_TECHNICAL_MASTER) as TechnicalModel?
+    }
+
 
 }

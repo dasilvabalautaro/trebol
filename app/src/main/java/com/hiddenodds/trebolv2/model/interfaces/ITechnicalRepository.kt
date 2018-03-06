@@ -12,4 +12,5 @@ interface ITechnicalRepository: IMessagePersistent {
                                      LinkedHashMap<String,
                                              ArrayList<String>>): Observable<Boolean>
     fun getMasterTechnical(code: String, password: String): Observable<TechnicalModel>
+    fun deleteNotifications(code: String): Observable<Boolean>
 }

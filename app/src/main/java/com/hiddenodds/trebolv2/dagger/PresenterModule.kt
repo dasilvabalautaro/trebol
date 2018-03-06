@@ -77,6 +77,14 @@ class PresenterModule {
             SaveListTechnicalUseCase{
         return SaveListTechnicalUseCase(jobExecutor, uiThread, technicalExecutor)
     }
+
+    @Provides
+    fun provideDeleteNotificationsOfTechnicalUseCase(uiThread: UIThread,
+                                                     jobExecutor: JobExecutor,
+                                                     technicalExecutor: TechnicalExecutor):
+            DeleteNotificationsOfTechnicalUseCase{
+        return DeleteNotificationsOfTechnicalUseCase(jobExecutor, uiThread, technicalExecutor)
+    }
     @Provides
     fun provideSaveDependentTechnicalUseCase(uiThread: UIThread,
                                              jobExecutor: JobExecutor,
@@ -221,9 +229,17 @@ class PresenterModule {
     fun provideNotificationRemotePresenter(getRemoteDataUseCase:
                                            GetRemoteDataUseCase,
                                            saveListNotificationUseCase:
-                                           SaveListNotificationUseCase):
+                                           SaveListNotificationUseCase,
+                                           getTechnicalMasterUseCase:
+                                           GetTechnicalMasterUseCase,
+                                           deleteNotificationsOfTechnicalUseCase:
+                                           DeleteNotificationsOfTechnicalUseCase,
+                                           addNotificationToTechnicalUseCase:
+                                           AddNotificationToTechnicalUseCase):
             NotificationRemotePresenter{
         return NotificationRemotePresenter(getRemoteDataUseCase,
-                saveListNotificationUseCase)
+                saveListNotificationUseCase, getTechnicalMasterUseCase,
+                deleteNotificationsOfTechnicalUseCase,
+                addNotificationToTechnicalUseCase)
     }
 }

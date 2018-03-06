@@ -23,4 +23,5 @@ object Constants {
     val TECHNICAL_DB = "db_tech"
     val CACHE_TECHNICAL_MASTER = "tech_master"
     val TECHNICAL_KEY = "key_master"
+    val TECHNICAL_PASSWORD = "key_password"
 }

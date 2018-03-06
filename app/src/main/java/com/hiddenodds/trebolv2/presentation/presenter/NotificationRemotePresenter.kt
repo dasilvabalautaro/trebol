@@ -3,12 +3,13 @@ package com.hiddenodds.trebolv2.presentation.presenter
 import com.hiddenodds.trebolv2.App
 import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.domain.data.MapperNotification
-import com.hiddenodds.trebolv2.domain.interactor.GetRemoteDataUseCase
-import com.hiddenodds.trebolv2.domain.interactor.SaveListNotificationUseCase
-import com.hiddenodds.trebolv2.model.persistent.caching.CachingLruRepository
+import com.hiddenodds.trebolv2.domain.interactor.*
 import com.hiddenodds.trebolv2.model.persistent.network.StatementSQL
 import com.hiddenodds.trebolv2.presentation.model.TechnicalModel
+import com.hiddenodds.trebolv2.tools.ChangeFormat
 import com.hiddenodds.trebolv2.tools.Constants
+import com.hiddenodds.trebolv2.tools.PreferenceHelper
+import com.hiddenodds.trebolv2.tools.PreferenceHelper.get
 import io.reactivex.observers.DisposableObserver
 import org.json.JSONArray
 import org.json.JSONObject
@@ -18,31 +19,59 @@ import javax.inject.Inject
 class NotificationRemotePresenter @Inject constructor(private val getRemoteDataUseCase:
                                                       GetRemoteDataUseCase,
                                                       private val saveListNotificationUseCase:
-                                                      SaveListNotificationUseCase):
+                                                      SaveListNotificationUseCase,
+                                                      private val getTechnicalMasterUseCase:
+                                                      GetTechnicalMasterUseCase,
+                                                      private val deleteNotificationsOfTechnicalUseCase:
+                                                      DeleteNotificationsOfTechnicalUseCase,
+                                                      private val addNotificationToTechnicalUseCase:
+                                                      AddNotificationToTechnicalUseCase):
         BasePresenter(){
-    private val listMapperNotification: ArrayList<MapperNotification> = ArrayList()
+    private var listMapperNotification: ArrayList<MapperNotification> = ArrayList()
+    private var listTechnicals: ArrayList<String> = ArrayList()
+    private var codeTechnical: String = ""
+    private var codeMaster: String = ""
+    private var flag = false
 
     init {
         this.iHearMessage = getRemoteDataUseCase
     }
 
     fun executeQueryRemote(){
-        if ((context as App).connectionNetwork.isOnline()){
-            val tech= CachingLruRepository
-                    .instance
-                    .getLru()
-                    .get(Constants.CACHE_TECHNICAL_MASTER) as TechnicalModel
-            var code = tech.code
 
+        val prefs = PreferenceHelper.customPrefs(context,
+                Constants.PREFERENCE_TREBOL)
+        val code: String? = prefs[Constants.TECHNICAL_KEY, ""]
+        val password: String? = prefs[Constants.TECHNICAL_PASSWORD, ""]
+        if (!code.isNullOrEmpty() && !password.isNullOrEmpty()){
+            getTechnicalMasterUseCase.code = code!!
+            getTechnicalMasterUseCase.password = password!!
+            getTechnicalMasterUseCase.execute(TechObserver())
+        }else{
+            println("Technical not found")
+        }
+
+
+    }
+
+    private fun executeGetRemote(code: String){
+        if ((context as App).connectionNetwork.isOnline()) {
+            this.codeTechnical = code
+            this.iHearMessage = getRemoteDataUseCase
+            if ((this.codeMaster != this.codeTechnical) && !flag){
+                this.flag = true
+                stopProgress()
+            }
             getRemoteDataUseCase.sql = StatementSQL.getNotifications(code)
             getRemoteDataUseCase.execute(ListObserver())
-
         }else{
             showError(context.resources.getString(R.string.network_not_found))
         }
     }
 
     private fun buildListMapper(jsonArray: JSONArray){
+        listMapperNotification = ArrayList()
+
         if (jsonArray.length() != 0){
             (0 until jsonArray.length()).forEach { i ->
                 val jsonObject: JSONObject = jsonArray.getJSONObject(i)
@@ -60,7 +89,7 @@ class NotificationRemotePresenter @Inject constructor(private val getRemoteDataU
 
                 if (jsonObject.has("FECHAINICIO")){
                     mapperNotification.dateInit = jsonObject.getString("FECHAINICIO")?: ""
-                    mapperNotification.dateInit = mapperNotification.dateInit.trim()
+                    mapperNotification.dateInit = ChangeFormat.convertDate(mapperNotification.dateInit.trim())
                 }
                 if (jsonObject.has("TRB_TIPO")){
                     mapperNotification.type = jsonObject.getString("TRB_TIPO")?: ""
@@ -74,7 +103,7 @@ class NotificationRemotePresenter @Inject constructor(private val getRemoteDataU
                 }
                 if (jsonObject.has("FECHAREALIZACIO")){
                     mapperNotification.dateCompleted = jsonObject.getString("FECHAREALIZACIO")?: ""
-                    mapperNotification.dateCompleted = mapperNotification.dateCompleted.trim()
+                    mapperNotification.dateCompleted = ChangeFormat.convertDate(mapperNotification.dateCompleted.trim())
                 }
 
 
@@ -117,7 +146,6 @@ class NotificationRemotePresenter @Inject constructor(private val getRemoteDataU
                     mapperNotification.ink = mapperNotification.ink.trim()
                 }
 
-
                 if (jsonObject.has("TRB_PEAJEPRE")){
                     mapperNotification.peaje = jsonObject.getString("TRB_PEAJEPRE")?: ""
                     mapperNotification.peaje = mapperNotification.peaje.trim()
@@ -142,8 +170,22 @@ class NotificationRemotePresenter @Inject constructor(private val getRemoteDataU
     }
     private fun buildObjets(jsonArray: JSONArray){
         buildListMapper(jsonArray)
-        saveListNotification()
+        deleteListNotification()
+
     }
+
+    private fun deleteListNotification(){
+        this.iHearMessage = deleteNotificationsOfTechnicalUseCase
+        deleteNotificationsOfTechnicalUseCase.code = this.codeTechnical
+        deleteNotificationsOfTechnicalUseCase.execute(DeleteNotificationObserver())
+    }
+
+    private fun addNotificationsTechnical(){
+        this.iHearMessage = addNotificationToTechnicalUseCase
+        addNotificationToTechnicalUseCase.codeTech = this.codeTechnical
+        addNotificationToTechnicalUseCase.execute(AddNotificationTechnicalObserver())
+    }
+
     private fun saveListNotification(){
         if (listMapperNotification.size != 0){
             this.iHearMessage = saveListNotificationUseCase
@@ -152,7 +194,21 @@ class NotificationRemotePresenter @Inject constructor(private val getRemoteDataU
             saveListNotificationUseCase.execute(SaveNotificationObserver())
 
         }else{
-            showError(context.resources.getString(R.string.list_not_found))
+            getNotificationsNextTechnical()
+        }
+    }
+
+    private fun stopProgress(){
+        view!!.executeTask()
+    }
+
+    private fun getNotificationsNextTechnical(){
+        if (listTechnicals.isNotEmpty()){
+            val code = listTechnicals.last()
+            listTechnicals.remove(code)
+            executeGetRemote(code)
+        }else{
+            showMessage(context.resources.getString(R.string.notification_save))
         }
     }
 
@@ -162,7 +218,23 @@ class NotificationRemotePresenter @Inject constructor(private val getRemoteDataU
         }
 
         override fun onComplete() {
-            showMessage(context.resources.getString(R.string.task_complete))
+            showMessage(context.resources.getString(R.string.download_complete))
+        }
+
+        override fun onError(e: Throwable) {
+            if (e.message != null) {
+                showError(e.message!!)
+            }
+        }
+    }
+
+    inner class DeleteNotificationObserver: DisposableObserver<Boolean>(){
+        override fun onNext(t: Boolean) {
+            saveListNotification()
+        }
+
+        override fun onComplete() {
+            showMessage(context.resources.getString(R.string.delete_complete))
         }
 
         override fun onError(e: Throwable) {
@@ -174,12 +246,47 @@ class NotificationRemotePresenter @Inject constructor(private val getRemoteDataU
 
     inner class SaveNotificationObserver: DisposableObserver<Boolean>(){
         override fun onNext(t: Boolean) {
-            showMessage(context.resources.getString(R.string.notification_save))
-            //stopProgress()
+            addNotificationsTechnical()
+
         }
 
         override fun onComplete() {
-            showMessage(context.resources.getString(R.string.task_complete))
+            showMessage(context.resources.getString(R.string.save_data))
+        }
+
+        override fun onError(e: Throwable) {
+            if (e.message != null) {
+                showError(e.message!!)
+            }
+        }
+    }
+
+    inner class AddNotificationTechnicalObserver: DisposableObserver<Boolean>(){
+        override fun onNext(t: Boolean) {
+            getNotificationsNextTechnical()
+
+        }
+
+        override fun onComplete() {
+            showMessage(context.resources.getString(R.string.add_notifications))
+        }
+
+        override fun onError(e: Throwable) {
+            if (e.message != null) {
+                showError(e.message!!)
+            }
+        }
+    }
+
+    inner class TechObserver: DisposableObserver<TechnicalModel>(){
+        override fun onNext(t: TechnicalModel) {
+            listTechnicals = t.trd
+            codeMaster = t.code
+            executeGetRemote(t.code)
+        }
+
+        override fun onComplete() {
+            showMessage(context.resources.getString(R.string.get_complete))
         }
 
         override fun onError(e: Throwable) {

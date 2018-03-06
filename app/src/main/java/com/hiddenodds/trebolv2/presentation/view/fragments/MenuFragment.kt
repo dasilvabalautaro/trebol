@@ -17,6 +17,7 @@ import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.dagger.PresenterModule
 import com.hiddenodds.trebolv2.presentation.interfaces.ILoadDataView
 import com.hiddenodds.trebolv2.presentation.presenter.MaterialRemotePresenter
+import com.hiddenodds.trebolv2.presentation.presenter.NotificationRemotePresenter
 import com.hiddenodds.trebolv2.presentation.presenter.TypeNotificationRemotePresenter
 import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
@@ -41,7 +42,10 @@ class MenuFragment: Fragment(), ILoadDataView {
 
     @OnClick(R.id.btn_get)
     fun updateDataNotification(){
-
+        setViewForTransferData()
+        launch {
+            notificationRemotePresenter.executeQueryRemote()
+        }
     }
 
     @OnClick(R.id.btn_update_thinks)
@@ -68,6 +72,9 @@ class MenuFragment: Fragment(), ILoadDataView {
     lateinit var materialRemotePresenter: MaterialRemotePresenter
     @Inject
     lateinit var typeNotificationRemotePresenter: TypeNotificationRemotePresenter
+    @Inject
+    lateinit var notificationRemotePresenter: NotificationRemotePresenter
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,6 +94,7 @@ class MenuFragment: Fragment(), ILoadDataView {
         super.onActivityCreated(savedInstanceState)
         materialRemotePresenter.view = this
         typeNotificationRemotePresenter.view = this
+        notificationRemotePresenter.view = this
         activity.theme.applyStyle(R.style.AppTheme, true)
     }
 

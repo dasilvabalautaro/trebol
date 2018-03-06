@@ -7,6 +7,7 @@ import com.hiddenodds.trebolv2.model.interfaces.IDataContent
 import com.hiddenodds.trebolv2.model.interfaces.IRepository
 import com.hiddenodds.trebolv2.model.interfaces.ITaskCompleteListener
 import io.realm.Realm
+import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.RealmResults
 import java.util.*
@@ -110,6 +111,32 @@ abstract class CRUDRealm: IRepository {
             return false
         }
 
+        return true
+    }
+
+    fun deleteNotificationsOfTechnical(code: String,
+                                       listener: ITaskCompleteListener): Boolean{
+        val realm: Realm = Realm.getDefaultInstance()
+
+        try {
+            realm.executeTransaction {
+                val technical = realm.where(Technical::class.java).equalTo(
+                        "code", code).findFirst()
+                if (technical != null){
+                    val listNotify: RealmList<Notification> = technical.notifications
+                    technical.notifications = RealmList()
+                    if (!listNotify.isEmpty()){
+                        for (notify: Notification in listNotify){
+                            RealmObject.deleteFromRealm(notify)
+                        }
+                    }
+                }
+                listener.onSaveSucceeded()
+            }
+        }catch (e: Throwable){
+            listener.onSaveFailed(e.message!!)
+            return false
+        }
         return true
     }
 

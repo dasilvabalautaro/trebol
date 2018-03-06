@@ -78,10 +78,11 @@ class MaterialRemotePresenter @Inject constructor(private val getRemoteDataUseCa
     inner class ListObserver: DisposableObserver<JSONArray>(){
         override fun onNext(t: JSONArray) {
             buildObjets(t)
+            stopProgress()
         }
 
         override fun onComplete() {
-            showMessage(context.resources.getString(R.string.task_complete))
+            showMessage(context.resources.getString(R.string.download_complete))
         }
 
         override fun onError(e: Throwable) {
@@ -94,7 +95,6 @@ class MaterialRemotePresenter @Inject constructor(private val getRemoteDataUseCa
     inner class SaveMaterialObserver: DisposableObserver<Boolean>(){
         override fun onNext(t: Boolean) {
             showMessage(context.resources.getString(R.string.material_save))
-            stopProgress()
         }
 
         override fun onComplete() {

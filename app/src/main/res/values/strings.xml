@@ -9,6 +9,10 @@
     <string name="lbl_usuario">Usuario</string>
     <string name="lbl_password">Password</string>
     <string name="task_complete">Task Complete</string>
+    <string name="get_complete">Get Complete</string>
+    <string name="download_complete">Download Complete</string>
+    <string name="add_notifications">Add Notifications</string>
+    <string name="delete_complete">Delete Complete</string>
     <string name="list_not_found">List not found</string>
     <string name="network_not_found">Network not found</string>
     <string name="technicals_save">Success Save Technical</string>
@@ -18,4 +22,5 @@
     <string name="notification_save">Success Save Notification</string>
     <string name="type_notification_save">Success Type Notification</string>
     <string name="wait_task">Wait, all tasks should be completed.</string>
+    <string name="lbl_close_app">Tap again to close the application.</string>
 </resources>

@@ -73,6 +73,7 @@ class NotificationExecutor @Inject constructor(): CRUDRealm(),
             for (i in list.indices){
                 val parcel: Parcel = list[i].getContent()
                 parcel.setDataPosition(0)
+
                 val clazz: Class<Notification> = Notification::class.java
 
                 val newNotification = this.save(clazz, parcel, taskListenerExecutor)
@@ -102,5 +103,6 @@ class NotificationExecutor @Inject constructor(): CRUDRealm(),
 
         }
     }
+
 
 }
