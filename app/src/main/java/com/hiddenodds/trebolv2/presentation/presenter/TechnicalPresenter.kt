@@ -1,21 +1,22 @@
 package com.hiddenodds.trebolv2.presentation.presenter
 
 import com.hiddenodds.trebolv2.R
-import com.hiddenodds.trebolv2.domain.interactor.GetTechnicalMasterUseCase
+import com.hiddenodds.trebolv2.domain.interactor.GetTechnicalUseCase
 import com.hiddenodds.trebolv2.presentation.model.TechnicalModel
 import io.reactivex.observers.DisposableObserver
 import javax.inject.Inject
 
-class TechnicalMasterPresenter @Inject constructor(private val
-                                                   getTechnicalMasterUseCase:
-                                                   GetTechnicalMasterUseCase):
+
+class TechnicalPresenter @Inject constructor(private val
+                                             getTechnicalUseCase:
+                                             GetTechnicalUseCase):
         BasePresenter(){
 
-    fun executeGetTechnicalMaster(code: String, password: String){
-        getTechnicalMasterUseCase.code = code
-        getTechnicalMasterUseCase.password = password
-        getTechnicalMasterUseCase.execute(TechObserver())
+    fun executeGetTechnical(code: String){
+        getTechnicalUseCase.code = code
+        getTechnicalUseCase.execute(TechObserver())
     }
+
 
     private fun foundMasterTechnical(technicalModel: TechnicalModel){
         view!!.executeTask(technicalModel)

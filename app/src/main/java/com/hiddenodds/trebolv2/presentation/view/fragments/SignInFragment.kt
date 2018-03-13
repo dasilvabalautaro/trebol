@@ -15,9 +15,11 @@ import com.hiddenodds.trebolv2.App
 import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.dagger.PresenterModule
 import com.hiddenodds.trebolv2.presentation.interfaces.ILoadDataView
+import com.hiddenodds.trebolv2.presentation.model.TechnicalModel
 import com.hiddenodds.trebolv2.presentation.presenter.SaveCustomerPresenter
 import com.hiddenodds.trebolv2.presentation.presenter.TechnicalMasterPresenter
 import com.hiddenodds.trebolv2.presentation.presenter.TechnicalRemotePresenter
+import com.hiddenodds.trebolv2.presentation.presenter.TypeNotificationRemotePresenter
 import com.hiddenodds.trebolv2.presentation.view.activities.MainActivity
 import com.hiddenodds.trebolv2.tools.Constants
 import com.hiddenodds.trebolv2.tools.PreferenceHelper
@@ -53,6 +55,8 @@ class SignInFragment: Fragment(), ILoadDataView {
     @Inject
     lateinit var technicalRemotePresenter: TechnicalRemotePresenter
     @Inject
+    lateinit var typeNotificationRemotePresenter: TypeNotificationRemotePresenter
+    @Inject
     lateinit var technicalMasterPresenter: TechnicalMasterPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,19 +78,28 @@ class SignInFragment: Fragment(), ILoadDataView {
         super.onActivityCreated(savedInstanceState)
         technicalRemotePresenter.view = this
         technicalMasterPresenter.view = this
+        typeNotificationRemotePresenter.view = this
     }
 
     override fun onResume() {
         super.onResume()
-        val prefs = PreferenceHelper.customPrefs(context,
-                Constants.PREFERENCE_TREBOL)
-        val techKey: Boolean? = prefs[Constants.TECHNICAL_DB, false]
-        if (techKey == null || !techKey){
-            launch{
-                technicalRemotePresenter.executeQueryRemote()
+
+        try {
+            val prefs = PreferenceHelper.customPrefs(context,
+                    Constants.PREFERENCE_TREBOL)
+            val techKey: Boolean? = prefs[Constants.TECHNICAL_DB, false]
+            if (techKey == null || !techKey){
+                launch{
+                    technicalRemotePresenter.executeQueryRemote()
+                    typeNotificationRemotePresenter.executeQueryRemote()
+                }
+
             }
 
+        }catch (ie: IllegalStateException){
+            println(ie.message)
         }
+
 
     }
 
@@ -99,7 +112,12 @@ class SignInFragment: Fragment(), ILoadDataView {
         context.toast(message)
     }
 
-    override fun executeTask() {
+    override fun <T> executeTask(obj: T) {
+        if (obj != null){
+            val nameTech = (obj as TechnicalModel).name
+            context.toast(context.resources.getString(R.string.welcome) +
+                    "\n" + nameTech)
+        }
         val fragmentMenu = MenuFragment()
         (context as MainActivity).addFragment(fragmentMenu)
     }

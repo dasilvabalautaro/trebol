@@ -10,4 +10,5 @@ interface INotificationRepository: IMessagePersistent {
     fun save(notification: MapperNotification): Observable<NotificationModel>
     fun saveList(list: ArrayList<MapperNotification>): Observable<Boolean>
     fun addNotificationsToTechnical(codeTech: String): Observable<Boolean>
+    fun addTypeDescription(): Observable<Boolean>
 }

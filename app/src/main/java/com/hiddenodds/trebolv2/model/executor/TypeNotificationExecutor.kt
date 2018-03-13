@@ -7,9 +7,11 @@ import com.hiddenodds.trebolv2.domain.data.MapperTypeNotification
 import com.hiddenodds.trebolv2.model.data.TypeNotification
 import com.hiddenodds.trebolv2.model.exception.DatabaseOperationException
 import com.hiddenodds.trebolv2.model.interfaces.ITypeNotificationRepository
+import com.hiddenodds.trebolv2.model.persistent.caching.CachingLruRepository
 import com.hiddenodds.trebolv2.model.persistent.database.CRUDRealm
 import com.hiddenodds.trebolv2.presentation.mapper.TypeNotificationModelDataMapper
 import com.hiddenodds.trebolv2.presentation.model.TypeNotificationModel
+import com.hiddenodds.trebolv2.tools.Constants
 import io.reactivex.Observable
 import java.util.*
 import javax.inject.Inject
@@ -95,17 +97,31 @@ class TypeNotificationExecutor @Inject constructor(): CRUDRealm(),
 
     override fun getList(): Observable<List<TypeNotificationModel>> {
         return Observable.create { subscriber ->
-            val clazz: Class<TypeNotification> = TypeNotification::class.java
-            val listTypeNotification: List<TypeNotification>? = this.getAllData(clazz)
-            if (listTypeNotification != null){
-                val typeNotificationModelCollection: Collection<TypeNotificationModel> = this
-                        .typeNotificationModelDataMapper
-                        .transform(listTypeNotification)
-                subscriber.onNext(typeNotificationModelCollection as List<TypeNotificationModel>)
+            var listTypeNotificationModel: List<TypeNotificationModel>? = null
+            val list = getListTypeNotificationOfCache()
+            if (list != null && list.isNotEmpty()){
+                listTypeNotificationModel = list.filterIsInstance<TypeNotificationModel>()
+                subscriber.onNext(listTypeNotificationModel)
                 subscriber.onComplete()
             }else{
-                subscriber.onError(Throwable())
+                val clazz: Class<TypeNotification> = TypeNotification::class.java
+                val listTypeNotification: List<TypeNotification>? = this.getAllData(clazz)
+                if (listTypeNotification != null){
+                    val typeNotificationModelCollection: Collection<TypeNotificationModel> = this
+                            .typeNotificationModelDataMapper
+                            .transform(listTypeNotification)
+                    CachingLruRepository.instance.getLru()
+                            .put(Constants.CACHE_LIST_TYPE_NOTIFICATION,
+                                    typeNotificationModelCollection as List<TypeNotificationModel>)
+
+                    subscriber.onNext(typeNotificationModelCollection)
+                    subscriber.onComplete()
+                }else{
+                    subscriber.onError(Throwable())
+                }
             }
+
+
         }
 
     }
@@ -119,6 +135,11 @@ class TypeNotificationExecutor @Inject constructor(): CRUDRealm(),
         }
     }
 
-
+    private fun getListTypeNotificationOfCache(): List<*>? {
+        return CachingLruRepository
+                .instance
+                .getLru()
+                .get(Constants.CACHE_LIST_TYPE_NOTIFICATION) as List<*>?
+    }
 
 }

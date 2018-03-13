@@ -3,6 +3,7 @@ package com.hiddenodds.trebolv2.model.persistent.database
 import android.os.Parcel
 import com.hiddenodds.trebolv2.model.data.Notification
 import com.hiddenodds.trebolv2.model.data.Technical
+import com.hiddenodds.trebolv2.model.data.TypeNotification
 import com.hiddenodds.trebolv2.model.interfaces.IDataContent
 import com.hiddenodds.trebolv2.model.interfaces.IRepository
 import com.hiddenodds.trebolv2.model.interfaces.ITaskCompleteListener
@@ -84,6 +85,39 @@ abstract class CRUDRealm: IRepository {
 
     }
 
+    override fun <E : RealmObject> updateField(nameField: String,
+                                               valueSearch: String,
+                                               nameFieldUpdate: String,
+                                               newValue: String,
+                                               clazz: Class<E>,
+                                               listener: ITaskCompleteListener): Boolean {
+
+        val realm: Realm = Realm.getDefaultInstance()
+        try {
+            realm.executeTransaction {
+                val e: E? = realm.where(clazz).equalTo(nameField, valueSearch).findFirst()
+
+                if (e != null && e is Notification){
+                    if (nameFieldUpdate == "type"){
+
+                    }
+                }
+
+
+                listener.onSaveSucceeded()
+
+            }
+            return true
+
+        }catch (e: Throwable){
+            listener.onSaveFailed(e.message!!)
+            return false
+        }finally {
+            //realm.close()
+        }
+
+    }
+
     fun getTechnicalMaster(code: String, password: String): RealmResults<Technical>?{
         val realm: Realm = Realm.getDefaultInstance()
         return realm.where(Technical::class.java)
@@ -135,6 +169,35 @@ abstract class CRUDRealm: IRepository {
             }
         }catch (e: Throwable){
             listener.onSaveFailed(e.message!!)
+            return false
+        }
+        return true
+    }
+
+    fun addDescriptionToNotification(): Boolean{
+
+        val realm: Realm = Realm.getDefaultInstance()
+        try {
+            realm.executeTransaction {
+                val listTypeNotify: RealmResults<TypeNotification>? =
+                        this.getAllData(TypeNotification::class.java)
+
+                if (listTypeNotify != null){
+                    for (type: TypeNotification in listTypeNotify){
+                        val listNotify: RealmResults<Notification> = realm
+                                .where(Notification::class.java).equalTo(
+                                        "type", type.code).findAll()
+                        if (listNotify.isNotEmpty()){
+                            for (notify: Notification in listNotify){
+                                notify.type = type.description
+                            }
+                        }
+                    }
+                }
+
+            }
+
+        }catch (e: Throwable){
             return false
         }
         return true

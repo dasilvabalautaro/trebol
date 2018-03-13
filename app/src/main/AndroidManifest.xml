@@ -15,6 +15,7 @@
         android:fullBackupContent="@xml/backup_descriptor"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".presentation.view.activities.MainActivity"
+            android:windowSoftInputMode="adjustPan"
             android:configChanges="mcc|mnc|locale|keyboardHidden|screenLayout|screenSize|orientation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -99,6 +99,13 @@ class PresenterModule {
         return GetTechnicalMasterUseCase(jobExecutor, uiThread, technicalExecutor)
     }
 
+    @Provides
+    fun provideGetTechnicalUseCase(uiThread: UIThread,
+                                   jobExecutor: JobExecutor,
+                                   technicalExecutor: TechnicalExecutor): GetTechnicalUseCase{
+        return GetTechnicalUseCase(jobExecutor, uiThread, technicalExecutor)
+    }
+
     ///////////////////
 
     @Provides
@@ -121,6 +128,12 @@ class PresenterModule {
                                         GetTechnicalMasterUseCase):
             TechnicalMasterPresenter{
         return TechnicalMasterPresenter(getTechnicalMasterUseCase)
+    }
+
+    @Provides
+    fun provideTechnicalPresenter(getTechnicalUseCase:
+                                  GetTechnicalUseCase): TechnicalPresenter{
+        return TechnicalPresenter(getTechnicalUseCase)
     }
 
     ///////////////////
@@ -183,6 +196,14 @@ class PresenterModule {
     }
 
     @Provides
+    fun provideGetLisTypeNotificationUseCase(uiThread: UIThread,
+                                             jobExecutor: JobExecutor,
+                                             typeNotificationExecutor:
+                                             TypeNotificationExecutor): GetLisTypeNotificationUseCase{
+        return GetLisTypeNotificationUseCase(jobExecutor, uiThread, typeNotificationExecutor)
+    }
+
+    @Provides
     fun provideTypeNotificationRemotePresenter(getRemoteDataUseCase:
                                                GetRemoteDataUseCase,
                                                saveListTypeNotificationUseCase:
@@ -235,11 +256,14 @@ class PresenterModule {
                                            deleteNotificationsOfTechnicalUseCase:
                                            DeleteNotificationsOfTechnicalUseCase,
                                            addNotificationToTechnicalUseCase:
-                                           AddNotificationToTechnicalUseCase):
+                                           AddNotificationToTechnicalUseCase,
+                                           getLisTypeNotificationUseCase:
+                                           GetLisTypeNotificationUseCase):
             NotificationRemotePresenter{
         return NotificationRemotePresenter(getRemoteDataUseCase,
                 saveListNotificationUseCase, getTechnicalMasterUseCase,
                 deleteNotificationsOfTechnicalUseCase,
-                addNotificationToTechnicalUseCase)
+                addNotificationToTechnicalUseCase,
+                getLisTypeNotificationUseCase)
     }
 }

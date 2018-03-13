@@ -19,9 +19,10 @@ object Constants {
     val TBL_DEL_PIECES = "DATAS01"
     val TBL_TYPE_NOTIFICATION = "CONVERSIONAVISOS01"
     val TBL_TEAM_TECHNICAL = "CONVERSIONTRD"
-    val PREFERENCE_TREBOL = "trebol"
+    val PREFERENCE_TREBOL = "com.hiddenodds.trebolv2.PREFERENCE_FILE_KEY"
     val TECHNICAL_DB = "db_tech"
     val CACHE_TECHNICAL_MASTER = "tech_master"
+    val CACHE_LIST_TYPE_NOTIFICATION = "list_type_notification"
     val TECHNICAL_KEY = "key_master"
     val TECHNICAL_PASSWORD = "key_password"
 }

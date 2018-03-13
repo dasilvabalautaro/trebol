@@ -42,8 +42,12 @@ class TypeNotificationRemotePresenter @Inject constructor(private val getRemoteD
                 val mapperTypeNotification = MapperTypeNotification()
 
                 if (jsonObject.has("TRB_TIPO")){
-                    mapperTypeNotification.code = jsonObject.getString("TRB_TIPO")?: ""
-                    mapperTypeNotification.code = mapperTypeNotification.code.trim()
+                    var dataField = jsonObject.getString("TRB_TIPO")?: ""
+                    dataField = dataField.trim()
+                    if (dataField.isNotEmpty()){
+                        dataField = dataField.toInt().toString()
+                    }
+                    mapperTypeNotification.code = dataField
                 }
                 if (jsonObject.has("DESCRIPCION")){
                     mapperTypeNotification.description = jsonObject.getString("DESCRIPCION")?: ""

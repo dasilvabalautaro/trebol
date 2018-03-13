@@ -6,6 +6,7 @@ import com.hiddenodds.trebolv2.domain.data.MapperNotification
 import com.hiddenodds.trebolv2.domain.interactor.*
 import com.hiddenodds.trebolv2.model.persistent.network.StatementSQL
 import com.hiddenodds.trebolv2.presentation.model.TechnicalModel
+import com.hiddenodds.trebolv2.presentation.model.TypeNotificationModel
 import com.hiddenodds.trebolv2.tools.ChangeFormat
 import com.hiddenodds.trebolv2.tools.Constants
 import com.hiddenodds.trebolv2.tools.PreferenceHelper
@@ -25,9 +26,12 @@ class NotificationRemotePresenter @Inject constructor(private val getRemoteDataU
                                                       private val deleteNotificationsOfTechnicalUseCase:
                                                       DeleteNotificationsOfTechnicalUseCase,
                                                       private val addNotificationToTechnicalUseCase:
-                                                      AddNotificationToTechnicalUseCase):
+                                                      AddNotificationToTechnicalUseCase,
+                                                      private val getLisTypeNotificationUseCase:
+                                                      GetLisTypeNotificationUseCase):
         BasePresenter(){
     private var listMapperNotification: ArrayList<MapperNotification> = ArrayList()
+    private var listTypeNotification: List<TypeNotificationModel> = ArrayList()
     private var listTechnicals: ArrayList<String> = ArrayList()
     private var codeTechnical: String = ""
     private var codeMaster: String = ""
@@ -35,10 +39,14 @@ class NotificationRemotePresenter @Inject constructor(private val getRemoteDataU
 
     init {
         this.iHearMessage = getRemoteDataUseCase
+
+    }
+
+    fun executeDownloadNotification(){
+        getLisTypeNotificationUseCase.execute(ListTypeNotificationObserver())
     }
 
     fun executeQueryRemote(){
-
         val prefs = PreferenceHelper.customPrefs(context,
                 Constants.PREFERENCE_TREBOL)
         val code: String? = prefs[Constants.TECHNICAL_KEY, ""]
@@ -50,7 +58,6 @@ class NotificationRemotePresenter @Inject constructor(private val getRemoteDataU
         }else{
             println("Technical not found")
         }
-
 
     }
 
@@ -92,8 +99,20 @@ class NotificationRemotePresenter @Inject constructor(private val getRemoteDataU
                     mapperNotification.dateInit = ChangeFormat.convertDate(mapperNotification.dateInit.trim())
                 }
                 if (jsonObject.has("TRB_TIPO")){
-                    mapperNotification.type = jsonObject.getString("TRB_TIPO")?: ""
-                    mapperNotification.type = mapperNotification.type.trim()
+                    var dataField = jsonObject.getString("TRB_TIPO")?: ""
+                    dataField = dataField.trim()
+
+                    if (listTypeNotification.isNotEmpty()){
+
+                        val found = listTypeNotification.find { it.code == dataField}
+                        if (found != null){
+                            mapperNotification.type = found.description
+                        }
+
+                    }else{
+                        mapperNotification.type = dataField
+                    }
+
                 }
 
 
@@ -199,7 +218,7 @@ class NotificationRemotePresenter @Inject constructor(private val getRemoteDataU
     }
 
     private fun stopProgress(){
-        view!!.executeTask()
+        view!!.executeTask(null)
     }
 
     private fun getNotificationsNextTechnical(){
@@ -208,7 +227,26 @@ class NotificationRemotePresenter @Inject constructor(private val getRemoteDataU
             listTechnicals.remove(code)
             executeGetRemote(code)
         }else{
+
             showMessage(context.resources.getString(R.string.notification_save))
+        }
+    }
+
+    inner class ListTypeNotificationObserver:
+            DisposableObserver<List<TypeNotificationModel>>(){
+        override fun onNext(t: List<TypeNotificationModel>) {
+            listTypeNotification = t
+            executeQueryRemote()
+        }
+
+        override fun onComplete() {
+            showMessage(context.resources.getString(R.string.get_complete))
+        }
+
+        override fun onError(e: Throwable) {
+            if (e.message != null) {
+                showError(e.message!!)
+            }
         }
     }
 

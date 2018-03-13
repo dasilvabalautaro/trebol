@@ -115,6 +115,33 @@ class TechnicalExecutor @Inject constructor(): CRUDRealm(),
         }
     }
 
+    override fun getTechnical(code: String): Observable<TechnicalModel> {
+        return Observable.create { subscriber ->
+            var technicalModel: TechnicalModel? = null
+            technicalModel = getTechicalOfCache(code)
+            if (technicalModel != null){
+                subscriber.onNext(technicalModel)
+                subscriber.onComplete()
+            }else{
+                val clazz: Class<Technical> = Technical::class.java
+                val newTechnical: List<Technical>? = this.getDataByField(clazz,
+                        "code", code)
+                if (newTechnical!!.isNotEmpty()){
+                    technicalModel = this.technicalModelDataMapper
+                            .transform(newTechnical[0])
+                    CachingLruRepository.instance.getLru()
+                            .put(code, technicalModel)
+                    subscriber.onNext(technicalModel)
+                    subscriber.onComplete()
+                }else{
+                    subscriber.onError(Throwable())
+                }
+            }
+
+        }
+    }
+
+
     override fun getMasterTechnical(code: String,
                                     password: String): Observable<TechnicalModel>{
 
@@ -169,5 +196,10 @@ class TechnicalExecutor @Inject constructor(): CRUDRealm(),
                 .get(Constants.CACHE_TECHNICAL_MASTER) as TechnicalModel?
     }
 
-
+    private fun getTechicalOfCache(code: String): TechnicalModel?{
+        return CachingLruRepository
+                .instance
+                .getLru()
+                .get(code) as TechnicalModel?
+    }
 }

@@ -13,4 +13,5 @@ interface ITechnicalRepository: IMessagePersistent {
                                              ArrayList<String>>): Observable<Boolean>
     fun getMasterTechnical(code: String, password: String): Observable<TechnicalModel>
     fun deleteNotifications(code: String): Observable<Boolean>
+    fun getTechnical(code: String): Observable<TechnicalModel>
 }

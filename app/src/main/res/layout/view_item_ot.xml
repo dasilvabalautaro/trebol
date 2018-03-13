@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+    <android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@android:color/white">
+
+        <android.support.constraint.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/left_guideline"
+            app:layout_constraintGuide_percent=".05"
+            android:orientation="vertical"/>
+
+        <android.support.constraint.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/left_twice_guideline"
+            app:layout_constraintGuide_percent=".5"
+            android:orientation="vertical"/>
+
+        <android.support.constraint.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/left_one_guideline"
+            app:layout_constraintGuide_percent=".35"
+            android:orientation="vertical"/>
+
+        <android.support.constraint.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/left_two_guideline"
+            app:layout_constraintGuide_percent=".65"
+            android:orientation="vertical"/>
+
+        <android.support.constraint.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/right_guideline"
+            app:layout_constraintGuide_percent=".95"
+            android:orientation="vertical"/>
+
+        <android.support.constraint.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/top_guideline"
+            app:layout_constraintGuide_percent=".01"
+            android:orientation="horizontal"/>
+
+        <android.support.constraint.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/bottom_guideline"
+            app:layout_constraintGuide_percent="0.99"
+            android:orientation="horizontal"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+            app:layout_constraintRight_toRightOf="@+id/left_twice_guideline"
+            app:layout_constraintTop_toTopOf="@+id/top_guideline"
+            android:textSize="12sp"
+            android:text="@string/lbl_announce"
+            android:textColor="@color/colorLblSubTitle"
+            android:textAlignment="textStart"
+            android:id="@+id/lblAnnounce"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/left_twice_guideline"
+            app:layout_constraintRight_toRightOf="@+id/right_guideline"
+            app:layout_constraintTop_toTopOf="@+id/top_guideline"
+            android:textSize="12sp"
+            android:text="@string/lbl_type"
+            android:textColor="@color/colorLblSubTitle"
+            android:textAlignment="textStart"
+            android:id="@+id/lblType"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+            app:layout_constraintRight_toRightOf="@+id/left_twice_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/lblAnnounce"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:textColor="@color/colorTxt"
+            android:textAlignment="textStart"
+            android:id="@+id/edtAnnounce"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/left_twice_guideline"
+            app:layout_constraintRight_toRightOf="@+id/right_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/lblType"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:textColor="@color/colorTxt"
+            android:textAlignment="textStart"
+            android:id="@+id/edtType"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+            app:layout_constraintRight_toRightOf="@+id/left_twice_guideline"
+            app:layout_constraintTop_toBottomOf ="@+id/edtAnnounce"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:text="@string/lbl_num_serie"
+            android:textColor="@color/colorLblSubTitle"
+            android:textAlignment="textStart"
+            android:id="@+id/lblMachine"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+            app:layout_constraintRight_toRightOf="@+id/right_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/lblMachine"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:textColor="@color/colorTxt"
+            android:textAlignment="textStart"
+            android:id="@+id/edtMachine"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+            app:layout_constraintRight_toRightOf="@+id/left_twice_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/edtMachine"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:text="@string/lbl_name"
+            android:textColor="@color/colorLblSubTitle"
+            android:textAlignment="textStart"
+            android:id="@+id/lblName"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+            app:layout_constraintRight_toRightOf="@+id/right_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/lblName"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:textColor="@color/colorTxt"
+            android:textAlignment="textStart"
+            android:id="@+id/edtName" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+            app:layout_constraintRight_toRightOf="@+id/right_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/edtName"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:text="@string/lbl_contact"
+            android:textColor="@color/colorLblSubTitle"
+            android:textAlignment="textStart"
+            android:id="@+id/lblContact"/>
+
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+            app:layout_constraintRight_toRightOf="@+id/right_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/lblContact"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:textColor="@color/colorTxt"
+            android:textAlignment="textStart"
+            android:id="@+id/edtContact"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+            app:layout_constraintRight_toRightOf="@+id/left_twice_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/edtContact"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:text="@string/lbl_fecha"
+            android:textColor="@color/colorLblSubTitle"
+            android:textAlignment="textStart"
+            android:id="@+id/lblDate"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/left_twice_guideline"
+            app:layout_constraintRight_toRightOf="@+id/right_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/edtContact"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:text="@string/lbl_date_finish"
+            android:textColor="@color/colorLblSubTitle"
+            android:textAlignment="textStart"
+            android:id="@+id/lblDateFinish"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+            app:layout_constraintRight_toRightOf="@+id/left_twice_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/lblDate"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:textColor="@color/colorTxt"
+            android:textAlignment="textStart"
+            android:id="@+id/edtDate"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/left_twice_guideline"
+            app:layout_constraintRight_toRightOf="@+id/right_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/lblDate"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:textColor="@color/colorTxt"
+            android:textAlignment="textStart"
+            android:id="@+id/edtDateFinish"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+            app:layout_constraintRight_toRightOf="@+id/left_twice_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/edtDate"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:text="@string/lbl_address"
+            android:textColor="@color/colorLblSubTitle"
+            android:textAlignment="textStart"
+            android:id="@+id/lblAddress"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+            app:layout_constraintRight_toRightOf="@+id/right_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/lblAddress"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:textColor="@color/colorTxt"
+            android:textAlignment="textStart"
+            android:id="@+id/edtAddress"/>
+
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+            app:layout_constraintRight_toRightOf="@+id/left_twice_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/edtAddress"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:text="@string/lbl_province"
+            android:textColor="@color/colorLblSubTitle"
+            android:textAlignment="textStart"
+            android:id="@+id/lblProvince"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/left_twice_guideline"
+            app:layout_constraintRight_toRightOf="@+id/right_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/edtAddress"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:text="@string/lbl_phone"
+            android:textColor="@color/colorLblSubTitle"
+            android:textAlignment="textStart"
+            android:id="@+id/lblPhone"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+            app:layout_constraintRight_toRightOf="@+id/left_twice_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/lblProvince"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:textColor="@color/colorTxt"
+            android:textAlignment="textStart"
+            android:id="@+id/edtProvince"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/left_twice_guideline"
+            app:layout_constraintRight_toRightOf="@+id/right_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/lblPhone"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:textColor="@color/colorTxt"
+            android:textAlignment="textStart"
+            android:id="@+id/edtPhone"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+            app:layout_constraintRight_toRightOf="@+id/left_twice_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/edtProvince"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:text="@string/lbl_location"
+            android:textColor="@color/colorLblSubTitle"
+            android:textAlignment="textStart"
+            android:id="@+id/lblLocation"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+            app:layout_constraintRight_toRightOf="@+id/right_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/lblLocation"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:textColor="@color/colorTxt"
+            android:textAlignment="textStart"
+            android:id="@+id/edtLocation"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+            app:layout_constraintRight_toRightOf="@+id/left_twice_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/edtLocation"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:text="@string/lbl_observation"
+            android:textColor="@color/colorLblSubTitle"
+            android:textAlignment="textStart"
+            android:id="@+id/lblObservation"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+            app:layout_constraintRight_toRightOf="@+id/right_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/lblObservation"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:textColor="@color/colorTxt"
+            android:textAlignment="textStart"
+            android:id="@+id/edtObservation"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+            app:layout_constraintRight_toRightOf="@+id/left_twice_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/edtObservation"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:id="@+id/btnOpenOt"
+            android:background="@drawable/button_open_ot"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toRightOf="@+id/right_guideline"
+            app:layout_constraintLeft_toLeftOf="@+id/left_twice_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/edtObservation"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:id="@+id/btnEmail"
+            android:background="@drawable/button_email"/>
+
+        <View
+            android:id="@+id/view_space"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toBottomOf="@+id/btnOpenOt"/>
+    </android.support.constraint.ConstraintLayout>
+</ScrollView>
+

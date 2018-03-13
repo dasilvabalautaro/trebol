@@ -18,7 +18,7 @@ import com.hiddenodds.trebolv2.dagger.PresenterModule
 import com.hiddenodds.trebolv2.presentation.interfaces.ILoadDataView
 import com.hiddenodds.trebolv2.presentation.presenter.MaterialRemotePresenter
 import com.hiddenodds.trebolv2.presentation.presenter.NotificationRemotePresenter
-import com.hiddenodds.trebolv2.presentation.presenter.TypeNotificationRemotePresenter
+import com.hiddenodds.trebolv2.presentation.view.activities.MainActivity
 import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
 
@@ -44,7 +44,7 @@ class MenuFragment: Fragment(), ILoadDataView {
     fun updateDataNotification(){
         setViewForTransferData()
         launch {
-            notificationRemotePresenter.executeQueryRemote()
+            notificationRemotePresenter.executeDownloadNotification()
         }
     }
 
@@ -52,14 +52,15 @@ class MenuFragment: Fragment(), ILoadDataView {
     fun updateDataGeneral(){
         setViewForTransferData()
         launch {
-            typeNotificationRemotePresenter.executeQueryRemote()
             materialRemotePresenter.executeQueryRemote()
         }
 
     }
+
     @OnClick(R.id.btn_ots)
     fun viewOTS(){
-
+        val fragmentOtsFragment = OtsFragment()
+        (context as MainActivity).addFragment(fragmentOtsFragment)
     }
 
     val Fragment.app: App
@@ -70,8 +71,6 @@ class MenuFragment: Fragment(), ILoadDataView {
 
     @Inject
     lateinit var materialRemotePresenter: MaterialRemotePresenter
-    @Inject
-    lateinit var typeNotificationRemotePresenter: TypeNotificationRemotePresenter
     @Inject
     lateinit var notificationRemotePresenter: NotificationRemotePresenter
 
@@ -93,7 +92,6 @@ class MenuFragment: Fragment(), ILoadDataView {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         materialRemotePresenter.view = this
-        typeNotificationRemotePresenter.view = this
         notificationRemotePresenter.view = this
         activity.theme.applyStyle(R.style.AppTheme, true)
     }
@@ -108,7 +106,7 @@ class MenuFragment: Fragment(), ILoadDataView {
         context.toast(message)
     }
 
-    override fun executeTask() {
+    override fun <T> executeTask(obj: T) {
         pbDownload!!.visibility = View.INVISIBLE
         enabledButton(true)
     }

@@ -104,5 +104,15 @@ class NotificationExecutor @Inject constructor(): CRUDRealm(),
         }
     }
 
+    override fun addTypeDescription(): Observable<Boolean> {
+        return Observable.create{subscriber ->
+            if (this.addDescriptionToNotification()){
+                subscriber.onNext(true)
+                subscriber.onComplete()
+            }else{
+                subscriber.onError(Throwable())
+            }
+        }
+    }
 
 }

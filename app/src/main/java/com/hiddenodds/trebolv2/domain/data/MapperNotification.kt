@@ -85,9 +85,9 @@ class MapperNotification: IDataContent {
 
         parcel.writeString(code)
         parcel.writeString(machine)
+        parcel.writeString(type)
         parcel.writeString(dateInit)
         parcel.writeString(dateEnd)
-        parcel.writeString(type)
         parcel.writeString(observations)
         parcel.writeString(dateCompleted)
         parcel.writeString(completed)

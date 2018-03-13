@@ -72,7 +72,7 @@ class MaterialRemotePresenter @Inject constructor(private val getRemoteDataUseCa
     }
 
     private fun stopProgress(){
-        view!!.executeTask()
+        view!!.executeTask(null)
     }
 
     inner class ListObserver: DisposableObserver<JSONArray>(){

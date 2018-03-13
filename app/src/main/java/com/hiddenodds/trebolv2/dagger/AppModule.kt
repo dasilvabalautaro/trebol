@@ -32,4 +32,5 @@ class AppModule(private val app: App) {
     fun provideConnectionNetwork(): ConnectionNetwork {
         return ConnectionNetwork(app as Context)
     }
+
 }
