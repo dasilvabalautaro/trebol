@@ -16,9 +16,12 @@ import com.hiddenodds.trebolv2.App
 import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.dagger.PresenterModule
 import com.hiddenodds.trebolv2.presentation.interfaces.ILoadDataView
+import com.hiddenodds.trebolv2.presentation.presenter.AddNotificationToTechnicalPresenter
+import com.hiddenodds.trebolv2.presentation.presenter.CustomerRemotePresenter
 import com.hiddenodds.trebolv2.presentation.presenter.MaterialRemotePresenter
 import com.hiddenodds.trebolv2.presentation.presenter.NotificationRemotePresenter
 import com.hiddenodds.trebolv2.presentation.view.activities.MainActivity
+import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
 
@@ -73,7 +76,10 @@ class MenuFragment: Fragment(), ILoadDataView {
     lateinit var materialRemotePresenter: MaterialRemotePresenter
     @Inject
     lateinit var notificationRemotePresenter: NotificationRemotePresenter
-
+    @Inject
+    lateinit var customerRemotePresenter: CustomerRemotePresenter
+    @Inject
+    lateinit var addNotificationToTechnicalPresenter: AddNotificationToTechnicalPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,6 +99,8 @@ class MenuFragment: Fragment(), ILoadDataView {
         super.onActivityCreated(savedInstanceState)
         materialRemotePresenter.view = this
         notificationRemotePresenter.view = this
+        customerRemotePresenter.view = this
+        addNotificationToTechnicalPresenter.view = this
         activity.theme.applyStyle(R.style.AppTheme, true)
     }
 
@@ -101,14 +109,34 @@ class MenuFragment: Fragment(), ILoadDataView {
     }
 
     override fun showError(message: String) {
-        pbDownload!!.visibility = View.INVISIBLE
-        enabledButton(true)
+        enableView()
         context.toast(message)
     }
 
     override fun <T> executeTask(obj: T) {
-        pbDownload!!.visibility = View.INVISIBLE
-        enabledButton(true)
+        if (obj != null){
+            val option = (obj as Int)
+            when(option){
+                1 -> {
+
+                    launch {
+                        customerRemotePresenter.executeGetTechnicalMaster()
+                    }
+                }
+                2 -> {
+
+                    launch {
+                        addNotificationToTechnicalPresenter.executeAddNotification()
+                    }
+                }
+                3 -> {
+                    enableView()
+                }
+            }
+        }else{
+            enableView()
+        }
+
     }
 
     private fun Context.toast(message: CharSequence) =
@@ -124,6 +152,19 @@ class MenuFragment: Fragment(), ILoadDataView {
     private fun setViewForTransferData(){
         enabledButton(false)
         context.toast(context.resources.getString(R.string.wait_task))
-        pbDownload!!.visibility = View.VISIBLE
+        activity.runOnUiThread({
+            pbDownload!!.visibility = View.VISIBLE
+        })
+    }
+
+    private fun enableView(){
+        launch {
+            delay(3000)
+            activity.runOnUiThread({
+                pbDownload!!.visibility = View.INVISIBLE
+                enabledButton(true)
+            })
+
+        }
     }
 }

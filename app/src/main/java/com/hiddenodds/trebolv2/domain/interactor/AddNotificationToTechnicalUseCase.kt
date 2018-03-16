@@ -1,7 +1,5 @@
 package com.hiddenodds.trebolv2.domain.interactor
 
-import com.hiddenodds.trebolv2.domain.interfaces.IHearMessage
-import com.hiddenodds.trebolv2.model.exception.DatabaseOperationException
 import com.hiddenodds.trebolv2.model.interfaces.INotificationRepository
 import com.hiddenodds.trebolv2.model.interfaces.IPostExecutionThread
 import com.hiddenodds.trebolv2.model.interfaces.IThreadExecutor
@@ -13,18 +11,9 @@ class AddNotificationToTechnicalUseCase @Inject constructor(threadExecutor: IThr
                                                             postExecutionThread: IPostExecutionThread,
                                                             private var iNotificationRepository:
                                                             INotificationRepository):
-        UseCase<Boolean>(threadExecutor, postExecutionThread),
-        IHearMessage {
+        UseCase<Boolean>(threadExecutor, postExecutionThread){
 
     var codeTech: String = ""
-
-    override fun hearMessage(): Observable<String> {
-        return iNotificationRepository.userGetMessage()
-    }
-
-    override fun hearError(): Observable<DatabaseOperationException> {
-        return iNotificationRepository.userGetError()
-    }
 
     override fun buildUseCaseObservable(): Observable<Boolean> {
         return iNotificationRepository.addNotificationsToTechnical(codeTech)

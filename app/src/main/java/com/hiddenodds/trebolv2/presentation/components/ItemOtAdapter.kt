@@ -46,6 +46,12 @@ class ItemOtAdapter: RecyclerView.Adapter<ItemOtAdapter.ViewHolder>() {
             edtLocation!!.text = item.locality
             edtObservation!!.text = item.symptom
             edtAddress!!.text = item.address
+            if (item.customer != null){
+                edtPhone!!.text = item.customer!!.phone
+                edtContact!!.text = item.customer!!.name
+
+            }
+
         }
     }
 }

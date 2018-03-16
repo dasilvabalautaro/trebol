@@ -1,9 +1,9 @@
 package com.hiddenodds.trebolv2.model.persistent.database
 
 import android.os.Parcel
+import com.hiddenodds.trebolv2.model.data.Customer
 import com.hiddenodds.trebolv2.model.data.Notification
 import com.hiddenodds.trebolv2.model.data.Technical
-import com.hiddenodds.trebolv2.model.data.TypeNotification
 import com.hiddenodds.trebolv2.model.interfaces.IDataContent
 import com.hiddenodds.trebolv2.model.interfaces.IRepository
 import com.hiddenodds.trebolv2.model.interfaces.ITaskCompleteListener
@@ -54,18 +54,19 @@ abstract class CRUDRealm: IRepository {
     override fun <E : RealmObject> deleteByField(clazz: Class<E>,
                                                  fieldName: String,
                                                  value: String,
-                                                 listener: ITaskCompleteListener) {
+                                                 listener: ITaskCompleteListener): Boolean {
         val realm: Realm = Realm.getDefaultInstance()
-        try {
+        return try {
             realm.executeTransaction({
                 it.where(clazz)
                         .equalTo(fieldName, value)
                         .findAll()?.deleteAllFromRealm()
                 listener.onSaveSucceeded()
-
             })
+            true
         }catch (e: Throwable){
             listener.onSaveFailed(e.message!!)
+            false
         }
     }
     override fun <E : RealmObject> deleteAll(clazz: Class<E>,
@@ -126,7 +127,8 @@ abstract class CRUDRealm: IRepository {
                 .findAll()
     }
 
-    fun saveListTRD(code:String, list: ArrayList<String>): Boolean{
+    fun saveListTRD(code:String, list: ArrayList<String>,
+                    listener: ITaskCompleteListener): Boolean{
         val realm: Realm = Realm.getDefaultInstance()
         try {
             realm.executeTransaction {
@@ -137,11 +139,12 @@ abstract class CRUDRealm: IRepository {
                         technical.trd.add(list[i])
                     }
                 }
-
+                listener.onSaveSucceeded()
             }
 
         }catch (e: Throwable){
             println(e.message!!)
+            listener.onSaveFailed(e.message!!)
             return false
         }
 
@@ -158,12 +161,11 @@ abstract class CRUDRealm: IRepository {
                         "code", code).findFirst()
                 if (technical != null){
                     val listNotify: RealmList<Notification> = technical.notifications
-                    technical.notifications = RealmList()
-                    if (!listNotify.isEmpty()){
-                        for (notify: Notification in listNotify){
-                            RealmObject.deleteFromRealm(notify)
-                        }
-                    }
+                    technical.notifications.removeAll(listNotify)
+                    realm.where(Notification::class.java)
+                            .equalTo("idTech", code)
+                            .findAll()?.deleteAllFromRealm()
+
                 }
                 listener.onSaveSucceeded()
             }
@@ -174,30 +176,32 @@ abstract class CRUDRealm: IRepository {
         return true
     }
 
-    fun addDescriptionToNotification(): Boolean{
+    fun addCustomerToNotification(idTech: String,
+                                  listener: ITaskCompleteListener): Boolean{
 
         val realm: Realm = Realm.getDefaultInstance()
         try {
             realm.executeTransaction {
-                val listTypeNotify: RealmResults<TypeNotification>? =
-                        this.getAllData(TypeNotification::class.java)
+                val listNotify: RealmResults<Notification> = realm
+                        .where(Notification::class.java).equalTo(
+                                "idTech", idTech).findAll()
 
-                if (listTypeNotify != null){
-                    for (type: TypeNotification in listTypeNotify){
-                        val listNotify: RealmResults<Notification> = realm
-                                .where(Notification::class.java).equalTo(
-                                        "type", type.code).findAll()
-                        if (listNotify.isNotEmpty()){
-                            for (notify: Notification in listNotify){
-                                notify.type = type.description
-                            }
+                if (listNotify.isNotEmpty()){
+                    for (notify: Notification in listNotify){
+
+                        val customer: Customer? = realm
+                                .where(Customer::class.java).equalTo(
+                                        "code", notify.code).findFirst()
+                        if (customer != null){
+                            notify.customer = customer
                         }
                     }
                 }
-
+                listener.onSaveSucceeded()
             }
 
         }catch (e: Throwable){
+            listener.onSaveFailed(e.message!!)
             return false
         }
         return true
@@ -218,6 +222,7 @@ abstract class CRUDRealm: IRepository {
                         technical.notifications.add(notify)
                     }
                 }
+
                 listener.onSaveSucceeded()
             }
 

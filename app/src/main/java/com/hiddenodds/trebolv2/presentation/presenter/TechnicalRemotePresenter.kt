@@ -31,10 +31,6 @@ class TechnicalRemotePresenter @Inject constructor(private val getRemoteDataUseC
             ArrayList<String>> = LinkedHashMap()
     private var flag = true
 
-    init {
-        this.iHearMessage = getRemoteDataUseCase
-    }
-
     fun executeQueryRemote(){
         if ((context as App).connectionNetwork.isOnline()){
             getRemoteDataUseCase.sql = StatementSQL.getTechnical()
@@ -110,7 +106,6 @@ class TechnicalRemotePresenter @Inject constructor(private val getRemoteDataUseC
 
     private fun saveListTechnicals(){
         if (listMapperTechnical.size != 0){
-            this.iHearMessage = saveListTechnicalUseCase
             saveListTechnicalUseCase
                     .listMapperTechnical = this.listMapperTechnical
             saveListTechnicalUseCase.execute(SaveTechniciansObserver())

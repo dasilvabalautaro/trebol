@@ -5,7 +5,7 @@ import com.hiddenodds.trebolv2.presentation.model.TechnicalModel
 import io.reactivex.Observable
 import java.util.*
 
-interface ITechnicalRepository: IMessagePersistent {
+interface ITechnicalRepository{
     fun save(technical: MapperTechnical): Observable<TechnicalModel>
     fun saveList(list: ArrayList<MapperTechnical>): Observable<Boolean>
     fun saveListDependentTechnicians(dependentTechnical:

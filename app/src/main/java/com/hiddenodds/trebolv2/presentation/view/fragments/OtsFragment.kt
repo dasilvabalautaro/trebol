@@ -117,9 +117,11 @@ class OtsFragment: Fragment(), ILoadDataView {
         if (obj != null){
             val code = (obj as TechnicalModel).code
             if (code == this.techMasterCode && spTech!!.adapter == null){
-                setDataSpinner((obj as TechnicalModel).trd)
+                val listTech = ArrayList((obj as TechnicalModel).trd)
+                setDataSpinner(listTech)
             }
-            adapter!!.setObjectList((obj as TechnicalModel).notifications)
+            val listNotification = ArrayList((obj as TechnicalModel).notifications)
+            adapter!!.setObjectList(listNotification)
             rvOts!!.scrollToPosition(0)
 
         }

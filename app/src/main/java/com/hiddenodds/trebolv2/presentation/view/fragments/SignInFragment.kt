@@ -16,7 +16,6 @@ import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.dagger.PresenterModule
 import com.hiddenodds.trebolv2.presentation.interfaces.ILoadDataView
 import com.hiddenodds.trebolv2.presentation.model.TechnicalModel
-import com.hiddenodds.trebolv2.presentation.presenter.SaveCustomerPresenter
 import com.hiddenodds.trebolv2.presentation.presenter.TechnicalMasterPresenter
 import com.hiddenodds.trebolv2.presentation.presenter.TechnicalRemotePresenter
 import com.hiddenodds.trebolv2.presentation.presenter.TypeNotificationRemotePresenter
@@ -50,8 +49,7 @@ class SignInFragment: Fragment(), ILoadDataView {
     private val component by lazy { app.
             getAppComponent().plus(PresenterModule())}
 
-    @Inject
-    lateinit var saveCustomerPresenter: SaveCustomerPresenter
+
     @Inject
     lateinit var technicalRemotePresenter: TechnicalRemotePresenter
     @Inject

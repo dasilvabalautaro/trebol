@@ -5,12 +5,13 @@ import com.hiddenodds.trebolv2.App
 import com.hiddenodds.trebolv2.dagger.ModelsModule
 import com.hiddenodds.trebolv2.domain.data.MapperNotification
 import com.hiddenodds.trebolv2.model.data.Notification
-import com.hiddenodds.trebolv2.model.exception.DatabaseOperationException
 import com.hiddenodds.trebolv2.model.interfaces.INotificationRepository
 import com.hiddenodds.trebolv2.model.persistent.database.CRUDRealm
 import com.hiddenodds.trebolv2.presentation.mapper.NotificationModelDataMapper
 import com.hiddenodds.trebolv2.presentation.model.NotificationModel
 import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -23,6 +24,8 @@ class NotificationExecutor @Inject constructor(): CRUDRealm(),
 
     private val component by lazy {(context as App)
             .getAppComponent().plus(ModelsModule(context))}
+    private var disposable: CompositeDisposable = CompositeDisposable()
+    private var msgError: String = ""
 
     @Inject
     lateinit var taskListenerExecutor: TaskListenerExecutor
@@ -31,17 +34,12 @@ class NotificationExecutor @Inject constructor(): CRUDRealm(),
 
     init {
         component.inject(this)
-    }
-
-    override fun userGetMessage(): Observable<String> {
-        return this.taskListenerExecutor
-                .observableMessage.map { s -> s }
-
-    }
-
-    override fun userGetError(): Observable<DatabaseOperationException> {
-        return this.taskListenerExecutor
-                .observableException.map { e -> e }
+        val hear = this.taskListenerExecutor
+                .observableException.map { s -> s }
+        disposable.add(hear.observeOn(Schedulers.newThread())
+                .subscribe { s ->
+                    this.msgError = s.message
+                })
 
     }
 
@@ -61,7 +59,7 @@ class NotificationExecutor @Inject constructor(): CRUDRealm(),
                 subscriber.onNext(notificationModel)
                 subscriber.onComplete()
             }else{
-                subscriber.onError(Throwable())
+                subscriber.onError(Throwable(this.msgError))
             }
 
         }
@@ -76,7 +74,8 @@ class NotificationExecutor @Inject constructor(): CRUDRealm(),
 
                 val clazz: Class<Notification> = Notification::class.java
 
-                val newNotification = this.save(clazz, parcel, taskListenerExecutor)
+                val newNotification = this.save(clazz, parcel,
+                        taskListenerExecutor)
                 if (newNotification == null){
                     flag = false
                     break
@@ -86,7 +85,7 @@ class NotificationExecutor @Inject constructor(): CRUDRealm(),
                 subscriber.onNext(true)
                 subscriber.onComplete()
             }else{
-                subscriber.onError(Throwable())
+                subscriber.onError(Throwable(this.msgError))
             }
         }
     }
@@ -98,19 +97,20 @@ class NotificationExecutor @Inject constructor(): CRUDRealm(),
                 subscriber.onNext(true)
                 subscriber.onComplete()
             }else{
-                subscriber.onError(Throwable())
+                subscriber.onError(Throwable(this.msgError))
             }
 
         }
     }
 
-    override fun addTypeDescription(): Observable<Boolean> {
+    override fun addCustomer(idTech: String): Observable<Boolean> {
         return Observable.create{subscriber ->
-            if (this.addDescriptionToNotification()){
+            if (this.addCustomerToNotification(idTech,
+                            taskListenerExecutor)){
                 subscriber.onNext(true)
                 subscriber.onComplete()
             }else{
-                subscriber.onError(Throwable())
+                subscriber.onError(Throwable(this.msgError))
             }
         }
     }

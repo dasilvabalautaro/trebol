@@ -16,7 +16,7 @@ interface IRepository {
     fun <E : RealmObject> getAllData(clazz: Class<E>): RealmResults<E>?
     fun <E : RealmObject> deleteByField(clazz: Class<E>, fieldName: String,
                                         value: String,
-                                        listener: ITaskCompleteListener)
+                                        listener: ITaskCompleteListener): Boolean
 
     fun <E : RealmObject> deleteAll(clazz: Class<E>,
                                     listener: ITaskCompleteListener)

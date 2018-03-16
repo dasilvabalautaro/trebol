@@ -3,7 +3,6 @@ package com.hiddenodds.trebolv2.model.persistent.caching
 import android.support.v4.util.LruCache
 
 class CachingLruRepository private constructor(){
-    private val CACHE_SIZE = 1024
     private var lru: LruCache<String, Any>
     private object Holder { val INSTANCE = CachingLruRepository() }
 
@@ -12,7 +11,8 @@ class CachingLruRepository private constructor(){
     }
 
     init {
-        val cacheSize = CACHE_SIZE
+        val maxMemory = (Runtime.getRuntime().maxMemory() / 1024)
+        val cacheSize = (maxMemory / 4).toInt()
         lru = LruCache(cacheSize)
     }
 

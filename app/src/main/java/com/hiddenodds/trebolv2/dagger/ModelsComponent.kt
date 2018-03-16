@@ -10,4 +10,5 @@ interface ModelsComponent {
     fun inject(materialExecutor: MaterialExecutor)
     fun inject(typeNotificationExecutor: TypeNotificationExecutor)
     fun inject(notificationExecutor: NotificationExecutor)
+    fun inject(downloadExecutor: DownloadExecutor)
 }

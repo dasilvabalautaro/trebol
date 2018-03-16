@@ -44,19 +44,19 @@ class PresenterModule {
     }
 
     @Provides
-    fun provideSaveCustomerUseCase(uiThread: UIThread,
+    fun provideSaveListCustomerUseCase(uiThread: UIThread,
                                    jobExecutor: JobExecutor,
                                    customerExecutor: CustomerExecutor):
-            SaveCustomerUseCase {
-        return SaveCustomerUseCase(jobExecutor, uiThread, customerExecutor)
+            SaveListCustomerUseCase {
+        return SaveListCustomerUseCase(jobExecutor, uiThread, customerExecutor)
     }
 
     @Provides
-    fun provideSaveCustomerPresenter(saveCustomerUseCase: SaveCustomerUseCase):
-            SaveCustomerPresenter {
-        return SaveCustomerPresenter(saveCustomerUseCase)
+    fun provideDeleteCustomersUseCase(uiThread: UIThread,
+                                      jobExecutor: JobExecutor,
+                                      customerExecutor: CustomerExecutor): DeleteCustomersUseCase{
+        return DeleteCustomersUseCase(jobExecutor, uiThread, customerExecutor)
     }
-
     /////////////////
 
     @Provides
@@ -247,6 +247,15 @@ class PresenterModule {
     }
 
     @Provides
+    fun provideAddCustomerToNotificationUseCase(uiThread: UIThread,
+                                                jobExecutor: JobExecutor,
+                                                notificationExecutor:
+                                                NotificationExecutor): AddCustomerToNotificationUseCase{
+        return AddCustomerToNotificationUseCase(jobExecutor, uiThread,
+                notificationExecutor)
+    }
+
+    @Provides
     fun provideNotificationRemotePresenter(getRemoteDataUseCase:
                                            GetRemoteDataUseCase,
                                            saveListNotificationUseCase:
@@ -255,15 +264,39 @@ class PresenterModule {
                                            GetTechnicalMasterUseCase,
                                            deleteNotificationsOfTechnicalUseCase:
                                            DeleteNotificationsOfTechnicalUseCase,
-                                           addNotificationToTechnicalUseCase:
-                                           AddNotificationToTechnicalUseCase,
                                            getLisTypeNotificationUseCase:
                                            GetLisTypeNotificationUseCase):
             NotificationRemotePresenter{
         return NotificationRemotePresenter(getRemoteDataUseCase,
                 saveListNotificationUseCase, getTechnicalMasterUseCase,
                 deleteNotificationsOfTechnicalUseCase,
-                addNotificationToTechnicalUseCase,
                 getLisTypeNotificationUseCase)
+    }
+
+    @Provides
+    fun provideCustomerRemotePresenter(getRemoteDataUseCase:
+                                       GetRemoteDataUseCase,
+                                       getTechnicalMasterUseCase:
+                                       GetTechnicalMasterUseCase,
+                                       saveCustomerUseCase:
+                                       SaveListCustomerUseCase,
+                                       deleteCustomersUseCase:
+                                       DeleteCustomersUseCase):
+            CustomerRemotePresenter {
+        return CustomerRemotePresenter(getRemoteDataUseCase,
+                getTechnicalMasterUseCase, saveCustomerUseCase,
+                deleteCustomersUseCase)
+    }
+
+    @Provides
+    fun provideAddNotificationToTechnicalPresenter(addNotificationToTechnicalUseCase:
+                                                   AddNotificationToTechnicalUseCase,
+                                                   addCustomerToNotificationUseCase:
+                                                   AddCustomerToNotificationUseCase,
+                                                   getTechnicalMasterUseCase:
+                                                   GetTechnicalMasterUseCase):
+            AddNotificationToTechnicalPresenter{
+        return AddNotificationToTechnicalPresenter(addNotificationToTechnicalUseCase,
+                addCustomerToNotificationUseCase, getTechnicalMasterUseCase)
     }
 }

@@ -5,7 +5,6 @@ import com.hiddenodds.trebolv2.App
 import com.hiddenodds.trebolv2.dagger.ModelsModule
 import com.hiddenodds.trebolv2.domain.data.MapperTypeNotification
 import com.hiddenodds.trebolv2.model.data.TypeNotification
-import com.hiddenodds.trebolv2.model.exception.DatabaseOperationException
 import com.hiddenodds.trebolv2.model.interfaces.ITypeNotificationRepository
 import com.hiddenodds.trebolv2.model.persistent.caching.CachingLruRepository
 import com.hiddenodds.trebolv2.model.persistent.database.CRUDRealm
@@ -13,6 +12,8 @@ import com.hiddenodds.trebolv2.presentation.mapper.TypeNotificationModelDataMapp
 import com.hiddenodds.trebolv2.presentation.model.TypeNotificationModel
 import com.hiddenodds.trebolv2.tools.Constants
 import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -25,6 +26,8 @@ class TypeNotificationExecutor @Inject constructor(): CRUDRealm(),
 
     private val component by lazy {(context as App)
             .getAppComponent().plus(ModelsModule(context))}
+    private var disposable: CompositeDisposable = CompositeDisposable()
+    private var msgError: String = ""
 
     @Inject
     lateinit var taskListenerExecutor: TaskListenerExecutor
@@ -33,16 +36,12 @@ class TypeNotificationExecutor @Inject constructor(): CRUDRealm(),
 
     init {
         component.inject(this)
-    }
-    
-
-    override fun userGetMessage(): Observable<String> {
-        return taskListenerExecutor.observableMessage.map { s -> s }
-    }
-
-    override fun userGetError(): Observable<DatabaseOperationException> {
-        return this.taskListenerExecutor
-                .observableException.map { e -> e }
+        val hear = this.taskListenerExecutor
+                .observableException.map { s -> s }
+        disposable.add(hear.observeOn(Schedulers.newThread())
+                .subscribe { s ->
+                    this.msgError = s.message
+                })
 
     }
 
@@ -63,7 +62,7 @@ class TypeNotificationExecutor @Inject constructor(): CRUDRealm(),
                 subscriber.onNext(typeNotificationModel)
                 subscriber.onComplete()
             }else{
-                subscriber.onError(Throwable())
+                subscriber.onError(Throwable(this.msgError))
             }
 
         }
@@ -79,7 +78,8 @@ class TypeNotificationExecutor @Inject constructor(): CRUDRealm(),
             for (i in list.indices){
                 val parcel: Parcel = list[i].getContent()
                 parcel.setDataPosition(0)
-                val newTypeNotification = this.save(clazz, parcel, taskListenerExecutor)
+                val newTypeNotification = this.save(clazz, parcel,
+                        taskListenerExecutor)
                 if (newTypeNotification == null){
                     flag = false
                     break
@@ -89,7 +89,7 @@ class TypeNotificationExecutor @Inject constructor(): CRUDRealm(),
                 subscriber.onNext(true)
                 subscriber.onComplete()
             }else{
-                subscriber.onError(Throwable())
+                subscriber.onError(Throwable(this.msgError))
             }
         }
         
@@ -97,7 +97,7 @@ class TypeNotificationExecutor @Inject constructor(): CRUDRealm(),
 
     override fun getList(): Observable<List<TypeNotificationModel>> {
         return Observable.create { subscriber ->
-            var listTypeNotificationModel: List<TypeNotificationModel>? = null
+            var listTypeNotificationModel: List<TypeNotificationModel>?
             val list = getListTypeNotificationOfCache()
             if (list != null && list.isNotEmpty()){
                 listTypeNotificationModel = list.filterIsInstance<TypeNotificationModel>()
@@ -117,7 +117,7 @@ class TypeNotificationExecutor @Inject constructor(): CRUDRealm(),
                     subscriber.onNext(typeNotificationModelCollection)
                     subscriber.onComplete()
                 }else{
-                    subscriber.onError(Throwable())
+                    subscriber.onError(Throwable("List empty type notification."))
                 }
             }
 
@@ -128,10 +128,15 @@ class TypeNotificationExecutor @Inject constructor(): CRUDRealm(),
 
     override fun deleteList(): Observable<Boolean> {
         return Observable.create{subscriber ->
+            this.msgError = ""
             val clazz: Class<TypeNotification> = TypeNotification::class.java
             this.deleteAll(clazz, taskListenerExecutor)
-            subscriber.onNext(true)
-            subscriber.onComplete()
+            if (this.msgError.isEmpty()){
+                subscriber.onNext(true)
+                subscriber.onComplete()
+            }else{
+                subscriber.onError(Throwable(this.msgError))
+            }
         }
     }
 

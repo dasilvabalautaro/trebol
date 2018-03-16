@@ -11,7 +11,8 @@
     <string name="task_complete">Task Complete</string>
     <string name="get_complete">Get Complete</string>
     <string name="download_complete">Download Complete</string>
-    <string name="add_notifications">Add Notifications</string>
+    <string name="add_notifications">Success Add Notification to Technical</string>
+    <string name="add_customer">Add Customer</string>
     <string name="delete_complete">Delete Complete</string>
     <string name="list_not_found">List not found</string>
     <string name="network_not_found">Network not found</string>
@@ -19,7 +20,8 @@
     <string name="input_error">Fields empty, verify please</string>
     <string name="welcome">Welcome </string>
     <string name="material_save">Success Save Material</string>
-    <string name="notification_save">Success Save Notification</string>
+    <string name="notification_download">Success Download Notification</string>
+    <string name="customer_download">Success Download Customer</string>
     <string name="type_notification_save">Success Type Notification</string>
     <string name="wait_task">Wait, all tasks should be completed.</string>
     <string name="lbl_close_app">Tap again to close the application.</string>

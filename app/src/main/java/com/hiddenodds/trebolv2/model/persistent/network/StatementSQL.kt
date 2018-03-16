@@ -4,6 +4,13 @@ import com.hiddenodds.trebolv2.tools.Constants
 
 object StatementSQL {
 
+    fun getCustomer(code: String): String{
+        return "SELECT W.CODIGOAVISO, W.TECNICO, C.PERSONA, C.TELEFONO1, C.EMAIL FROM " +
+                Constants.TBL_NOTIFICATION + " W JOIN " + Constants.TBL_CONTACTS +
+                " C ON W.TRB_CONTACT = C.CODIGO WHERE W.TECNICO = '" + code +
+                "' AND W.FECHAFIN = '1900-01-01'"
+    }
+
     fun getTechnical(): String{
         return "SELECT * FROM " + Constants.TBL_TEAM_TECHNICAL
     }

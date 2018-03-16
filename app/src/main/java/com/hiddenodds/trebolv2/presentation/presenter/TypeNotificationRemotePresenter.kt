@@ -21,10 +21,6 @@ class TypeNotificationRemotePresenter @Inject constructor(private val getRemoteD
     private val listMapperTypeNotification:
             ArrayList<MapperTypeNotification> = ArrayList()
 
-    init {
-        this.iHearMessage = getRemoteDataUseCase
-    }
-
     fun executeQueryRemote(){
         if ((context as App).connectionNetwork.isOnline()){
             getRemoteDataUseCase.sql = StatementSQL.getTypeNotification()
@@ -62,7 +58,6 @@ class TypeNotificationRemotePresenter @Inject constructor(private val getRemoteD
 
     private fun saveListTypeNotification(){
         if (listMapperTypeNotification.size != 0){
-            this.iHearMessage = saveListTypeNotificationUseCase
             saveListTypeNotificationUseCase
                     .listMapperTypeNotification = this.listMapperTypeNotification
             saveListTypeNotificationUseCase.execute(SaveTypeNotificationObserver())

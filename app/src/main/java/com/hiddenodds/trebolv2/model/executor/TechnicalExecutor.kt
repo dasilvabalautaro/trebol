@@ -5,7 +5,6 @@ import com.hiddenodds.trebolv2.App
 import com.hiddenodds.trebolv2.dagger.ModelsModule
 import com.hiddenodds.trebolv2.domain.data.MapperTechnical
 import com.hiddenodds.trebolv2.model.data.Technical
-import com.hiddenodds.trebolv2.model.exception.DatabaseOperationException
 import com.hiddenodds.trebolv2.model.interfaces.ITechnicalRepository
 import com.hiddenodds.trebolv2.model.persistent.caching.CachingLruRepository
 import com.hiddenodds.trebolv2.model.persistent.database.CRUDRealm
@@ -15,6 +14,8 @@ import com.hiddenodds.trebolv2.tools.Constants
 import com.hiddenodds.trebolv2.tools.PreferenceHelper
 import com.hiddenodds.trebolv2.tools.PreferenceHelper.set
 import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -30,6 +31,9 @@ class TechnicalExecutor @Inject constructor(): CRUDRealm(),
     private val component by lazy {(context as App)
             .getAppComponent().plus(ModelsModule(context))}
 
+    private var disposable: CompositeDisposable = CompositeDisposable()
+    private var msgError: String = ""
+
     @Inject
     lateinit var taskListenerExecutor: TaskListenerExecutor
     @Inject
@@ -37,17 +41,12 @@ class TechnicalExecutor @Inject constructor(): CRUDRealm(),
 
     init {
         component.inject(this)
-    }
-
-
-    override fun userGetMessage(): Observable<String> {
-        return this.taskListenerExecutor
-                .observableMessage.map { s -> s }
-    }
-
-    override fun userGetError(): Observable<DatabaseOperationException> {
-        return this.taskListenerExecutor
-                .observableException.map { e -> e }
+        val hear = this.taskListenerExecutor
+                .observableException.map { s -> s }
+        disposable.add(hear.observeOn(Schedulers.newThread())
+                .subscribe { s ->
+                    this.msgError = s.message
+                })
     }
 
     override fun save(technical: MapperTechnical): Observable<TechnicalModel> {
@@ -66,7 +65,7 @@ class TechnicalExecutor @Inject constructor(): CRUDRealm(),
                 subscriber.onNext(technicalModel)
                 subscriber.onComplete()
             }else{
-                subscriber.onError(Throwable())
+                subscriber.onError(Throwable(this.msgError))
             }
 
         }
@@ -75,6 +74,7 @@ class TechnicalExecutor @Inject constructor(): CRUDRealm(),
     override fun saveList(list: ArrayList<MapperTechnical>): Observable<Boolean> {
         var flag = true
         return Observable.create{subscriber ->
+
             for (i in list.indices){
                 val parcel: Parcel = list[i].getContent()
                 parcel.setDataPosition(0)
@@ -90,7 +90,7 @@ class TechnicalExecutor @Inject constructor(): CRUDRealm(),
                 subscriber.onNext(true)
                 subscriber.onComplete()
             }else{
-                subscriber.onError(Throwable())
+                subscriber.onError(Throwable(this.msgError))
             }
         }
     }
@@ -102,7 +102,8 @@ class TechnicalExecutor @Inject constructor(): CRUDRealm(),
         var flag = true
         return Observable.create { subscriber ->
             dependentTechnical.iterator().forEach {
-                if (!this.saveListTRD(it.key, it.value)){
+                if (!this.saveListTRD(it.key, it.value,
+                                taskListenerExecutor)){
                     flag = false
                 }
             }
@@ -110,14 +111,14 @@ class TechnicalExecutor @Inject constructor(): CRUDRealm(),
                 subscriber.onNext(true)
                 subscriber.onComplete()
             }else{
-                subscriber.onError(Throwable())
+                subscriber.onError(Throwable(this.msgError))
             }
         }
     }
 
     override fun getTechnical(code: String): Observable<TechnicalModel> {
         return Observable.create { subscriber ->
-            var technicalModel: TechnicalModel? = null
+            var technicalModel: TechnicalModel?
             technicalModel = getTechicalOfCache(code)
             if (technicalModel != null){
                 subscriber.onNext(technicalModel)
@@ -134,7 +135,7 @@ class TechnicalExecutor @Inject constructor(): CRUDRealm(),
                     subscriber.onNext(technicalModel)
                     subscriber.onComplete()
                 }else{
-                    subscriber.onError(Throwable())
+                    subscriber.onError(Throwable("Technical not exist."))
                 }
             }
 
@@ -147,7 +148,7 @@ class TechnicalExecutor @Inject constructor(): CRUDRealm(),
 
 
         return Observable.create { subscriber ->
-            var technicalModel: TechnicalModel? = null
+            var technicalModel: TechnicalModel?
             technicalModel = getTechMasterOfCache()
             if (technicalModel != null){
                 subscriber.onNext(technicalModel)
@@ -167,7 +168,7 @@ class TechnicalExecutor @Inject constructor(): CRUDRealm(),
                     subscriber.onNext(technicalModel)
                     subscriber.onComplete()
                 }else{
-                    subscriber.onError(Throwable())
+                    subscriber.onError(Throwable("Technical master not exist."))
                 }
             }
 
@@ -183,7 +184,7 @@ class TechnicalExecutor @Inject constructor(): CRUDRealm(),
                 subscriber.onNext(true)
                 subscriber.onComplete()
             }else{
-                subscriber.onError(Throwable())
+                subscriber.onError(Throwable(this.msgError))
             }
         }
     }

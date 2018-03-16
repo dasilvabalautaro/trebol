@@ -19,10 +19,6 @@ class MaterialRemotePresenter @Inject constructor(private val getRemoteDataUseCa
         BasePresenter(){
     private val listMapperMaterial: ArrayList<MapperMaterial> = ArrayList()
 
-    init {
-        this.iHearMessage = getRemoteDataUseCase
-    }
-
     fun executeQueryRemote(){
         if ((context as App).connectionNetwork.isOnline()){
             getRemoteDataUseCase.sql = StatementSQL.getItems()
@@ -61,7 +57,6 @@ class MaterialRemotePresenter @Inject constructor(private val getRemoteDataUseCa
 
     private fun saveListMaterial(){
         if (listMapperMaterial.size != 0){
-            this.iHearMessage = saveListMaterialUseCase
             saveListMaterialUseCase
                     .listMapperMaterial = this.listMapperMaterial
             saveListMaterialUseCase.execute(SaveMaterialObserver())
