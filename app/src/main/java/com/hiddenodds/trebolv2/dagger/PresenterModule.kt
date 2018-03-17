@@ -299,4 +299,80 @@ class PresenterModule {
         return AddNotificationToTechnicalPresenter(addNotificationToTechnicalUseCase,
                 addCustomerToNotificationUseCase, getTechnicalMasterUseCase)
     }
+
+    //////////////////
+
+    @Provides
+    fun provideDownloadExecutor(): DownloadExecutor{
+        return DownloadExecutor()
+    }
+
+    @Provides
+    fun provideIDownloadRepository(downloadExecutor: DownloadExecutor):
+            IDownloadRepository{
+        return downloadExecutor
+    }
+
+    @Provides
+    fun provideCreateDownloadsUseCase(uiThread: UIThread,
+                                      jobExecutor: JobExecutor,
+                                      downloadExecutor:
+                                      DownloadExecutor): CreateDownloadsUseCase{
+        return CreateDownloadsUseCase(jobExecutor, uiThread,
+                downloadExecutor)
+    }
+
+    @Provides
+    fun provideUpdateDownloadUseCase(uiThread: UIThread,
+                                     jobExecutor: JobExecutor,
+                                     downloadExecutor:
+                                     DownloadExecutor): UpdateDownloadUseCase{
+        return UpdateDownloadUseCase(jobExecutor, uiThread,
+                downloadExecutor)
+    }
+
+    @Provides
+    fun provideGetDownloadUseCase(uiThread: UIThread,
+                                  jobExecutor: JobExecutor,
+                                  downloadExecutor:
+                                  DownloadExecutor): GetDownloadUseCase{
+        return GetDownloadUseCase(jobExecutor, uiThread,
+                downloadExecutor)
+    }
+
+    @Provides
+    fun provideDeleteDownloadsUseCase(uiThread: UIThread,
+                                      jobExecutor: JobExecutor,
+                                      downloadExecutor:
+                                      DownloadExecutor): DeleteDownloadsUseCase{
+        return DeleteDownloadsUseCase(jobExecutor, uiThread,
+                downloadExecutor)
+    }
+
+    @Provides
+    fun provideDownloadNotificationExecutor(getRemoteDataUseCase:
+                                            GetRemoteDataUseCase,
+                                            getTechnicalMasterUseCase:
+                                            GetTechnicalMasterUseCase,
+                                            createDownloadsUseCase:
+                                            CreateDownloadsUseCase,
+                                            updateDownloadUseCase:
+                                            UpdateDownloadUseCase,
+                                            deleteDownloadsUseCase:
+                                            DeleteDownloadsUseCase): DownloadNotificationExecutor{
+        return DownloadNotificationExecutor(getRemoteDataUseCase,
+                getTechnicalMasterUseCase, createDownloadsUseCase,
+                updateDownloadUseCase, deleteDownloadsUseCase)
+    }
+
+    @Provides
+    fun provideDownloadCustomerExecutor(getRemoteDataUseCase:
+                                        GetRemoteDataUseCase,
+                                        getTechnicalMasterUseCase:
+                                        GetTechnicalMasterUseCase,
+                                        updateDownloadUseCase:
+                                        UpdateDownloadUseCase): DownloadCustomerExecutor{
+        return DownloadCustomerExecutor(getRemoteDataUseCase,
+                getTechnicalMasterUseCase, updateDownloadUseCase)
+    }
 }

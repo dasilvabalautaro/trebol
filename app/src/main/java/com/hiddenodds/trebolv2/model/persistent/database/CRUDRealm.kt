@@ -2,6 +2,7 @@ package com.hiddenodds.trebolv2.model.persistent.database
 
 import android.os.Parcel
 import com.hiddenodds.trebolv2.model.data.Customer
+import com.hiddenodds.trebolv2.model.data.Download
 import com.hiddenodds.trebolv2.model.data.Notification
 import com.hiddenodds.trebolv2.model.data.Technical
 import com.hiddenodds.trebolv2.model.interfaces.IDataContent
@@ -82,6 +83,42 @@ abstract class CRUDRealm: IRepository {
 
         }catch (e: Throwable){
             listener.onSaveFailed(e.message!!)
+        }
+
+    }
+
+    fun updateToDownload(code: String, fieldName: String,
+                         value: String,
+                         listener: ITaskCompleteListener): Boolean{
+
+        val realm: Realm = Realm.getDefaultInstance()
+        try {
+            realm.executeTransaction {
+                val e = realm.where(Download::class.java)
+                        .equalTo("code", code).findFirst()
+
+                if (e != null && fieldName == "customer"){
+                    e.customer = value
+
+                }
+                if (e != null && fieldName == "notification"){
+                    e.notification = value
+                }
+                if (e != null && e.notification.isNotEmpty()
+                        && e.customer.isNotEmpty()){
+                    e.state = 1
+                }
+
+                listener.onSaveSucceeded()
+
+            }
+            return true
+
+        }catch (e: Throwable){
+            listener.onSaveFailed(e.message!!)
+            return false
+        }finally {
+
         }
 
     }

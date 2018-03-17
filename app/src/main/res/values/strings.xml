@@ -13,6 +13,7 @@
     <string name="download_complete">Download Complete</string>
     <string name="add_notifications">Success Add Notification to Technical</string>
     <string name="add_customer">Add Customer</string>
+    <string name="technical_not_found">Technical not found</string>
     <string name="delete_complete">Delete Complete</string>
     <string name="list_not_found">List not found</string>
     <string name="network_not_found">Network not found</string>

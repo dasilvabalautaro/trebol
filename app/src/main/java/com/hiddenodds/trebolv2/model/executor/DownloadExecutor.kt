@@ -8,10 +8,10 @@ import com.hiddenodds.trebolv2.model.data.Download
 import com.hiddenodds.trebolv2.model.interfaces.IDownloadRepository
 import com.hiddenodds.trebolv2.model.persistent.database.CRUDRealm
 import com.hiddenodds.trebolv2.presentation.mapper.DownloadModelDataMapper
+import com.hiddenodds.trebolv2.presentation.model.DownloadModel
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -66,13 +66,56 @@ class DownloadExecutor @Inject constructor(): CRUDRealm(),
         }
     }
 
-    override fun update(code: String, fieldName: String, value: String): Observable<Boolean> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun update(code: String, fieldName: String, value: String):
+            Observable<Boolean> {
+        return Observable.create{subscriber ->
+            if (this.updateToDownload(code, fieldName,
+                            value,
+                            taskListenerExecutor)){
+                subscriber.onNext(true)
+                subscriber.onComplete()
+            }else{
+                subscriber.onError(Throwable(this.msgError))
+            }
+        }
     }
 
-    override fun delete(code: String): Observable<Boolean> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun delete(list: ArrayList<String>): Observable<Boolean> {
+        return Observable.create{subscriber ->
+            var flag = true
+            val clazz: Class<Download> = Download::class.java
+
+            for (i in list.indices){
+                if (!this.deleteByField(clazz, "code",
+                                list[i], taskListenerExecutor)){
+                    flag = false
+                    break
+                }
+            }
+
+            if (flag){
+                subscriber.onNext(true)
+                subscriber.onComplete()
+            }else{
+                subscriber.onError(Throwable(this.msgError))
+            }
+        }
     }
 
+    override fun getDownload(code: String): Observable<DownloadModel> {
+        return Observable.create { subscriber ->
+            val clazz: Class<Download> = Download::class.java
+            val newDownload: List<Download>? = this.getDataByField(clazz,
+                    "code", code)
+            if (newDownload!!.isNotEmpty()){
+                val downloadModel = this.downloadModelDataMapper
+                        .transform(newDownload[0])
+                subscriber.onNext(downloadModel)
+                subscriber.onComplete()
+            }else{
+                subscriber.onError(Throwable("Download not exist."))
+            }
+        }
+    }
 
 }
