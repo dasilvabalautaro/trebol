@@ -67,6 +67,7 @@ class NotificationExecutor @Inject constructor(): CRUDRealm(),
 
     override fun saveList(list: ArrayList<MapperNotification>): Observable<Boolean> {
         var flag = true
+        //val q = list[0].idTech
         return Observable.create{subscriber ->
             for (i in list.indices){
                 val parcel: Parcel = list[i].getContent()
@@ -81,6 +82,8 @@ class NotificationExecutor @Inject constructor(): CRUDRealm(),
                     break
                 }
             }
+            /*val l = this.getDataByField(Notification::class.java,
+                    "idTech", "T025")*/
             if (flag){
                 subscriber.onNext(true)
                 subscriber.onComplete()

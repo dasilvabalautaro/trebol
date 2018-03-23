@@ -6,7 +6,7 @@ import com.hiddenodds.trebolv2.presentation.interfaces.IPresenter
 import io.reactivex.disposables.CompositeDisposable
 
 abstract class BasePresenter: IPresenter {
-    private var disposable: CompositeDisposable = CompositeDisposable()
+    protected var disposable: CompositeDisposable = CompositeDisposable()
     var view: ILoadDataView? = null
 
     val context = App.appComponent.context()

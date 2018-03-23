@@ -15,7 +15,7 @@
                 </shape>
             </item>
             <item>
-                <bitmap android:gravity="bottom|right" android:src="@drawable/dropdow"/> // you can place your dropdown image
+                <bitmap android:gravity="top|right" android:src="@drawable/dropdow"/>
             </item>
         </layer-list>
     </item>

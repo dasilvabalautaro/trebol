@@ -1,28 +1,19 @@
-package com.hiddenodds.trebolv2.model.executor
+package com.hiddenodds.trebolv2.domain.interactor
 
 import com.hiddenodds.trebolv2.App
 import com.hiddenodds.trebolv2.R
-import com.hiddenodds.trebolv2.domain.interactor.GetRemoteDataUseCase
-import com.hiddenodds.trebolv2.domain.interactor.GetTechnicalMasterUseCase
-import com.hiddenodds.trebolv2.domain.interactor.UpdateDownloadUseCase
 import com.hiddenodds.trebolv2.model.persistent.network.StatementSQL
-import com.hiddenodds.trebolv2.presentation.model.TechnicalModel
-import com.hiddenodds.trebolv2.tools.Constants
-import com.hiddenodds.trebolv2.tools.PreferenceHelper
-import com.hiddenodds.trebolv2.tools.PreferenceHelper.get
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import org.json.JSONArray
 import javax.inject.Inject
 
-class DownloadCustomerExecutor @Inject constructor(private val getRemoteDataUseCase:
+class DownloadCustomerUseCase @Inject constructor(private val getRemoteDataUseCase:
                                                    GetRemoteDataUseCase,
-                                                   private val getTechnicalMasterUseCase:
-                                                   GetTechnicalMasterUseCase,
-                                                   private val updateDownloadUseCase:
+                                                  private val updateDownloadUseCase:
                                                    UpdateDownloadUseCase) {
-    private var listTechnicals: ArrayList<String> = ArrayList()
+    var listTechnicals: ArrayList<String> = ArrayList()
     private var codeTechnical: String = ""
     private var messageError: String = ""
     var observableMessageError: Subject<String> = PublishSubject.create()
@@ -36,22 +27,7 @@ class DownloadCustomerExecutor @Inject constructor(private val getRemoteDataUseC
         this.observableFinishDownload
                 .subscribe { this.finishDownload }
     }
-
-    private fun getMasterTechnical(){
-        val prefs = PreferenceHelper.customPrefs(context,
-                Constants.PREFERENCE_TREBOL)
-        val code: String? = prefs[Constants.TECHNICAL_KEY, ""]
-        val password: String? = prefs[Constants.TECHNICAL_PASSWORD, ""]
-        if (!code.isNullOrEmpty() && !password.isNullOrEmpty()){
-            getTechnicalMasterUseCase.code = code!!
-            getTechnicalMasterUseCase.password = password!!
-            getTechnicalMasterUseCase.execute(TechObserver())
-        }else{
-            this.messageError = context.getString(R.string.technical_not_found)
-            this.observableMessageError.onNext(this.messageError)
-
-        }
-    }
+    
 
     private fun executeGetRemote(code: String){
         if ((context as App).connectionNetwork.isOnline()) {
@@ -72,16 +48,21 @@ class DownloadCustomerExecutor @Inject constructor(private val getRemoteDataUseC
             updateDownloadUseCase.fieldName = "customer"
             updateDownloadUseCase.execute(UpdateDownloadObserver())
         }else{
-            getNotificationsNextTechnical()
+            getCustomersNextTechnical()
+        }
+    }
+    
+    fun getCustomersNextTechnical(){
+        if (this.listTechnicals.size != 0){
+            val code = this.listTechnicals.last()
+            this.listTechnicals.remove(code)
+            executeGetRemote(code)
         }
     }
 
-    private fun getNotificationsNextTechnical(){
-        if (listTechnicals.size != 0){
-            val code = listTechnicals.last()
-            listTechnicals.remove(code)
-            executeGetRemote(code)
-        }
+    fun destroy(){
+        getRemoteDataUseCase.dispose()
+        updateDownloadUseCase.dispose()
     }
 
     inner class ListObserver: DisposableObserver<JSONArray>(){
@@ -101,30 +82,11 @@ class DownloadCustomerExecutor @Inject constructor(private val getRemoteDataUseC
             }
         }
     }
-
-    inner class TechObserver: DisposableObserver<TechnicalModel>(){
-        override fun onNext(t: TechnicalModel) {
-            listTechnicals = ArrayList(t.trd)
-            codeTechnical = t.code
-            executeGetRemote(codeTechnical)
-        }
-
-        override fun onComplete() {
-            //showMessage(context.resources.getString(R.string.get_complete))
-        }
-
-        override fun onError(e: Throwable) {
-            if (e.message != null) {
-                messageError = e.message!!
-                observableMessageError.onNext(messageError)
-
-            }
-        }
-    }
+    
 
     inner class UpdateDownloadObserver: DisposableObserver<Boolean>(){
         override fun onNext(t: Boolean) {
-            getNotificationsNextTechnical()
+            getCustomersNextTechnical()
         }
 
         override fun onComplete() {

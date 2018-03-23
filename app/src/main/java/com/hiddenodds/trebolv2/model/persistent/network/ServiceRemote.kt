@@ -34,7 +34,7 @@ class ServiceRemote @Inject constructor() {
         this.urlConnect = "jdbc:jtds:sqlserver://" + ip +
                 ";useLOBs=false;databaseName=" + database +
                 ";user=" + user + ";password=" + password + ";"
-        DriverManager.setLoginTimeout(5)
+        DriverManager.setLoginTimeout(15)
         this.connect = DriverManager.getConnection(this.urlConnect)
     }
 

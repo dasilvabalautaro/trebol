@@ -1,73 +1,58 @@
 package com.hiddenodds.trebolv2.presentation.presenter
 
-import com.hiddenodds.trebolv2.App
-import com.hiddenodds.trebolv2.R
+import android.os.Handler
+import android.os.Looper
 import com.hiddenodds.trebolv2.domain.data.MapperNotification
-import com.hiddenodds.trebolv2.domain.interactor.*
-import com.hiddenodds.trebolv2.model.persistent.network.StatementSQL
-import com.hiddenodds.trebolv2.presentation.model.TechnicalModel
+import com.hiddenodds.trebolv2.domain.interactor.DeleteNotificationsOfTechnicalUseCase
+import com.hiddenodds.trebolv2.domain.interactor.GetDownloadUseCase
+import com.hiddenodds.trebolv2.domain.interactor.GetLisTypeNotificationUseCase
+import com.hiddenodds.trebolv2.domain.interactor.SaveListNotificationUseCase
+import com.hiddenodds.trebolv2.presentation.model.DownloadModel
 import com.hiddenodds.trebolv2.presentation.model.TypeNotificationModel
 import com.hiddenodds.trebolv2.tools.ChangeFormat
-import com.hiddenodds.trebolv2.tools.Constants
-import com.hiddenodds.trebolv2.tools.PreferenceHelper
-import com.hiddenodds.trebolv2.tools.PreferenceHelper.get
+import com.hiddenodds.trebolv2.tools.Variables
 import io.reactivex.observers.DisposableObserver
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.async
 import org.json.JSONArray
 import org.json.JSONObject
 import javax.inject.Inject
 
 
-class NotificationRemotePresenter @Inject constructor(private val getRemoteDataUseCase:
-                                                      GetRemoteDataUseCase,
-                                                      private val saveListNotificationUseCase:
+class SaveNotificationPresenter @Inject constructor(private val getDownloadUseCase:
+                                                    GetDownloadUseCase,
+                                                    private val saveListNotificationUseCase:
                                                       SaveListNotificationUseCase,
-                                                      private val getTechnicalMasterUseCase:
-                                                      GetTechnicalMasterUseCase,
-                                                      private val deleteNotificationsOfTechnicalUseCase:
+                                                    private val deleteNotificationsOfTechnicalUseCase:
                                                       DeleteNotificationsOfTechnicalUseCase,
-                                                      private val getLisTypeNotificationUseCase:
+                                                    private val getLisTypeNotificationUseCase:
                                                       GetLisTypeNotificationUseCase):
         BasePresenter(){
     private var listMapperNotification: ArrayList<MapperNotification> = ArrayList()
     private var listTypeNotification: List<TypeNotificationModel> = ArrayList()
     private var listTechnicals: ArrayList<String> = ArrayList()
     private var codeTechnical: String = ""
+    private var countTech = 0
+    private val handler = Handler(Looper.getMainLooper())
 
-
-    fun executeDownloadNotification(){
+    fun executeSaveNotification(){
+        this.listTechnicals = ArrayList(Variables.listTechnicals)
+        this.listTechnicals.add(Variables.codeTechMaster)
+        this.countTech = this.listTechnicals.size
         getLisTypeNotificationUseCase.execute(ListTypeNotificationObserver())
     }
 
-    fun executeQueryRemote(){
-        val prefs = PreferenceHelper.customPrefs(context,
-                Constants.PREFERENCE_TREBOL)
-        val code: String? = prefs[Constants.TECHNICAL_KEY, ""]
-        val password: String? = prefs[Constants.TECHNICAL_PASSWORD, ""]
-        if (!code.isNullOrEmpty() && !password.isNullOrEmpty()){
-            getTechnicalMasterUseCase.code = code!!
-            getTechnicalMasterUseCase.password = password!!
-            getTechnicalMasterUseCase.execute(TechObserver())
-        }else{
-            println("Technical not found")
-        }
-
-    }
-
-    private fun executeGetRemote(code: String){
-        if ((context as App).connectionNetwork.isOnline()) {
-            this.codeTechnical = code
-            getRemoteDataUseCase.sql = StatementSQL.getNotifications(code)
-            getRemoteDataUseCase.execute(ListObserver())
-        }else{
-            showError(context.resources.getString(R.string.network_not_found))
-        }
+    private fun executeGetDowload(code: String){
+        getDownloadUseCase.code = code
+        getDownloadUseCase.execute(DownloadObserver())
+        
     }
 
     private fun buildListMapper(jsonArray: JSONArray){
-        listMapperNotification = ArrayList()
-
+        //println("Tamaño Array: " + jsonArray.length().toString())
         if (jsonArray.length() != 0){
             (0 until jsonArray.length()).forEach { i ->
+
                 val jsonObject: JSONObject = jsonArray.getJSONObject(i)
                 val mapperNotification = MapperNotification()
 
@@ -170,13 +155,28 @@ class NotificationRemotePresenter @Inject constructor(private val getRemoteDataU
                 }
 
                 listMapperNotification.add(mapperNotification)
+
+
             }
 
         }
     }
-    private fun buildObjets(jsonArray: JSONArray){
-        buildListMapper(jsonArray)
+    private fun buildNotification(jsonString: String){
         deleteListNotification()
+
+        if (jsonString.isNotEmpty()){
+            async(CommonPool) {
+                val jsonArray = JSONArray(jsonString)
+                buildListMapper(jsonArray)
+                saveListNotification()
+            }
+        }else{
+            this.countTech -= 1
+            if (this.countTech == 0){
+                stopProgress()
+            }
+            getNotificationsNextTechnical()
+        }
 
     }
 
@@ -186,37 +186,42 @@ class NotificationRemotePresenter @Inject constructor(private val getRemoteDataU
     }
 
     private fun saveListNotification(){
-        if (listMapperNotification.size != 0){
+        if (this.listMapperNotification.size != 0){
             saveListNotificationUseCase
-                    .listMapperNotification = this.listMapperNotification
+                    .listMapperNotification = ArrayList(this.listMapperNotification)
+            /*println("listas cargadas:" + this.codeTechnical +
+                    "  cantidad:" + this.listMapperNotification.size.toString())*/
+            this.listMapperNotification = ArrayList()
             saveListNotificationUseCase.execute(SaveNotificationObserver())
 
-        }else{
-            getNotificationsNextTechnical()
         }
     }
 
     private fun stopProgress(){
-
-        view!!.executeTask(1)
+        handler.post { view!!.executeTask(3)}
     }
 
     private fun getNotificationsNextTechnical(){
-        if (listTechnicals.size != 0){
-            val code = listTechnicals.last()
-            listTechnicals.remove(code)
-            executeGetRemote(code)
-        }else{
-            stopProgress()
-            showMessage(context.resources.getString(R.string.notification_download))
+        if (this.listTechnicals.size != 0){
+            val code = this.listTechnicals.last()
+            this.listTechnicals.remove(code)
+            this.codeTechnical = code
+            executeGetDowload(code)
         }
     }
 
+    override fun destroy() {
+        super.destroy()
+        getDownloadUseCase.dispose()
+        saveListNotificationUseCase.dispose()
+        deleteNotificationsOfTechnicalUseCase.dispose()
+        getLisTypeNotificationUseCase.dispose()
+    }
     inner class ListTypeNotificationObserver:
             DisposableObserver<List<TypeNotificationModel>>(){
         override fun onNext(t: List<TypeNotificationModel>) {
             listTypeNotification = t
-            executeQueryRemote()
+            getNotificationsNextTechnical()
         }
 
         override fun onComplete() {
@@ -230,9 +235,9 @@ class NotificationRemotePresenter @Inject constructor(private val getRemoteDataU
         }
     }
 
-    inner class ListObserver: DisposableObserver<JSONArray>(){
-        override fun onNext(t: JSONArray) {
-            buildObjets(t)
+    inner class DownloadObserver: DisposableObserver<DownloadModel>(){
+        override fun onNext(t: DownloadModel) {
+            buildNotification(t.notification)
         }
 
         override fun onComplete() {
@@ -249,7 +254,7 @@ class NotificationRemotePresenter @Inject constructor(private val getRemoteDataU
 
     inner class DeleteNotificationObserver: DisposableObserver<Boolean>(){
         override fun onNext(t: Boolean) {
-            saveListNotification()
+            //saveListNotification()
         }
 
         override fun onComplete() {
@@ -270,7 +275,11 @@ class NotificationRemotePresenter @Inject constructor(private val getRemoteDataU
         }
 
         override fun onComplete() {
-            //showMessage(context.resources.getString(R.string.save_data))
+            countTech -= 1
+            if (countTech == 0){
+                stopProgress()
+            }
+
         }
 
         override fun onError(e: Throwable) {
@@ -281,21 +290,4 @@ class NotificationRemotePresenter @Inject constructor(private val getRemoteDataU
         }
     }
 
-
-    inner class TechObserver: DisposableObserver<TechnicalModel>(){
-        override fun onNext(t: TechnicalModel) {
-            listTechnicals = ArrayList(t.trd)
-            executeGetRemote(t.code)
-        }
-
-        override fun onComplete() {
-            //showMessage(context.resources.getString(R.string.get_complete))
-        }
-
-        override fun onError(e: Throwable) {
-            if (e.message != null) {
-                showError(e.message!!)
-            }
-        }
-    }
 }

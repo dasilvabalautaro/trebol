@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    override fun onBackPressed() {
+  /*  override fun onBackPressed() {
         super.onBackPressed()
 
         if (supportFragmentManager.backStackEntryCount > 0){
@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
             handleBackPressInThisActivity()
         }
 
-    }
+    }*/
 
     private fun handleBackPressInThisActivity(){
         if (isWarnedToClose){
@@ -75,13 +75,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     @SuppressLint("PrivateResource")
-    fun addFragment(fragment: Fragment) {
+    private fun addFragment(newFragment: Fragment) {
         supportFragmentManager
                 .beginTransaction()
                 .setCustomAnimations(R.anim.design_bottom_sheet_slide_in,
                         R.anim.design_bottom_sheet_slide_out)
-                .replace(R.id.flContent, fragment, fragment.javaClass.simpleName)
-                .addToBackStack(fragment.javaClass.simpleName)
+                .replace(R.id.flContent, newFragment, newFragment.javaClass.simpleName)
+                .addToBackStack(null)
                 .commit()
     }
 

@@ -19,10 +19,10 @@ import com.hiddenodds.trebolv2.presentation.model.TechnicalModel
 import com.hiddenodds.trebolv2.presentation.presenter.TechnicalMasterPresenter
 import com.hiddenodds.trebolv2.presentation.presenter.TechnicalRemotePresenter
 import com.hiddenodds.trebolv2.presentation.presenter.TypeNotificationRemotePresenter
-import com.hiddenodds.trebolv2.presentation.view.activities.MainActivity
 import com.hiddenodds.trebolv2.tools.Constants
 import com.hiddenodds.trebolv2.tools.PreferenceHelper
 import com.hiddenodds.trebolv2.tools.PreferenceHelper.get
+import com.hiddenodds.trebolv2.tools.Variables
 import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
 
@@ -113,11 +113,13 @@ class SignInFragment: Fragment(), ILoadDataView {
     override fun <T> executeTask(obj: T) {
         if (obj != null){
             val nameTech = (obj as TechnicalModel).name
+            Variables.codeTechMaster = (obj as TechnicalModel).code
+            Variables.listTechnicals = ArrayList((obj as TechnicalModel).trd)
             context.toast(context.resources.getString(R.string.welcome) +
                     "\n" + nameTech)
+            callMenu()
         }
-        val fragmentMenu = MenuFragment()
-        (context as MainActivity).addFragment(fragmentMenu)
+
     }
 
     private fun Context.toast(message: CharSequence) =
@@ -126,5 +128,15 @@ class SignInFragment: Fragment(), ILoadDataView {
     private fun validateInput(): Boolean{
         return (!edt_user!!.text.isNullOrEmpty() &&
                 !edt_password!!.text.isNullOrEmpty())
+    }
+
+    private fun callMenu(){
+        val fragmentMenu = MenuFragment()
+        activity.supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.flContent, fragmentMenu,
+                        fragmentMenu.javaClass.simpleName)
+                .addToBackStack(null)
+                .commit()
     }
 }

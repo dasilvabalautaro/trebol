@@ -12,6 +12,7 @@ import com.hiddenodds.trebolv2.presentation.model.MaterialModel
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import io.realm.RealmResults
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -87,15 +88,12 @@ class MaterialExecutor @Inject constructor(): CRUDRealm(),
         }
     }
 
-    override fun getList(): Observable<List<MaterialModel>> {
+    override fun getList(): Observable<RealmResults<Material>> {
         return Observable.create { subscriber ->
             val clazz: Class<Material> = Material::class.java
-            val listMaterial: List<Material>? = this.getAllData(clazz)
+            val listMaterial: RealmResults<Material>? = this.getAllData(clazz)
             if (listMaterial != null){
-                val materialModelCollection: Collection<MaterialModel> = this
-                        .materialModelDataMapper
-                        .transform(listMaterial)
-                subscriber.onNext(materialModelCollection as List<MaterialModel>)
+                subscriber.onNext(listMaterial)
                 subscriber.onComplete()
             }else{
                 subscriber.onError(Throwable("List empty."))

@@ -51,6 +51,8 @@ class ItemOtAdapter: RecyclerView.Adapter<ItemOtAdapter.ViewHolder>() {
                 edtContact!!.text = item.customer!!.name
 
             }
+            btnEmail!!.tag = item.code + "*" + item.idTech
+            btnOpenOt!!.tag = item.code + "*" + item.idTech
 
         }
     }

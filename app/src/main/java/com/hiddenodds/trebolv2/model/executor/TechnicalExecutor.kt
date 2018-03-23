@@ -181,6 +181,12 @@ class TechnicalExecutor @Inject constructor(): CRUDRealm(),
         return Observable.create{subscriber ->
             if (this.deleteNotificationsOfTechnical(code,
                             taskListenerExecutor)){
+                /*val l = this.getDataByField(Notification::class.java,
+                        "idTech", code)*/
+                CachingLruRepository
+                        .instance
+                        .getLru()
+                        .remove(code)
                 subscriber.onNext(true)
                 subscriber.onComplete()
             }else{

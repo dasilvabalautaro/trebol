@@ -1,13 +1,8 @@
 package com.hiddenodds.trebolv2.presentation.presenter
 
-import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.domain.interactor.AddCustomerToNotificationUseCase
 import com.hiddenodds.trebolv2.domain.interactor.AddNotificationToTechnicalUseCase
-import com.hiddenodds.trebolv2.domain.interactor.GetTechnicalMasterUseCase
-import com.hiddenodds.trebolv2.presentation.model.TechnicalModel
-import com.hiddenodds.trebolv2.tools.Constants
-import com.hiddenodds.trebolv2.tools.PreferenceHelper
-import com.hiddenodds.trebolv2.tools.PreferenceHelper.get
+import com.hiddenodds.trebolv2.tools.Variables
 import io.reactivex.observers.DisposableObserver
 import javax.inject.Inject
 
@@ -15,31 +10,23 @@ import javax.inject.Inject
 class AddNotificationToTechnicalPresenter @Inject constructor(private val addNotificationToTechnicalUseCase:
                                                               AddNotificationToTechnicalUseCase,
                                                               private val addCustomerToNotificationUseCase:
-                                                              AddCustomerToNotificationUseCase,
-                                                              private val getTechnicalMasterUseCase:
-                                                              GetTechnicalMasterUseCase):
+                                                              AddCustomerToNotificationUseCase):
         BasePresenter(){
 
 
     private var listTechnicals: ArrayList<String> = ArrayList()
     private var codeTechnical: String = ""
+    private var countTech = 0
 
     fun executeAddNotification(){
-        val prefs = PreferenceHelper.customPrefs(context,
-                Constants.PREFERENCE_TREBOL)
-        val code: String? = prefs[Constants.TECHNICAL_KEY, ""]
-        val password: String? = prefs[Constants.TECHNICAL_PASSWORD, ""]
-        if (!code.isNullOrEmpty() && !password.isNullOrEmpty()){
-            getTechnicalMasterUseCase.code = code!!
-            getTechnicalMasterUseCase.password = password!!
-            getTechnicalMasterUseCase.execute(TechObserver())
-        }else{
-            println("Technical not found")
-        }
+        this.listTechnicals = ArrayList(Variables.listTechnicals)
+        this.listTechnicals.add(Variables.codeTechMaster)
+        this.countTech = this.listTechnicals.size
+        getNextTechnical()
 
     }
 
-    fun executeAddCustomer(idTech: String){
+    private fun executeAddCustomer(idTech: String){
         this.codeTechnical = idTech
         addCustomerToNotificationUseCase.codeTech = idTech
         addCustomerToNotificationUseCase.execute(AddCustomerObserver())
@@ -52,7 +39,7 @@ class AddNotificationToTechnicalPresenter @Inject constructor(private val addNot
     }
 
     private fun stopProgress(){
-        view!!.executeTask(3)
+        view!!.executeTask(5)
     }
 
 
@@ -61,11 +48,13 @@ class AddNotificationToTechnicalPresenter @Inject constructor(private val addNot
             val code = listTechnicals.last()
             listTechnicals.remove(code)
             executeAddCustomer(code)
-        }else{
-
-            showMessage(context.resources.getString(R.string.add_notifications))
-            stopProgress()
         }
+    }
+
+    override fun destroy() {
+        super.destroy()
+        addNotificationToTechnicalUseCase.dispose()
+        addCustomerToNotificationUseCase.dispose()
     }
 
     inner class AddCustomerObserver: DisposableObserver<Boolean>(){
@@ -93,8 +82,11 @@ class AddNotificationToTechnicalPresenter @Inject constructor(private val addNot
         }
 
         override fun onComplete() {
+            countTech -= 1
+            if (countTech == 0){
+                stopProgress()
+            }
 
-            //showMessage(context.resources.getString(R.string.add_notifications))
         }
 
         override fun onError(e: Throwable) {
@@ -102,24 +94,6 @@ class AddNotificationToTechnicalPresenter @Inject constructor(private val addNot
            if (e.message != null) {
                showError(e.message!!)
            }
-        }
-    }
-
-    inner class TechObserver: DisposableObserver<TechnicalModel>(){
-        override fun onNext(t: TechnicalModel) {
-            listTechnicals = ArrayList(t.trd)
-            executeAddCustomer(t.code)
-        }
-
-        override fun onComplete() {
-            //showMessage(context.resources.getString(R.string.get_complete))
-        }
-
-        override fun onError(e: Throwable) {
-            println("Error: Technical master")
-            if (e.message != null) {
-                showError(e.message!!)
-            }
         }
     }
 

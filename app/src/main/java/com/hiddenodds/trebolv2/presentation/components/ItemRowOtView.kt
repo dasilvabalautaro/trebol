@@ -1,6 +1,7 @@
 package com.hiddenodds.trebolv2.presentation.components
 
 import android.content.Context
+import android.support.v4.app.FragmentActivity
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.Button
@@ -8,7 +9,9 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
+import butterknife.OnClick
 import com.hiddenodds.trebolv2.R
+import com.hiddenodds.trebolv2.presentation.view.fragments.EditOtFragment
 
 class ItemRowOtView: FrameLayout {
     constructor(context: Context): super(context)
@@ -49,6 +52,27 @@ class ItemRowOtView: FrameLayout {
     @JvmField var btnOpenOt: Button? = null
     @BindView(R.id.btnEmail)
     @JvmField var btnEmail: Button? = null
+    @OnClick(R.id.btnOpenOt)
+    fun openOT(){
+        val params = (btnOpenOt!!.tag as String).split("*")
+        if (params.isNotEmpty()){
+            val editOtFragment = EditOtFragment.newInstance(params[0],
+                    params[1])
+            (context as FragmentActivity).supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.flContent, editOtFragment,
+                            editOtFragment.javaClass.simpleName)
+                    .addToBackStack(null)
+                    .commit()
+
+        }
+
+    }
+    @OnClick(R.id.btnEmail)
+    fun openEmail(){
+
+    }
+
     /*@BindView(R.id.view_space)
     @JvmField var viewSpace: View? = null*/
     init {

@@ -34,7 +34,7 @@ import io.reactivex.ObservableEmitter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Cancellable
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.async
 import javax.inject.Inject
 
 class OtsFragment: Fragment(), ILoadDataView {
@@ -82,6 +82,7 @@ class OtsFragment: Fragment(), ILoadDataView {
         technicalMasterPresenter.view = this
         technicalPresenter.view = this
         setupRecyclerView()
+        getTechnicalMaster()
 //        setupSwipeRefresh()
     }
 
@@ -93,7 +94,7 @@ class OtsFragment: Fragment(), ILoadDataView {
                     run{
                         this.codeTech = spTech!!.getItemAtPosition(position) as String
 
-                        launch {
+                        async {
                             technicalPresenter.executeGetTechnical(codeTech)
                         }
 
@@ -102,7 +103,7 @@ class OtsFragment: Fragment(), ILoadDataView {
                 }
                 .subscribe { result -> context.toast(result)})
 
-        getTechnicalMaster()
+
     }
 
     override fun showMessage(message: String) {
@@ -120,8 +121,12 @@ class OtsFragment: Fragment(), ILoadDataView {
                 val listTech = ArrayList((obj as TechnicalModel).trd)
                 setDataSpinner(listTech)
             }
-            val listNotification = ArrayList((obj as TechnicalModel).notifications)
-            adapter!!.setObjectList(listNotification)
+
+            async {
+                val listNotification = ArrayList((obj as TechnicalModel).notifications)
+                adapter!!.setObjectList(listNotification)
+            }
+
             rvOts!!.scrollToPosition(0)
 
         }

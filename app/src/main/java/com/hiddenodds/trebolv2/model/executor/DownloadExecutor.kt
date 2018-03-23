@@ -88,6 +88,7 @@ class DownloadExecutor @Inject constructor(): CRUDRealm(),
             for (i in list.indices){
                 if (!this.deleteByField(clazz, "code",
                                 list[i], taskListenerExecutor)){
+
                     flag = false
                     break
                 }

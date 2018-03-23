@@ -25,6 +25,10 @@
     <string name="customer_download">Success Download Customer</string>
     <string name="type_notification_save">Success Type Notification</string>
     <string name="wait_task">Wait, all tasks should be completed.</string>
+    <string name="controls_enable">Controls enable.</string>
+    <string name="error_download">Error download.</string>
+    <string name="customer_save">Success Save Customer</string>
+    <string name="notification_save">Success Save Notification</string>
     <string name="lbl_close_app">Tap again to close the application.</string>
     <string name="lbl_list_ots">Listado de las OTs</string>
     <string name="lbl_announce">AVISO No</string>

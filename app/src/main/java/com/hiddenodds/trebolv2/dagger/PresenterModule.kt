@@ -173,6 +173,12 @@ class PresenterModule {
         return MaterialRemotePresenter(getRemoteDataUseCase, saveListMaterialUseCase)
     }
 
+    @Provides
+    fun provideMaterialPresenter(getListMaterialUseCase:
+                                 GetListMaterialUseCase): MaterialPresenter{
+        return MaterialPresenter(getListMaterialUseCase)
+    }
+
     ////////////////
 
     @Provides
@@ -255,49 +261,15 @@ class PresenterModule {
                 notificationExecutor)
     }
 
-    @Provides
-    fun provideNotificationRemotePresenter(getRemoteDataUseCase:
-                                           GetRemoteDataUseCase,
-                                           saveListNotificationUseCase:
-                                           SaveListNotificationUseCase,
-                                           getTechnicalMasterUseCase:
-                                           GetTechnicalMasterUseCase,
-                                           deleteNotificationsOfTechnicalUseCase:
-                                           DeleteNotificationsOfTechnicalUseCase,
-                                           getLisTypeNotificationUseCase:
-                                           GetLisTypeNotificationUseCase):
-            NotificationRemotePresenter{
-        return NotificationRemotePresenter(getRemoteDataUseCase,
-                saveListNotificationUseCase, getTechnicalMasterUseCase,
-                deleteNotificationsOfTechnicalUseCase,
-                getLisTypeNotificationUseCase)
-    }
-
-    @Provides
-    fun provideCustomerRemotePresenter(getRemoteDataUseCase:
-                                       GetRemoteDataUseCase,
-                                       getTechnicalMasterUseCase:
-                                       GetTechnicalMasterUseCase,
-                                       saveCustomerUseCase:
-                                       SaveListCustomerUseCase,
-                                       deleteCustomersUseCase:
-                                       DeleteCustomersUseCase):
-            CustomerRemotePresenter {
-        return CustomerRemotePresenter(getRemoteDataUseCase,
-                getTechnicalMasterUseCase, saveCustomerUseCase,
-                deleteCustomersUseCase)
-    }
 
     @Provides
     fun provideAddNotificationToTechnicalPresenter(addNotificationToTechnicalUseCase:
                                                    AddNotificationToTechnicalUseCase,
                                                    addCustomerToNotificationUseCase:
-                                                   AddCustomerToNotificationUseCase,
-                                                   getTechnicalMasterUseCase:
-                                                   GetTechnicalMasterUseCase):
+                                                   AddCustomerToNotificationUseCase):
             AddNotificationToTechnicalPresenter{
         return AddNotificationToTechnicalPresenter(addNotificationToTechnicalUseCase,
-                addCustomerToNotificationUseCase, getTechnicalMasterUseCase)
+                addCustomerToNotificationUseCase)
     }
 
     //////////////////
@@ -350,29 +322,70 @@ class PresenterModule {
     }
 
     @Provides
-    fun provideDownloadNotificationExecutor(getRemoteDataUseCase:
+    fun provideDownloadNotificationUseCase(getRemoteDataUseCase:
                                             GetRemoteDataUseCase,
-                                            getTechnicalMasterUseCase:
-                                            GetTechnicalMasterUseCase,
                                             createDownloadsUseCase:
                                             CreateDownloadsUseCase,
                                             updateDownloadUseCase:
                                             UpdateDownloadUseCase,
                                             deleteDownloadsUseCase:
-                                            DeleteDownloadsUseCase): DownloadNotificationExecutor{
-        return DownloadNotificationExecutor(getRemoteDataUseCase,
-                getTechnicalMasterUseCase, createDownloadsUseCase,
+                                            DeleteDownloadsUseCase):
+            DownloadNotificationUseCase {
+        return DownloadNotificationUseCase(getRemoteDataUseCase,
+                createDownloadsUseCase,
                 updateDownloadUseCase, deleteDownloadsUseCase)
     }
 
     @Provides
-    fun provideDownloadCustomerExecutor(getRemoteDataUseCase:
-                                        GetRemoteDataUseCase,
-                                        getTechnicalMasterUseCase:
-                                        GetTechnicalMasterUseCase,
-                                        updateDownloadUseCase:
-                                        UpdateDownloadUseCase): DownloadCustomerExecutor{
-        return DownloadCustomerExecutor(getRemoteDataUseCase,
-                getTechnicalMasterUseCase, updateDownloadUseCase)
+    fun provideNotificationDownloadPresenter(downloadNotificationUseCase:
+                                             DownloadNotificationUseCase):
+            NotificationDownloadPresenter{
+        return NotificationDownloadPresenter(downloadNotificationUseCase)
     }
+
+    @Provides
+    fun provideDownloadCustomerUseCase(getRemoteDataUseCase:
+                                        GetRemoteDataUseCase,
+                                        updateDownloadUseCase:
+                                        UpdateDownloadUseCase):
+            DownloadCustomerUseCase {
+        return DownloadCustomerUseCase(getRemoteDataUseCase,
+                updateDownloadUseCase)
+    }
+
+    @Provides
+    fun provideCustomerDownloadPresenter(downloadCustomerUseCase:
+                                         DownloadCustomerUseCase): CustomerDownloadPresenter{
+        return CustomerDownloadPresenter(downloadCustomerUseCase)
+    }
+
+    @Provides
+    fun provideSaveNotificationPresenter(getDownloadUseCase:
+                                         GetDownloadUseCase,
+                                         saveListNotificationUseCase:
+                                         SaveListNotificationUseCase,
+                                         deleteNotificationsOfTechnicalUseCase:
+                                         DeleteNotificationsOfTechnicalUseCase,
+                                         getLisTypeNotificationUseCase:
+                                         GetLisTypeNotificationUseCase):
+            SaveNotificationPresenter{
+        return SaveNotificationPresenter(getDownloadUseCase,
+                saveListNotificationUseCase,
+                deleteNotificationsOfTechnicalUseCase,
+                getLisTypeNotificationUseCase)
+    }
+
+    @Provides
+    fun provideSaveCustomerPresenter(getDownloadUseCase:
+                                     GetDownloadUseCase,
+                                     saveCustomerUseCase:
+                                     SaveListCustomerUseCase,
+                                     deleteCustomersUseCase:
+                                     DeleteCustomersUseCase):
+            SaveCustomerPresenter {
+        return SaveCustomerPresenter(getDownloadUseCase,
+                saveCustomerUseCase,
+                deleteCustomersUseCase)
+    }
+
 }

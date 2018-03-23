@@ -1,64 +1,44 @@
 package com.hiddenodds.trebolv2.presentation.presenter
 
-import com.hiddenodds.trebolv2.App
-import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.domain.data.MapperCustomer
 import com.hiddenodds.trebolv2.domain.interactor.DeleteCustomersUseCase
-import com.hiddenodds.trebolv2.domain.interactor.GetRemoteDataUseCase
-import com.hiddenodds.trebolv2.domain.interactor.GetTechnicalMasterUseCase
+import com.hiddenodds.trebolv2.domain.interactor.GetDownloadUseCase
 import com.hiddenodds.trebolv2.domain.interactor.SaveListCustomerUseCase
-import com.hiddenodds.trebolv2.model.persistent.network.StatementSQL
-import com.hiddenodds.trebolv2.presentation.model.TechnicalModel
-import com.hiddenodds.trebolv2.tools.Constants
-import com.hiddenodds.trebolv2.tools.PreferenceHelper
-import com.hiddenodds.trebolv2.tools.PreferenceHelper.get
+import com.hiddenodds.trebolv2.presentation.model.DownloadModel
+import com.hiddenodds.trebolv2.tools.Variables
 import io.reactivex.observers.DisposableObserver
 import org.json.JSONArray
 import org.json.JSONObject
 import javax.inject.Inject
 
-class CustomerRemotePresenter @Inject constructor(private val getRemoteDataUseCase:
-                                                  GetRemoteDataUseCase,
-                                                  private val getTechnicalMasterUseCase:
-                                                  GetTechnicalMasterUseCase,
-                                                  private val saveListCustomerUseCase:
+class SaveCustomerPresenter @Inject constructor(private val getDownloadUseCase:
+                                                GetDownloadUseCase,
+                                                private val saveListCustomerUseCase:
                                                   SaveListCustomerUseCase,
-                                                  private val deleteCustomersUseCase:
+                                                private val deleteCustomersUseCase:
                                                   DeleteCustomersUseCase):
         BasePresenter(){
 
     private var listTechnicals: ArrayList<String> = ArrayList()
     private var codeTechnical: String = ""
     private var listMapperCustomer: ArrayList<MapperCustomer> = ArrayList()
+    private var countTech = 0
 
 
-
-    fun executeGetTechnicalMaster(){
-        val prefs = PreferenceHelper.customPrefs(context,
-                Constants.PREFERENCE_TREBOL)
-        val code: String? = prefs[Constants.TECHNICAL_KEY, ""]
-        val password: String? = prefs[Constants.TECHNICAL_PASSWORD, ""]
-        if (!code.isNullOrEmpty() && !password.isNullOrEmpty()){
-            getTechnicalMasterUseCase.code = code!!
-            getTechnicalMasterUseCase.password = password!!
-            getTechnicalMasterUseCase.execute(TechObserver())
-        }else{
-            println("Technical not found")
-        }
+    fun executeGetCustomer(){
+        this.listTechnicals = ArrayList(Variables.listTechnicals)
+        this.listTechnicals.add(Variables.codeTechMaster)
+        this.countTech = this.listTechnicals.size
+        getCustomersNext()
     }
 
-    private fun executeGetRemote(code: String){
-        if ((context as App).connectionNetwork.isOnline()) {
-            this.codeTechnical = code
-            getRemoteDataUseCase.sql = StatementSQL.getCustomer(code)
-            getRemoteDataUseCase.execute(ListObserver())
-        }else{
-            showError(context.resources.getString(R.string.network_not_found))
-        }
+    private fun executeGetDownload(code: String){
+        getDownloadUseCase.code = code
+        getDownloadUseCase.execute(DownloadObserver())
+
     }
 
     private fun buildListMapper(jsonArray: JSONArray){
-        listMapperCustomer = ArrayList()
 
         if (jsonArray.length() != 0){
             (0 until jsonArray.length()).forEach { i ->
@@ -94,13 +74,17 @@ class CustomerRemotePresenter @Inject constructor(private val getRemoteDataUseCa
 
         }
     }
-
-    private fun buildObjets(jsonArray: JSONArray){
-        buildListMapper(jsonArray)
+    private fun buildNotification(jsonString: String){
+        this.listMapperCustomer = ArrayList()
+        if (jsonString.isNotEmpty()){
+            val jsonArray = JSONArray(jsonString)
+            buildListMapper(jsonArray)
+        }
 
         deleteCustomers()
 
     }
+
 
     private fun saveListCustomer(){
         if (listMapperCustomer.size != 0){
@@ -109,22 +93,24 @@ class CustomerRemotePresenter @Inject constructor(private val getRemoteDataUseCa
             saveListCustomerUseCase.execute(SaveCustomerObserver())
 
         }else{
+            this.countTech -= 1
+            if (this.countTech == 0){
+                stopProgress()
+            }
             getCustomersNext()
         }
     }
 
     private fun stopProgress(){
-        view!!.executeTask(2)
+        view!!.executeTask(4)
     }
 
     private fun getCustomersNext(){
         if (listTechnicals.isNotEmpty()){
             val code = listTechnicals.last()
             listTechnicals.remove(code)
-            executeGetRemote(code)
-        }else{
-            stopProgress()
-            showMessage(context.resources.getString(R.string.customer_download))
+            this.codeTechnical = code
+            executeGetDownload(code)
         }
     }
 
@@ -135,6 +121,12 @@ class CustomerRemotePresenter @Inject constructor(private val getRemoteDataUseCa
         deleteCustomersUseCase.execute(DeleteCustomerObserver())
     }
 
+    override fun destroy() {
+        super.destroy()
+        getDownloadUseCase.dispose()
+        saveListCustomerUseCase.dispose()
+        deleteCustomersUseCase.dispose()
+    }
 
     inner class SaveCustomerObserver: DisposableObserver<Boolean>(){
         override fun onNext(t: Boolean) {
@@ -142,7 +134,10 @@ class CustomerRemotePresenter @Inject constructor(private val getRemoteDataUseCa
         }
 
         override fun onComplete() {
-            //showMessage(context.resources.getString(R.string.save_data))
+            countTech -= 1
+            if (countTech == 0){
+                stopProgress()
+            }
         }
 
         override fun onError(e: Throwable) {
@@ -152,27 +147,9 @@ class CustomerRemotePresenter @Inject constructor(private val getRemoteDataUseCa
         }
     }
 
-    inner class TechObserver: DisposableObserver<TechnicalModel>(){
-        override fun onNext(t: TechnicalModel) {
-            listTechnicals = ArrayList(t.trd)
-            executeGetRemote(t.code)
-        }
-
-        override fun onComplete() {
-            //showMessage(context.resources.getString(R.string.get_complete))
-        }
-
-        override fun onError(e: Throwable) {
-            println("Error: Technical master")
-            if (e.message != null) {
-                showError(e.message!!)
-            }
-        }
-    }
-
-    inner class ListObserver: DisposableObserver<JSONArray>(){
-        override fun onNext(t: JSONArray) {
-            buildObjets(t)
+    inner class DownloadObserver: DisposableObserver<DownloadModel>(){
+        override fun onNext(t: DownloadModel) {
+            buildNotification(t.customer)
         }
 
         override fun onComplete() {

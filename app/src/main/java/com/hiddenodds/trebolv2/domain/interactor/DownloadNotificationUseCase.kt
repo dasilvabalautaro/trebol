@@ -1,14 +1,9 @@
-package com.hiddenodds.trebolv2.model.executor
+package com.hiddenodds.trebolv2.domain.interactor
 
 import com.hiddenodds.trebolv2.App
 import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.domain.data.MapperDownload
-import com.hiddenodds.trebolv2.domain.interactor.*
 import com.hiddenodds.trebolv2.model.persistent.network.StatementSQL
-import com.hiddenodds.trebolv2.presentation.model.TechnicalModel
-import com.hiddenodds.trebolv2.tools.Constants
-import com.hiddenodds.trebolv2.tools.PreferenceHelper
-import com.hiddenodds.trebolv2.tools.PreferenceHelper.get
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
@@ -16,18 +11,16 @@ import org.json.JSONArray
 import javax.inject.Inject
 
 
-class DownloadNotificationExecutor @Inject constructor(private val getRemoteDataUseCase:
+class DownloadNotificationUseCase @Inject constructor(private val getRemoteDataUseCase:
                                                        GetRemoteDataUseCase,
-                                                       private val getTechnicalMasterUseCase:
-                                                       GetTechnicalMasterUseCase,
-                                                       private val createDownloadsUseCase:
+                                                      private val createDownloadsUseCase:
                                                        CreateDownloadsUseCase,
-                                                       private val updateDownloadUseCase:
+                                                      private val updateDownloadUseCase:
                                                        UpdateDownloadUseCase,
-                                                       private val deleteDownloadsUseCase:
+                                                      private val deleteDownloadsUseCase:
                                                        DeleteDownloadsUseCase){
 
-    private var listTechnicals: ArrayList<String> = ArrayList()
+    var listTechnicals: ArrayList<String> = ArrayList()
     private var codeTechnical: String = ""
     private var messageError: String = ""
     var observableMessageError: Subject<String> = PublishSubject.create()
@@ -40,22 +33,6 @@ class DownloadNotificationExecutor @Inject constructor(private val getRemoteData
                 .subscribe { this.messageError }
         this.observableFinishDownload
                 .subscribe { this.finishDownload }
-    }
-
-    private fun getMasterTechnical(){
-        val prefs = PreferenceHelper.customPrefs(context,
-                Constants.PREFERENCE_TREBOL)
-        val code: String? = prefs[Constants.TECHNICAL_KEY, ""]
-        val password: String? = prefs[Constants.TECHNICAL_PASSWORD, ""]
-        if (!code.isNullOrEmpty() && !password.isNullOrEmpty()){
-            getTechnicalMasterUseCase.code = code!!
-            getTechnicalMasterUseCase.password = password!!
-            getTechnicalMasterUseCase.execute(TechObserver())
-        }else{
-            this.messageError = context.getString(R.string.technical_not_found)
-            this.observableMessageError.onNext(this.messageError)
-
-        }
     }
 
     private fun executeGetRemote(code: String){
@@ -84,7 +61,7 @@ class DownloadNotificationExecutor @Inject constructor(private val getRemoteData
 
     }
 
-    private fun executeDeleteDownload(){
+    fun executeDeleteDownload(){
         deleteDownloadsUseCase.listTechnical = this.listTechnicals
         deleteDownloadsUseCase.execute(DeleteDownloadObserver())
     }
@@ -96,6 +73,7 @@ class DownloadNotificationExecutor @Inject constructor(private val getRemoteData
             updateDownloadUseCase.code = this.codeTechnical
             updateDownloadUseCase.fieldName = "notification"
             updateDownloadUseCase.execute(UpdateDownloadObserver())
+
         }else{
             getNotificationsNextTechnical()
         }
@@ -109,25 +87,11 @@ class DownloadNotificationExecutor @Inject constructor(private val getRemoteData
         }
     }
 
-    inner class TechObserver: DisposableObserver<TechnicalModel>(){
-        override fun onNext(t: TechnicalModel) {
-            listTechnicals = ArrayList(t.trd)
-            codeTechnical = t.code
-            listTechnicals.add(codeTechnical)
-            executeDeleteDownload()
-        }
-
-        override fun onComplete() {
-            //showMessage(context.resources.getString(R.string.get_complete))
-        }
-
-        override fun onError(e: Throwable) {
-            if (e.message != null) {
-                messageError = e.message!!
-                observableMessageError.onNext(messageError)
-
-            }
-        }
+    fun destroy(){
+        getRemoteDataUseCase.dispose()
+        createDownloadsUseCase.dispose()
+        updateDownloadUseCase.dispose()
+        deleteDownloadsUseCase.dispose()
     }
 
     inner class ListObserver: DisposableObserver<JSONArray>(){
@@ -149,7 +113,7 @@ class DownloadNotificationExecutor @Inject constructor(private val getRemoteData
     }
     inner class CreateDownloadObserver: DisposableObserver<Boolean>(){
         override fun onNext(t: Boolean) {
-            executeGetRemote(codeTechnical)
+            getNotificationsNextTechnical()
         }
 
         override fun onComplete() {
@@ -189,6 +153,7 @@ class DownloadNotificationExecutor @Inject constructor(private val getRemoteData
         }
 
         override fun onComplete() {
+
             if (listTechnicals.isEmpty()){
                 finishDownload = true
                 observableFinishDownload.onNext(finishDownload)
