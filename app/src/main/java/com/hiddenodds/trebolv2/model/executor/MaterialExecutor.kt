@@ -88,12 +88,15 @@ class MaterialExecutor @Inject constructor(): CRUDRealm(),
         }
     }
 
-    override fun getList(): Observable<RealmResults<Material>> {
+    override fun getList(): Observable<List<MaterialModel>> {
         return Observable.create { subscriber ->
             val clazz: Class<Material> = Material::class.java
             val listMaterial: RealmResults<Material>? = this.getAllData(clazz)
             if (listMaterial != null){
-                subscriber.onNext(listMaterial)
+                val materialModelCollection: Collection<MaterialModel> = this
+                        .materialModelDataMapper
+                        .transform(listMaterial)
+                subscriber.onNext(materialModelCollection as List<MaterialModel>)
                 subscriber.onComplete()
             }else{
                 subscriber.onError(Throwable("List empty."))

@@ -12,7 +12,9 @@ import com.hiddenodds.trebolv2.presentation.mapper.TechnicalModelDataMapper
 import com.hiddenodds.trebolv2.presentation.model.TechnicalModel
 import com.hiddenodds.trebolv2.tools.Constants
 import com.hiddenodds.trebolv2.tools.PreferenceHelper
+import com.hiddenodds.trebolv2.tools.PreferenceHelper.get
 import com.hiddenodds.trebolv2.tools.PreferenceHelper.set
+import com.hiddenodds.trebolv2.tools.Variables
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -117,6 +119,7 @@ class TechnicalExecutor @Inject constructor(): CRUDRealm(),
     }
 
     override fun getTechnical(code: String): Observable<TechnicalModel> {
+        deleteCacheTechnical()
         return Observable.create { subscriber ->
             var technicalModel: TechnicalModel?
             technicalModel = getTechicalOfCache(code)
@@ -145,8 +148,7 @@ class TechnicalExecutor @Inject constructor(): CRUDRealm(),
 
     override fun getMasterTechnical(code: String,
                                     password: String): Observable<TechnicalModel>{
-
-
+        deleteCacheTechnical()
         return Observable.create { subscriber ->
             var technicalModel: TechnicalModel?
             technicalModel = getTechMasterOfCache()
@@ -160,7 +162,7 @@ class TechnicalExecutor @Inject constructor(): CRUDRealm(),
                     technicalModel = this.technicalModelDataMapper
                             .transform(newTechnical[0])
                     CachingLruRepository.instance.getLru()
-                            .put(Constants.CACHE_TECHNICAL_MASTER, technicalModel)
+                            .put(technicalModel.code, technicalModel)
                     val prefs = PreferenceHelper.customPrefs(context,
                             Constants.PREFERENCE_TREBOL)
                     prefs[Constants.TECHNICAL_KEY] = technicalModel.code
@@ -197,10 +199,13 @@ class TechnicalExecutor @Inject constructor(): CRUDRealm(),
 
 
     private fun getTechMasterOfCache(): TechnicalModel?{
-        return CachingLruRepository
-                .instance
-                .getLru()
-                .get(Constants.CACHE_TECHNICAL_MASTER) as TechnicalModel?
+        val prefs = PreferenceHelper.customPrefs(context,
+                Constants.PREFERENCE_TREBOL)
+        val code = prefs[Constants.TECHNICAL_KEY, ""]
+        if (code != null){
+            return getTechicalOfCache(code)
+        }
+        return null
     }
 
     private fun getTechicalOfCache(code: String): TechnicalModel?{
@@ -208,5 +213,16 @@ class TechnicalExecutor @Inject constructor(): CRUDRealm(),
                 .instance
                 .getLru()
                 .get(code) as TechnicalModel?
+    }
+
+    private fun deleteCacheTechnical(){
+        if (Variables.changeTechnical.isNotEmpty()){
+            CachingLruRepository
+                    .instance
+                    .getLru()
+                    .remove(Variables.changeTechnical)
+            Variables.changeTechnical = ""
+            Thread.sleep(1000)
+        }
     }
 }

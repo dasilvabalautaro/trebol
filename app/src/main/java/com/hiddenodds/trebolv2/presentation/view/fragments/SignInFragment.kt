@@ -122,6 +122,10 @@ class SignInFragment: Fragment(), ILoadDataView {
 
     }
 
+    override fun <T> executeTask(objList: List<T>) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     private fun Context.toast(message: CharSequence) =
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 

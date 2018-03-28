@@ -6,12 +6,14 @@ import com.hiddenodds.trebolv2.dagger.ModelsModule
 import com.hiddenodds.trebolv2.domain.data.MapperNotification
 import com.hiddenodds.trebolv2.model.data.Notification
 import com.hiddenodds.trebolv2.model.interfaces.INotificationRepository
+import com.hiddenodds.trebolv2.model.persistent.caching.CachingLruRepository
 import com.hiddenodds.trebolv2.model.persistent.database.CRUDRealm
 import com.hiddenodds.trebolv2.presentation.mapper.NotificationModelDataMapper
 import com.hiddenodds.trebolv2.presentation.model.NotificationModel
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import io.realm.RealmResults
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -106,6 +108,22 @@ class NotificationExecutor @Inject constructor(): CRUDRealm(),
         }
     }
 
+    override fun deleteNotification(id: String, codeTech: String): Observable<Boolean> {
+        return Observable.create{subscriber ->
+            val clazz: Class<Notification> = Notification::class.java
+            if (this.deleteByField(clazz, "id", id,
+                            taskListenerExecutor)){
+                CachingLruRepository
+                        .instance
+                        .delLru(codeTech)
+                subscriber.onNext(true)
+                subscriber.onComplete()
+            }else{
+                subscriber.onError(Throwable(this.msgError))
+            }
+        }
+    }
+
     override fun addCustomer(idTech: String): Observable<Boolean> {
         return Observable.create{subscriber ->
             if (this.addCustomerToNotification(idTech,
@@ -117,5 +135,36 @@ class NotificationExecutor @Inject constructor(): CRUDRealm(),
             }
         }
     }
+
+    override fun updateField(id: String, nameFieldUpdate: String,
+                             newValue: String): Observable<Boolean> {
+        return Observable.create{subscriber ->
+            if (this.updateFieldNotification(id, nameFieldUpdate, newValue,
+                            taskListenerExecutor)){
+                subscriber.onNext(true)
+                subscriber.onComplete()
+            }else{
+                subscriber.onError(Throwable(this.msgError))
+            }
+        }
+    }
+
+    override fun getFinishedNotification(): Observable<List<NotificationModel>> {
+        return Observable.create { subscriber ->
+            val clazz: Class<Notification> = Notification::class.java
+            val listNotification: RealmResults<Notification>? = this.getDataByField(clazz,
+                    "state", "1")
+            if (listNotification != null){
+                val notificationModelCollection: Collection<NotificationModel> = this
+                        .notificationModelDataMapper
+                        .transform(listNotification)
+                subscriber.onNext(notificationModelCollection as List<NotificationModel>)
+                subscriber.onComplete()
+            }else{
+                subscriber.onError(Throwable("List empty."))
+            }
+        }
+    }
+
 
 }

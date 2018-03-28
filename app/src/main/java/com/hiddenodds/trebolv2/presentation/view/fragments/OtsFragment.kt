@@ -102,8 +102,6 @@ class OtsFragment: Fragment(), ILoadDataView {
                     }
                 }
                 .subscribe { result -> context.toast(result)})
-
-
     }
 
     override fun showMessage(message: String) {
@@ -131,6 +129,9 @@ class OtsFragment: Fragment(), ILoadDataView {
 
         }
 
+    }
+    override fun <T> executeTask(objList: List<T>) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
    /* private fun setupSwipeRefresh() = srData!!.setOnRefreshListener(

@@ -4,4 +4,5 @@ class AssignedMaterialModel {
     var id: String = ""
     var quantity: Int = 0
     var material: MaterialModel? = null
+    var change: Int = 0
 }

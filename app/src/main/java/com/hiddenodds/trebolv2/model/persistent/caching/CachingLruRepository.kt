@@ -18,4 +18,7 @@ class CachingLruRepository private constructor(){
 
     fun getLru(): LruCache<String, Any> = lru
 
+    fun delLru(key: String){
+        getLru().remove(key)
+    }
 }

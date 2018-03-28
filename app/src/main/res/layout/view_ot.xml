@@ -10,6 +10,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/sv_ot"
         android:fillViewport="true">
 
         <android.support.percent.PercentRelativeLayout
@@ -239,7 +240,8 @@
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="center"
                 android:textColor="@color/colorTxt"
-                android:background="@drawable/rounded_pass"/>
+                android:background="@drawable/rounded_pass"
+                tools:ignore="LabelFor,TextFields" />
             <EditText
                 android:id="@+id/spnSalida"
                 android:layout_alignStart="@+id/lblSalida"
@@ -250,7 +252,8 @@
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="center"
                 android:textColor="@color/colorTxt"
-                android:background="@drawable/rounded_pass"/>
+                android:background="@drawable/rounded_pass"
+                tools:ignore="LabelFor,TextFields" />
 
             <TextView
                 android:id="@+id/lblDieta"
@@ -508,7 +511,7 @@
             <!--+++-->
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerview_mat_out"
+                android:id="@+id/rv_mat_out"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@+id/lblMaterialRetirado"
@@ -522,7 +525,7 @@
                 android:id="@+id/lblMaterialEmpleado"
                 app:layout_marginLeftPercent="4%"
                 app:layout_widthPercent="70%"
-                android:layout_below="@+id/recyclerview_mat_out"
+                android:layout_below="@+id/rv_mat_out"
                 android:layout_marginTop="13dp"
                 android:layout_height="wrap_content"
                 android:text="@string/lbl_material_empleado"
@@ -542,7 +545,7 @@
                 android:background="@null"/>
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerview_mat_use"
+                android:id="@+id/rv_mat_use"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@+id/lblMaterialEmpleado"
@@ -556,7 +559,7 @@
                 android:id="@+id/lblFirma"
                 app:layout_marginLeftPercent="4%"
                 app:layout_widthPercent="60%"
-                android:layout_below="@+id/recyclerview_mat_use"
+                android:layout_below="@+id/rv_mat_use"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@string/lbl_firma"

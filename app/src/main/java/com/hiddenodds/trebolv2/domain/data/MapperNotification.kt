@@ -15,7 +15,7 @@ class MapperNotification: IDataContent {
     var duration: String = ""
     var displacement: String = ""
     var trbPartTwo: String = ""
-    var state: String = ""
+    var state: String = "0"
     var satd: String = ""
     var satdk: String = ""
     var ink: String = ""

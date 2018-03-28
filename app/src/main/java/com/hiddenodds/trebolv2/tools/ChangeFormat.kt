@@ -26,17 +26,18 @@ object ChangeFormat {
     }
 
     @Throws(NumberFormatException::class)
-    fun substracHours(etIn: EditText, etOut: EditText): String{
+    fun substracHours(etIn: String, etOut: String): String{
         var difHrs = "0"
 
-        val hrsInit = etIn.text.toString().split(":".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
-        val hrsEnd = etOut.text.toString().split(":".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
+        val hrsInit = etIn.split(":".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
+        val hrsEnd = etOut.split(":".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
         if (hrsInit.isNotEmpty() && hrsEnd.isNotEmpty()) {
-            val minInit = java.lang.Double.valueOf(hrsInit[0])!! * 60 + java.lang.Double.valueOf(hrsInit[1])!!
-            val minEnd = java.lang.Double.valueOf(hrsEnd[0])!! * 60 + java.lang.Double.valueOf(hrsEnd[1])!!
+            val minInit = (hrsInit[0].toInt() * 60) + hrsInit[1].toInt()
+            val minEnd = (hrsEnd[0].toInt() * 60) + hrsEnd[1].toInt()
             val dif = minEnd - minInit
-            val hrsWork = dif / 60
-            difHrs = hrsWork.toString()
+            val minWork = (dif % 60)
+            val hrsWork = (dif / 60)
+            difHrs = hrsWork.toString() + ":" + minWork.toString()
         }
 
         return difHrs

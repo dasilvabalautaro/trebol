@@ -11,7 +11,7 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import com.hiddenodds.trebolv2.R
-import com.hiddenodds.trebolv2.presentation.view.fragments.EditOtFragment
+import com.hiddenodds.trebolv2.presentation.view.fragments.OrderFragment
 
 class ItemRowOtView: FrameLayout {
     constructor(context: Context): super(context)
@@ -56,7 +56,7 @@ class ItemRowOtView: FrameLayout {
     fun openOT(){
         val params = (btnOpenOt!!.tag as String).split("*")
         if (params.isNotEmpty()){
-            val editOtFragment = EditOtFragment.newInstance(params[0],
+            val editOtFragment = OrderFragment.newInstance(params[0],
                     params[1])
             (context as FragmentActivity).supportFragmentManager
                     .beginTransaction()

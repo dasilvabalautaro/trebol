@@ -17,6 +17,7 @@ import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.dagger.PresenterModule
 import com.hiddenodds.trebolv2.presentation.interfaces.ILoadDataView
 import com.hiddenodds.trebolv2.presentation.presenter.*
+import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
 
@@ -35,6 +36,10 @@ class MenuFragment: Fragment(), ILoadDataView {
 
     @OnClick(R.id.btn_update_water)
     fun updateDataInWater(){
+        setViewForTransferData()
+        async {
+            updateDataRemoteWaterPresenter.executeUpdateRemoteWater()
+        }
 
     }
 
@@ -84,7 +89,8 @@ class MenuFragment: Fragment(), ILoadDataView {
     lateinit var saveCustomerPresenter: SaveCustomerPresenter
     @Inject
     lateinit var addNotificationToTechnicalPresenter: AddNotificationToTechnicalPresenter
-
+    @Inject
+    lateinit var updateDataRemoteWaterPresenter: UpdateDataRemoteWaterPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,6 +114,7 @@ class MenuFragment: Fragment(), ILoadDataView {
         customerDownloadPresenter.view = this
         saveNotificationPresenter.view = this
         saveCustomerPresenter.view = this
+        updateDataRemoteWaterPresenter.view = this
         activity.theme.applyStyle(R.style.AppTheme, true)
     }
 
@@ -117,8 +124,13 @@ class MenuFragment: Fragment(), ILoadDataView {
 
     override fun showError(message: String) {
         clearPresenter()
+        clearWaterPresenter()
         enableView()
         context.toast(message)
+    }
+
+    override fun <T> executeTask(objList: List<T>) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     private fun processDownloadNotification(option: Int){
@@ -159,6 +171,13 @@ class MenuFragment: Fragment(), ILoadDataView {
                 message = context.resources.getString(R.string.error_download)
 
             }
+            7 -> {
+                message = context.resources.getString(R.string.add_notifications) +
+                        " End process."
+
+                clearWaterPresenter()
+                enableView()
+            }
         }
         activity.runOnUiThread({
             context.toast(message)
@@ -171,10 +190,13 @@ class MenuFragment: Fragment(), ILoadDataView {
         addNotificationToTechnicalPresenter.destroy()
     }
 
+    private fun clearWaterPresenter(){
+        updateDataRemoteWaterPresenter.destroy()
+    }
+
     override fun <T> executeTask(obj: T) {
         if (obj != null){
             val option = (obj as Int)
-            //context.toast("Process: " + option.toString())
             processDownloadNotification(option)
         }else{
             enableView()

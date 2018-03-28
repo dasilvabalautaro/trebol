@@ -5,6 +5,8 @@ import com.hiddenodds.trebolv2.domain.interactor.*
 import com.hiddenodds.trebolv2.model.executor.*
 import com.hiddenodds.trebolv2.model.interfaces.*
 import com.hiddenodds.trebolv2.presentation.presenter.*
+import com.hiddenodds.trebolv2.tools.ManageImage
+import com.hiddenodds.trebolv2.tools.PermissionUtils
 import dagger.Module
 import dagger.Provides
 
@@ -28,6 +30,16 @@ class PresenterModule {
     @Provides
     fun providePostExecutionThread(uiThread: UIThread): IPostExecutionThread {
         return uiThread
+    }
+
+    @Provides
+    fun providePermissionUtils(): PermissionUtils {
+        return PermissionUtils()
+    }
+
+    @Provides
+    fun provideManageImage(permissionUtils: PermissionUtils): ManageImage{
+        return ManageImage(permissionUtils)
     }
 
     //////////////////////
@@ -113,6 +125,12 @@ class PresenterModule {
                                     jobExecutor: JobExecutor):
             GetRemoteDataUseCase{
         return GetRemoteDataUseCase(jobExecutor, uiThread)
+    }
+
+    @Provides
+    fun provideSetRemoteDataUseCase(uiThread: UIThread,
+                                    jobExecutor: JobExecutor): SetRemoteNotificationDataUseCase{
+        return SetRemoteNotificationDataUseCase(jobExecutor, uiThread)
     }
 
     @Provides
@@ -222,6 +240,64 @@ class PresenterModule {
     ////////////////////////
 
     @Provides
+    fun provideAssignedMaterialExecutor(): AssignedMaterialExecutor{
+        return AssignedMaterialExecutor()
+    }
+
+    @Provides
+    fun provideIAssignedMaterialRepository(assignedMaterialExecutor:
+                                           AssignedMaterialExecutor): IAssignedMaterialRepository{
+        return assignedMaterialExecutor
+    }
+
+    @Provides
+    fun provideAddAssignedMaterialToNotificationUseCase(uiThread: UIThread,
+                                                        jobExecutor: JobExecutor,
+                                                        assignedMaterialExecutor:
+                                                        AssignedMaterialExecutor):
+            AddAssignedMaterialToNotificationUseCase{
+        return AddAssignedMaterialToNotificationUseCase(jobExecutor,
+                uiThread, assignedMaterialExecutor)
+    }
+
+    @Provides
+    fun provideUpdateAssignedMaterialUseCase(uiThread: UIThread,
+                                             jobExecutor: JobExecutor,
+                                             assignedMaterialExecutor:
+                                             AssignedMaterialExecutor): UpdateAssignedMaterialUseCase{
+        return UpdateAssignedMaterialUseCase(jobExecutor,
+                uiThread, assignedMaterialExecutor)
+    }
+
+    @Provides
+    fun provideDeleteAssignedMaterialUseCase(uiThread: UIThread,
+                                             jobExecutor: JobExecutor,
+                                             assignedMaterialExecutor:
+                                             AssignedMaterialExecutor): DeleteAssignedMaterialUseCase{
+        return DeleteAssignedMaterialUseCase(jobExecutor,
+                uiThread, assignedMaterialExecutor)
+    }
+    @Provides
+    fun provideUpdateAssignedMaterialPresenter(updateAssignedMaterialUseCase:
+                                               UpdateAssignedMaterialUseCase): UpdateAssignedMaterialPresenter{
+        return UpdateAssignedMaterialPresenter(updateAssignedMaterialUseCase)
+    }
+
+    @Provides
+    fun provideAddAssignedMaterialToNotificationPresenter(addAssignedMaterialToNotificationUseCase:
+                                                          AddAssignedMaterialToNotificationUseCase): AddAssignedMaterialToNotificationPresenter{
+        return AddAssignedMaterialToNotificationPresenter(addAssignedMaterialToNotificationUseCase)
+    }
+
+    @Provides
+    fun provideDeleteAssignedMaterialPresenter(deleteAssignedMaterialUseCase:
+                                               DeleteAssignedMaterialUseCase):
+            DeleteAssignedMaterialPresenter{
+        return DeleteAssignedMaterialPresenter(deleteAssignedMaterialUseCase)
+    }
+    /////////////////////
+
+    @Provides
     fun provideNotificationExecutor(): NotificationExecutor{
         return NotificationExecutor()
     }
@@ -244,6 +320,33 @@ class PresenterModule {
     }
 
     @Provides
+    fun provideUpdateFieldNotificationUseCase(uiThread: UIThread,
+                                              jobExecutor: JobExecutor,
+                                              notificationExecutor:
+                                              NotificationExecutor):
+            UpdateFieldNotificationUseCase{
+        return UpdateFieldNotificationUseCase(jobExecutor, uiThread,
+                notificationExecutor)
+    }
+
+    @Provides
+    fun provideDeleteNotificationUseCase(uiThread: UIThread,
+                                         jobExecutor: JobExecutor,
+                                         notificationExecutor:
+                                         NotificationExecutor): DeleteNotificationUseCase{
+        return DeleteNotificationUseCase(jobExecutor, uiThread,
+                notificationExecutor)
+    }
+
+
+    @Provides
+    fun provideUpdateFieldNotificationPresenter(updateFieldNotificationUseCase:
+                                                UpdateFieldNotificationUseCase):
+            UpdateFieldNotificationPresenter{
+        return UpdateFieldNotificationPresenter(updateFieldNotificationUseCase)
+    }
+
+    @Provides
     fun provideAddNotificationToTechnicalUseCase(uiThread: UIThread,
                                                  jobExecutor: JobExecutor,
                                                  notificationExecutor:
@@ -261,6 +364,25 @@ class PresenterModule {
                 notificationExecutor)
     }
 
+    @Provides
+    fun provideGetFinishedNotificationUseCase(uiThread: UIThread,
+                                              jobExecutor: JobExecutor,
+                                              notificationExecutor:
+                                              NotificationExecutor): GetFinishedNotificationUseCase{
+        return GetFinishedNotificationUseCase(jobExecutor, uiThread,
+                notificationExecutor)
+    }
+
+    @Provides
+    fun provideUpdateDataRemoteWaterPresenter(getFinishedNotificationUseCase:
+                                              GetFinishedNotificationUseCase,
+                                              setRemoteNotificationDataUseCase:
+                                              SetRemoteNotificationDataUseCase,
+                                              deleteNotificationUseCase:
+                                              DeleteNotificationUseCase): UpdateDataRemoteWaterPresenter{
+        return UpdateDataRemoteWaterPresenter(getFinishedNotificationUseCase,
+                setRemoteNotificationDataUseCase, deleteNotificationUseCase)
+    }
 
     @Provides
     fun provideAddNotificationToTechnicalPresenter(addNotificationToTechnicalUseCase:

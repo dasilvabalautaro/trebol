@@ -10,8 +10,9 @@
     <string name="lbl_password">Password</string>
     <string name="task_complete">Task Complete</string>
     <string name="get_complete">Get Complete</string>
+    <string name="image_not_found">Image not found</string>
     <string name="download_complete">Download Complete</string>
-    <string name="add_notifications">Success Add Notification to Technical</string>
+    <string name="add_notifications">Success Add Notification</string>
     <string name="add_customer">Add Customer</string>
     <string name="technical_not_found">Technical not found</string>
     <string name="delete_complete">Delete Complete</string>
@@ -29,6 +30,9 @@
     <string name="error_download">Error download.</string>
     <string name="customer_save">Success Save Customer</string>
     <string name="notification_save">Success Save Notification</string>
+    <string name="image_save">Success Save Image</string>
+    <string name="change_field">change</string>
+    <string name="permission_write">"Cannot write images to external storage"</string>
     <string name="lbl_close_app">Tap again to close the application.</string>
     <string name="lbl_list_ots">Listado de las OTs</string>
     <string name="lbl_announce">AVISO No</string>
@@ -72,7 +76,7 @@
     <string name="lbl_fecha">FECHA AVISO:</string>
     <string name="lbl_logo">LOGO</string>
     <string name="lbl_title_materiales">Lista de Materiales</string>
-    <string name="lbl_hint_search">Descripción Material</string>
+    <string name="lbl_hint_search">Código Material(3)</string>
     <string name="lbl_orden_de_trabajo">Orden de Trabajo</string>
     <string name="lbl_nombre_cliente">NOMBRE CLIENTE</string>
     <string name="lbl_nombre_tecnico">NOMBRE TÉCNICO</string>

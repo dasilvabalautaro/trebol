@@ -1,13 +1,11 @@
 package com.hiddenodds.trebolv2.model.persistent.database
 
 import android.os.Parcel
-import com.hiddenodds.trebolv2.model.data.Customer
-import com.hiddenodds.trebolv2.model.data.Download
-import com.hiddenodds.trebolv2.model.data.Notification
-import com.hiddenodds.trebolv2.model.data.Technical
+import com.hiddenodds.trebolv2.model.data.*
 import com.hiddenodds.trebolv2.model.interfaces.IDataContent
 import com.hiddenodds.trebolv2.model.interfaces.IRepository
 import com.hiddenodds.trebolv2.model.interfaces.ITaskCompleteListener
+import com.hiddenodds.trebolv2.presentation.model.AssignedMaterialModel
 import io.realm.Realm
 import io.realm.RealmList
 import io.realm.RealmObject
@@ -38,6 +36,30 @@ abstract class CRUDRealm: IRepository {
         }
         return e
 
+    }
+
+    fun saveAssignedMaterial(assignedMaterialModel: AssignedMaterialModel,
+                             listener: ITaskCompleteListener): AssignedMaterial?{
+        val realm: Realm = Realm.getDefaultInstance()
+        var assignedMaterial: AssignedMaterial? = null
+        try {
+            realm.executeTransaction({
+                val material = realm.where(Material::class.java)
+                        .equalTo("id", assignedMaterialModel.material!!.id)
+                        .findFirst()
+
+                assignedMaterial = it.createObject(AssignedMaterial::class.java,
+                        UUID.randomUUID().toString())
+                assignedMaterial!!.quantity = assignedMaterialModel.quantity
+                assignedMaterial!!.material = material
+                listener.onSaveSucceeded()
+            })
+
+
+        }catch (e: Throwable){
+            listener.onSaveFailed(e.message!!)
+        }
+        return assignedMaterial
     }
 
     override fun <E : RealmObject> getAllData(clazz: Class<E>): RealmResults<E>? {
@@ -123,6 +145,90 @@ abstract class CRUDRealm: IRepository {
 
     }
 
+    fun updateAssignedMaterial(id: String, quantity: Int,
+                               listener: ITaskCompleteListener): Boolean{
+        val realm: Realm = Realm.getDefaultInstance()
+        try {
+            realm.executeTransaction {
+                val assigned = realm.where(AssignedMaterial::class.java)
+                        .equalTo("id", id).findFirst()
+                if (assigned != null){
+                    assigned.quantity = quantity
+                    realm.insertOrUpdate(assigned)
+                }
+                listener.onSaveSucceeded()
+            }
+        }catch (e: Throwable){
+            listener.onSaveFailed(e.message!!)
+            return false
+        }
+        return true
+    }
+
+    fun updateFieldNotification(id: String, nameFieldUpdate: String,
+                                newValue: String,
+                                listener: ITaskCompleteListener): Boolean{
+        val realm: Realm = Realm.getDefaultInstance()
+        try {
+
+            realm.executeTransaction {
+                val notification = realm.where(Notification::class.java)
+                        .equalTo("id", id).findFirst()
+
+                if (notification != null){
+                    if (nameFieldUpdate == "diet"){
+                        notification.diet = newValue
+                    }
+                    if (nameFieldUpdate == "observations"){
+                        notification.observations = newValue
+                    }
+                    if (nameFieldUpdate == "reportTechnical"){
+                        notification.reportTechnical = newValue
+                    }
+                    if (nameFieldUpdate == "lastAmount"){
+                        notification.lastAmount = newValue
+                    }
+                    if (nameFieldUpdate == "totalTeam"){
+                        notification.totalTeam = newValue
+                    }
+                    if (nameFieldUpdate == "hours"){
+                        notification.hours = newValue
+                    }
+                    if (nameFieldUpdate == "inside"){
+                        notification.inside = newValue
+                    }
+                    if (nameFieldUpdate == "vSoft1"){
+                        notification.vSoft1 = newValue
+                    }
+                    if (nameFieldUpdate == "vSoft2"){
+                        notification.vSoft2 = newValue
+                    }
+                    if (nameFieldUpdate == "vSoft3"){
+                        notification.vSoft3 = newValue
+                    }
+                    if (nameFieldUpdate == "outside"){
+                        notification.outside = newValue
+                    }
+                    if (nameFieldUpdate == "workHours"){
+                        notification.workHours = newValue
+                    }
+                    if (nameFieldUpdate == "state"){
+                        notification.state = newValue
+                    }
+                    if (nameFieldUpdate == "dateEnd"){
+                        notification.dateEnd = newValue
+                    }
+                    realm.insertOrUpdate(notification)
+                }
+                listener.onSaveSucceeded()
+            }
+        }catch (e: Throwable){
+            listener.onSaveFailed(e.message!!)
+            return false
+        }
+        return true
+    }
+
     override fun <E : RealmObject> updateField(nameField: String,
                                                valueSearch: String,
                                                nameFieldUpdate: String,
@@ -140,7 +246,6 @@ abstract class CRUDRealm: IRepository {
 
                     }
                 }
-
 
                 listener.onSaveSucceeded()
 
@@ -188,6 +293,41 @@ abstract class CRUDRealm: IRepository {
         return true
     }
 
+    fun deleteAssignedMaterialOfNotification(idNotification: String,
+                                             idAssigned: String,
+                                             flagUse: Boolean,
+                                             listener: ITaskCompleteListener):
+            Boolean{
+        val realm: Realm = Realm.getDefaultInstance()
+        try {
+            realm.executeTransaction{
+                val assigned = realm.where(AssignedMaterial::class.java)
+                        .equalTo("id", idAssigned).findFirst()
+                if (assigned != null){
+                    val notification = realm.where(Notification::class.java)
+                            .equalTo("id", idNotification).findFirst()
+                    when(flagUse){
+                        true -> {
+                            notification!!.materialUse.remove(assigned)
+                        }
+                        false -> {
+                            notification!!.materialOut.remove(assigned)
+                        }
+                    }
+                    realm.where(AssignedMaterial::class.java)
+                            .equalTo("id", idAssigned)
+                            .findAll()?.deleteAllFromRealm()
+                }
+                listener.onSaveSucceeded()
+            }
+
+        }catch (e: Throwable){
+            listener.onSaveFailed(e.message!!)
+            return false
+        }
+        return true
+    }
+
     fun deleteNotificationsOfTechnical(code: String,
                                        listener: ITaskCompleteListener): Boolean{
         val realm: Realm = Realm.getDefaultInstance()
@@ -205,6 +345,39 @@ abstract class CRUDRealm: IRepository {
 
                 }
                 listener.onSaveSucceeded()
+            }
+        }catch (e: Throwable){
+            listener.onSaveFailed(e.message!!)
+            return false
+        }
+        return true
+    }
+
+    fun addAssignedMaterialToNotification(list:
+                                          ArrayList<AssignedMaterialModel>,
+                                          id: String, flagUse: Boolean,
+                                          listener: ITaskCompleteListener): Boolean{
+        val realm: Realm = Realm.getDefaultInstance()
+        try {
+            realm.executeTransaction {
+                val notification = realm.where(Notification::class.java)
+                        .equalTo("id", id).findFirst()
+                if (notification != null){
+                    for (i in list.indices){
+                        val assigned = realm.where(AssignedMaterial::class.java)
+                                .equalTo("id", list[i].id).findFirst()
+                        when(flagUse){
+                            true -> {
+                                notification.materialUse.add(assigned)
+                                realm.insertOrUpdate(notification)
+                            }
+                            false ->{
+                                notification.materialOut.add(assigned)
+                                realm.insertOrUpdate(notification)
+                            }
+                        }
+                    }
+                }
             }
         }catch (e: Throwable){
             listener.onSaveFailed(e.message!!)
