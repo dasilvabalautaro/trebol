@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment
 import android.widget.Toast
 import com.hiddenodds.trebolv2.App
 import com.hiddenodds.trebolv2.dagger.PresenterModule
+import com.hiddenodds.trebolv2.presentation.components.PdfNotification
 import com.hiddenodds.trebolv2.presentation.model.MaterialModel
 import com.hiddenodds.trebolv2.presentation.presenter.*
 import com.hiddenodds.trebolv2.tools.ManageImage
@@ -44,6 +45,8 @@ abstract class NotificationFragment: Fragment() {
             AddAssignedMaterialToNotificationPresenter
     @Inject
     lateinit var deleteAssignedMaterialPresenter: DeleteAssignedMaterialPresenter
+    @Inject
+    lateinit var pdfNotification: PdfNotification
 
     var disposable: CompositeDisposable = CompositeDisposable()
 

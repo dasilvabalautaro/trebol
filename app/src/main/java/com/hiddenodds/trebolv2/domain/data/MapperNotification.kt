@@ -36,7 +36,7 @@ class MapperNotification: IDataContent {
     var totalTeam: String = "0"
     var lastAmount: String = "0"
     var reportTechnical: String = ""
-    var diet: String = ""
+    var diet: String = "NO"
     var workHours: String = "0"
     var inside: String = "00:00"
     var outside: String = "00:00"

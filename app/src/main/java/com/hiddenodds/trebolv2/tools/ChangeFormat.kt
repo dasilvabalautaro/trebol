@@ -71,4 +71,6 @@ object ChangeFormat {
         horizontalDecoration.setDrawable(horizontalDivider)
         rv.addItemDecoration(horizontalDecoration)
     }
+
+
 }

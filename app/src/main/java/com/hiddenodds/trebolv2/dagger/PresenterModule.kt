@@ -4,6 +4,7 @@ import com.hiddenodds.trebolv2.domain.UIThread
 import com.hiddenodds.trebolv2.domain.interactor.*
 import com.hiddenodds.trebolv2.model.executor.*
 import com.hiddenodds.trebolv2.model.interfaces.*
+import com.hiddenodds.trebolv2.presentation.components.PdfNotification
 import com.hiddenodds.trebolv2.presentation.presenter.*
 import com.hiddenodds.trebolv2.tools.ManageImage
 import com.hiddenodds.trebolv2.tools.PermissionUtils
@@ -40,6 +41,11 @@ class PresenterModule {
     @Provides
     fun provideManageImage(permissionUtils: PermissionUtils): ManageImage{
         return ManageImage(permissionUtils)
+    }
+
+    @Provides
+    fun providePdfNotification(): PdfNotification{
+        return PdfNotification()
     }
 
     //////////////////////

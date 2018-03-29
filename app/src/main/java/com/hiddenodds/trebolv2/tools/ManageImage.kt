@@ -3,10 +3,8 @@ package com.hiddenodds.trebolv2.tools
 import android.Manifest
 import android.app.Activity
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Canvas
-import android.graphics.Color
+import android.graphics.*
+import android.graphics.pdf.PdfDocument
 import android.net.Uri
 import android.os.Environment
 import android.support.v4.app.ActivityCompat
@@ -21,6 +19,8 @@ import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
 
+
+
 @Singleton
 class ManageImage @Inject constructor(private val permissionUtils:
                                       PermissionUtils):
@@ -29,6 +29,7 @@ class ManageImage @Inject constructor(private val permissionUtils:
     private val context = App.appComponent.context()
     var image: Bitmap? = null
     var code: String = ""
+    var flagPdf = false
     val REQUEST_EXTERNAL_STORAGE = 1
     private var message: String = ""
     private val ALBUM_APP = "SignatureTrebol"
@@ -40,7 +41,7 @@ class ManageImage @Inject constructor(private val permissionUtils:
                 .subscribe { message }
     }
 
-    fun addJpgSignatureToGallery(activity: Activity){
+    fun addFileToGallery(activity: Activity){
         when {
             ContextCompat.checkSelfPermission(context,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
@@ -53,9 +54,35 @@ class ManageImage @Inject constructor(private val permissionUtils:
     }
 
     private fun executeSaveImage(){
+        when(flagPdf){
+            true -> {
+                flagPdf = false
+                executeSaveImageToPdf()
+            }
+            false -> {
+                executeSaveImageToJPG()
+            }
+        }
+    }
+
+    private fun executeSaveImageToJPG(){
         try {
             val signatureImageFile = File(getAlbumStorageDir(), "$code.jpg")
             saveBitmapToJPG(image!!, signatureImageFile)
+            message = context.getString(R.string.image_save)
+            observableMessage.onNext(message)
+        }catch (ie: IOException){
+            if (ie.message != null){
+                message = ie.message!!
+                observableMessage.onNext(message)
+            }
+        }
+    }
+
+    private fun executeSaveImageToPdf(){
+        try {
+            val imageFile = File(getAlbumStorageDir(), "$code.pdf")
+            saveBitmapToPDF(image!!, imageFile)
             message = context.getString(R.string.image_save)
             observableMessage.onNext(message)
         }catch (ie: IOException){
@@ -100,7 +127,29 @@ class ManageImage @Inject constructor(private val permissionUtils:
         newBitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream)
         stream.close()
     }
+    @Throws(IOException::class)
+    private fun saveBitmapToPDF(bitmap: Bitmap, filePdf: File){
+        val document = PdfDocument()
+        val pageInfo = PdfDocument.PageInfo.Builder(bitmap.width,
+                bitmap.height, 1).create()
+        val page = document.startPage(pageInfo)
 
+        val canvas = page.canvas
+
+        val paint = Paint()
+        paint.color = Color.parseColor("#ffffff")
+        canvas.drawPaint(paint)
+
+
+        val bitmapScaled = Bitmap.createScaledBitmap(bitmap,
+                bitmap.width, bitmap.height, true)
+
+        paint.color = Color.BLUE
+        canvas.drawBitmap(bitmapScaled, 0f, 0f, null)
+        document.finishPage(page)
+        document.writeTo(FileOutputStream(filePdf))
+        document.close()
+    }
 
     fun getSignatureStore(code: String): Bitmap?{
         var bitmap: Bitmap? = null
@@ -130,5 +179,6 @@ class ManageImage @Inject constructor(private val permissionUtils:
             }
         }
     }
+
 
 }

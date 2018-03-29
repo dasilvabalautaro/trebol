@@ -83,13 +83,12 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
 
     @OnClick(R.id.btnPDF)
     fun savePdf(){
-        val view: View = activity.findViewById(R.id.sv_ot)
-        view.isDrawingCacheEnabled = true
-        val viewBitmap : Bitmap = view.drawingCache
-        view.isDrawingCacheEnabled = false
-        manageImage.image = viewBitmap
-        manageImage.code = "form"
-        manageImage.addJpgSignatureToGallery(activity)
+        pdfNotification.manageImage = this.manageImage
+        async {
+            pdfNotification.inflateView()
+            pdfNotification.setData(notificationModel!!, technicalModel!!)
+            pdfNotification.saveImage()
+        }
     }
 
     @OnClick(R.id.btnSaveSignature)
@@ -103,7 +102,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
                     updateState("1")
                 }
             }
-            manageImage.addJpgSignatureToGallery(activity)
+            manageImage.addFileToGallery(activity)
 
         }else{
             context.toast(context.getString(R.string.image_not_found))
@@ -393,7 +392,9 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
             technicalPresenter.executeGetTechnical(codeTechnical)
         }
 
+
     }
+
 
     private fun setSignature(codeTech: String){
         val bitmap = manageImage.getSignatureStore(codeTech)
@@ -609,14 +610,12 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
             for (i in 0 until spnDieta!!.adapter.count){
                 val value = spnDieta!!.adapter.getItem(i) as String
                 if (value == diet){
-                    flagSpinner = true
                     spnDieta!!.setSelection(i)
                     break
                 }
             }
-
         }
-
+        flagSpinner = true
     }
     
     private fun updateListMaterial(){
