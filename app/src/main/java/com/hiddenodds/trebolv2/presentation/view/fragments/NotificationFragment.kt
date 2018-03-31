@@ -47,6 +47,8 @@ abstract class NotificationFragment: Fragment() {
     lateinit var deleteAssignedMaterialPresenter: DeleteAssignedMaterialPresenter
     @Inject
     lateinit var pdfNotification: PdfNotification
+    @Inject
+    lateinit var sendEmailPresenter: SendEmailPresenter
 
     var disposable: CompositeDisposable = CompositeDisposable()
 

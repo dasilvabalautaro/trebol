@@ -15,10 +15,7 @@ import com.github.gcacace.signaturepad.views.SignaturePad
 import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.presentation.components.ItemProductSelectAdapter
 import com.hiddenodds.trebolv2.presentation.interfaces.ILoadDataView
-import com.hiddenodds.trebolv2.presentation.model.AssignedMaterialModel
-import com.hiddenodds.trebolv2.presentation.model.MaterialModel
-import com.hiddenodds.trebolv2.presentation.model.NotificationModel
-import com.hiddenodds.trebolv2.presentation.model.TechnicalModel
+import com.hiddenodds.trebolv2.presentation.model.*
 import com.hiddenodds.trebolv2.tools.ChangeFormat
 import com.hiddenodds.trebolv2.tools.Variables
 import kotlinx.coroutines.experimental.async
@@ -344,6 +341,11 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         flagAddMaterial = true
         typeListMaterial = 1
         callProductsFragment()
+    }
+
+    @OnClick(R.id.bt_email)
+    fun callEmail(){
+        executeEmail()
     }
 
     companion object Factory {
@@ -690,5 +692,38 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
             }
         }
 
+    }
+
+    private fun bluidEmailModel(): EmailModel{
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+        val dateWork = sdf.format(Date())
+        var whoFor = ""
+        if (notificationModel!!.customer != null){
+            whoFor = notificationModel!!.customer!!.email
+        }
+        val emailModel = EmailModel()
+        emailModel.title = lbl_title!!.text.toString()
+        emailModel.whoOf = "servicio.tecnico@trebolgroup.com"
+        emailModel.whoFor = whoFor
+        emailModel.whoCopy = "servicio.tecnico@trebolgroup.com; ${technicalModel!!.email}"
+        emailModel.subject = "Cliente: ${notificationModel!!.businessName} -- Orden de Trabajo: ${lbl_title!!.text.toString()}"
+        emailModel.message = "Estimado cliente, adjunto le enviamos el " +
+                " parte de trabajo del aviso ${lbl_title!!.text}" +
+                " llevado a cabo en sus instalaciones el día $dateWork .\n" +
+                "Reciba un Cordial Saludo.\n" +
+                "Trebol Group Providers S.L."
+        emailModel.client = notificationModel!!.businessName
+        emailModel.clip = notificationModel!!.code + ".pdf"
+        return emailModel
+    }
+
+    private fun executeEmail(){
+        val emailFragment = EmailFragment.newInstance(bluidEmailModel())
+        activity.supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.flContent, emailFragment,
+                        emailFragment.javaClass.simpleName)
+                .addToBackStack(null)
+                .commit()
     }
 }

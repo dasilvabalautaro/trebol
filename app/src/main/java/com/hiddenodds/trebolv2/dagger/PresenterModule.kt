@@ -516,4 +516,9 @@ class PresenterModule {
                 deleteCustomersUseCase)
     }
 
+    @Provides
+    fun provideSendEmailPresenter(): SendEmailPresenter{
+        return SendEmailPresenter()
+    }
+
 }

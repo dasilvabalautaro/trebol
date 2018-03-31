@@ -116,6 +116,7 @@ class NotificationExecutor @Inject constructor(): CRUDRealm(),
                 CachingLruRepository
                         .instance
                         .delLru(codeTech)
+
                 subscriber.onNext(true)
                 subscriber.onComplete()
             }else{

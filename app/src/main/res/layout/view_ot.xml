@@ -623,7 +623,7 @@
         android:gravity="bottom"
         android:orientation="horizontal" >
 
-        <Button
+        <!--<Button
             android:id="@+id/btnList"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
@@ -631,15 +631,15 @@
             android:layout_marginEnd="5dp"
             android:layout_marginStart="15dp"
             android:background="@drawable/button_back_list"
-            tools:ignore="ButtonStyle" />
+            tools:ignore="ButtonStyle" />-->
 
         <Button
-            android:id="@+id/btnEmail"
+            android:id="@+id/bt_email"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="15dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
             android:background="@drawable/email_update_thing"
             tools:ignore="ButtonStyle" />
     </LinearLayout>

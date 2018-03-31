@@ -94,4 +94,5 @@
     <string name="lbl_error">Trebol Error</string>
     <string name="lbl_end_instalation">ACEPTACION DE FINALIZACION \nDE LA INSTALACION</string>
     <string name="new_filter">New Filter</string>
+    <string name="address_empty">Address empty. Verify.</string>
 </resources>

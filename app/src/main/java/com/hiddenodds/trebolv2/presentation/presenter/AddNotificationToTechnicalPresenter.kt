@@ -2,8 +2,10 @@ package com.hiddenodds.trebolv2.presentation.presenter
 
 import com.hiddenodds.trebolv2.domain.interactor.AddCustomerToNotificationUseCase
 import com.hiddenodds.trebolv2.domain.interactor.AddNotificationToTechnicalUseCase
+import com.hiddenodds.trebolv2.model.persistent.file.ManageFile
 import com.hiddenodds.trebolv2.tools.Variables
 import io.reactivex.observers.DisposableObserver
+import kotlinx.coroutines.experimental.async
 import javax.inject.Inject
 
 
@@ -39,6 +41,10 @@ class AddNotificationToTechnicalPresenter @Inject constructor(private val addNot
     }
 
     private fun stopProgress(){
+        async {
+            ManageFile.deleteDirectoryOfWork()
+        }
+
         view!!.executeTask(5)
     }
 

@@ -6,11 +6,11 @@ import android.content.pm.PackageManager
 import android.graphics.*
 import android.graphics.pdf.PdfDocument
 import android.net.Uri
-import android.os.Environment
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import com.hiddenodds.trebolv2.App
 import com.hiddenodds.trebolv2.R
+import com.hiddenodds.trebolv2.model.persistent.file.ManageFile
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import java.io.File
@@ -32,7 +32,6 @@ class ManageImage @Inject constructor(private val permissionUtils:
     var flagPdf = false
     val REQUEST_EXTERNAL_STORAGE = 1
     private var message: String = ""
-    private val ALBUM_APP = "SignatureTrebol"
     var observableMessage: Subject<String> =
             PublishSubject.create()
 
@@ -108,12 +107,7 @@ class ManageImage @Inject constructor(private val permissionUtils:
     }
 
     private fun getAlbumStorageDir(): File {
-        val file = File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), ALBUM_APP)
-        if (!file.mkdirs()) {
-            println("Directory not created")
-        }
-        return file
+        return ManageFile.getAlbumStorageDir()
     }
 
     @Throws(IOException::class)
@@ -168,16 +162,7 @@ class ManageImage @Inject constructor(private val permissionUtils:
     }
 
     fun deleteSignatureStore(code:String){
-        try {
-            val pathSignature = File(getAlbumStorageDir(), "$code.jpg")
-            if (pathSignature.delete()){
-                println("Delete file OK")
-            }
-        }catch (ie: IOException){
-            if (ie.message != null){
-                println(ie.message)
-            }
-        }
+        ManageFile.deleteFileOfWork(code)
     }
 
 

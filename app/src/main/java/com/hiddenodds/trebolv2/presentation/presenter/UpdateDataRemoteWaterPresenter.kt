@@ -5,8 +5,10 @@ import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.domain.interactor.DeleteNotificationUseCase
 import com.hiddenodds.trebolv2.domain.interactor.GetFinishedNotificationUseCase
 import com.hiddenodds.trebolv2.domain.interactor.SetRemoteNotificationDataUseCase
+import com.hiddenodds.trebolv2.model.persistent.file.ManageFile
 import com.hiddenodds.trebolv2.presentation.model.NotificationModel
 import io.reactivex.observers.DisposableObserver
+import kotlinx.coroutines.experimental.async
 import javax.inject.Inject
 
 class UpdateDataRemoteWaterPresenter @Inject constructor(private val getFinishedNotificationUseCase:
@@ -88,6 +90,9 @@ class UpdateDataRemoteWaterPresenter @Inject constructor(private val getFinished
 
     inner class DeleteNotificationObserver: DisposableObserver<Boolean>(){
         override fun onNext(t: Boolean) {
+            async {
+                ManageFile.deleteFileOfWork(notificationModel!!.code)
+            }
             getUpdateNext()
         }
 

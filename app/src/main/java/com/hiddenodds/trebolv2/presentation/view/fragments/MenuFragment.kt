@@ -55,7 +55,6 @@ class MenuFragment: Fragment(), ILoadDataView {
         launch {
             materialRemotePresenter.executeQueryRemote()
         }
-
     }
 
     @OnClick(R.id.btn_ots)
@@ -161,6 +160,7 @@ class MenuFragment: Fragment(), ILoadDataView {
             5 -> {
                 message = context.resources.getString(R.string.add_notifications) +
                         " End process."
+
                 clearPresenter()
                 enableView()
             }
