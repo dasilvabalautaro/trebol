@@ -69,7 +69,9 @@ class MaterialExecutor @Inject constructor(): CRUDRealm(),
         var flag = true
         return Observable.create{subscriber ->
             val clazz: Class<Material> = Material::class.java
-            this.deleteAll(clazz, taskListenerExecutor)
+            //this.deleteAll(clazz, taskListenerExecutor)
+            var l = this.getAllData(clazz)
+            println("List size before: ${l!!.size}")
             for (i in list.indices){
                 val parcel: Parcel = list[i].getContent()
                 parcel.setDataPosition(0)
@@ -79,6 +81,8 @@ class MaterialExecutor @Inject constructor(): CRUDRealm(),
                     break
                 }
             }
+            l = this.getAllData(clazz)
+            println("List size after: ${l!!.size}")
             if (flag){
                 subscriber.onNext(true)
                 subscriber.onComplete()
@@ -92,6 +96,7 @@ class MaterialExecutor @Inject constructor(): CRUDRealm(),
         return Observable.create { subscriber ->
             val clazz: Class<Material> = Material::class.java
             val listMaterial: RealmResults<Material>? = this.getAllData(clazz)
+            println("Mostrar lista: ${listMaterial!!.size}")
             if (listMaterial != null){
                 val materialModelCollection: Collection<MaterialModel> = this
                         .materialModelDataMapper
@@ -108,11 +113,9 @@ class MaterialExecutor @Inject constructor(): CRUDRealm(),
         return Observable.create{subscriber ->
             this.msgError = ""
             val clazz: Class<Material> = Material::class.java
-            this.deleteAll(clazz, taskListenerExecutor)
-            if (this.msgError.isEmpty()){
+            if (this.deleteAll(clazz, taskListenerExecutor)){
                 subscriber.onNext(true)
                 subscriber.onComplete()
-
             }else{
                 subscriber.onError(Throwable(this.msgError))
             }

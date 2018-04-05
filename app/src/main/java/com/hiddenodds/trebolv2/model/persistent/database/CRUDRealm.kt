@@ -93,18 +93,26 @@ abstract class CRUDRealm: IRepository {
         }
     }
     override fun <E : RealmObject> deleteAll(clazz: Class<E>,
-                                             listener: ITaskCompleteListener) {
+                                             listener: ITaskCompleteListener): Boolean {
 
         val realm: Realm = Realm.getDefaultInstance()
-        try {
+        return try {
             realm.executeTransaction({
+                val list: RealmResults<E> = it.where(clazz).findAll()
+                if (list.isValid){
+                    list.deleteAllFromRealm()
+                }
+/*
                 it.where(clazz)
                         .findAll()?.deleteAllFromRealm()
+*/
                 listener.onSaveSucceeded()
             })
 
+            true
         }catch (e: Throwable){
             listener.onSaveFailed(e.message!!)
+            false
         }
 
     }

@@ -9,11 +9,12 @@ import com.hiddenodds.trebolv2.presentation.model.NotificationModel
 import com.hiddenodds.trebolv2.tools.DataListDiffCallback
 
 
-class ItemOtAdapter: RecyclerView.Adapter<ItemOtAdapter.ViewHolder>() {
+class ItemOtAdapter(private val listener:
+                    (NotificationModel) -> Unit): RecyclerView.Adapter<ItemOtAdapter.ViewHolder>() {
     private val items: ArrayList<NotificationModel> = ArrayList()
 
     override fun onBindViewHolder(holder: ItemOtAdapter.ViewHolder?, position: Int) =
-            holder!!.bind(items[position])
+            holder!!.bind(items[position], listener)
 
     override fun getItemCount(): Int = items.size
 
@@ -35,7 +36,8 @@ class ItemOtAdapter: RecyclerView.Adapter<ItemOtAdapter.ViewHolder>() {
 
     class ViewHolder(private val itemRowOtView: ItemRowOtView):
             RecyclerView.ViewHolder(itemRowOtView){
-        fun bind(item: NotificationModel) = with(itemRowOtView)  {
+        fun bind(item: NotificationModel, listener:
+        (NotificationModel) -> Unit) = with(itemRowOtView)  {
             edtAnnounce!!.text = item.code
             edtMachine!!.text = item.series
             edtType!!.text = item.type
@@ -51,7 +53,10 @@ class ItemOtAdapter: RecyclerView.Adapter<ItemOtAdapter.ViewHolder>() {
                 edtContact!!.text = item.customer!!.name
 
             }
-            btnEmail!!.tag = item.code + "*" + item.idTech
+            btnEmail!!.setOnClickListener {
+                listener(item)
+            }
+
             btnOpenOt!!.tag = item.code + "*" + item.idTech
 
         }

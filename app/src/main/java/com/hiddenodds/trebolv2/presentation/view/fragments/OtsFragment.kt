@@ -23,6 +23,8 @@ import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.dagger.PresenterModule
 import com.hiddenodds.trebolv2.presentation.components.ItemOtAdapter
 import com.hiddenodds.trebolv2.presentation.interfaces.ILoadDataView
+import com.hiddenodds.trebolv2.presentation.model.EmailModel
+import com.hiddenodds.trebolv2.presentation.model.NotificationModel
 import com.hiddenodds.trebolv2.presentation.model.TechnicalModel
 import com.hiddenodds.trebolv2.presentation.presenter.TechnicalMasterPresenter
 import com.hiddenodds.trebolv2.presentation.presenter.TechnicalPresenter
@@ -35,6 +37,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Cancellable
 import kotlinx.coroutines.experimental.async
+import org.jetbrains.anko.alert
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 class OtsFragment: Fragment(), ILoadDataView {
@@ -43,6 +48,8 @@ class OtsFragment: Fragment(), ILoadDataView {
     private var techMasterCode: String? = null
     private var codeTech: String = ""
     private var disposable: CompositeDisposable = CompositeDisposable()
+    private var technicalModel: TechnicalModel? = null
+    private var notificationModel: NotificationModel? = null
 
     @BindView(R.id.sp_tech)
     @JvmField var spTech: Spinner? = null
@@ -114,6 +121,7 @@ class OtsFragment: Fragment(), ILoadDataView {
 
     override fun <T> executeTask(obj: T) {
         if (obj != null){
+            this.technicalModel = (obj as TechnicalModel)
             val code = (obj as TechnicalModel).code
             if (code == this.techMasterCode && spTech!!.adapter == null){
                 val listTech = ArrayList((obj as TechnicalModel).trd)
@@ -150,7 +158,10 @@ class OtsFragment: Fragment(), ILoadDataView {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             addDecorationRecycler()
         }
-        adapter = ItemOtAdapter()
+        adapter = ItemOtAdapter{
+            this.notificationModel = it
+            launchOptions()
+        }
         rvOts!!.adapter = adapter
     }
 
@@ -210,6 +221,60 @@ class OtsFragment: Fragment(), ILoadDataView {
             context.toast(context.resources
                     .getString(R.string.input_error))
         }
+    }
+
+    private fun launchOptions(){
+        activity.alert(R.string.lbl_end_instalation) {
+            title = "Alerta"
+            positiveButton(R.string.lbl_confirm) {
+                callNotificationFinish(notificationModel!!.code,
+                        technicalModel!!.code)
+            }
+            negativeButton(R.string.lbl_not_confirm) {
+                executeEmail(buildEmailModel())
+            }
+            neutralPressed(R.string.lbl_cancel){}
+
+        }.show()
+    }
+
+    private fun callNotificationFinish(codeNotification: String,
+                                       codeTechnical: String){
+        val finishFragment = NotificationFinishFragment.newInstance(codeNotification,
+                codeTechnical)
+        activity.supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.flContent, finishFragment,
+                        finishFragment.javaClass.simpleName)
+                .addToBackStack(null)
+                .commit()
+    }
+
+    private fun buildEmailModel(): EmailModel {
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+        val dateWork = sdf.format(Date())
+
+        val emailModel = EmailModel()
+        emailModel.title = "OT Nº: ${notificationModel!!.code}"
+        emailModel.whoOf = "instalaciones@trebolgroup.com"
+        emailModel.whoFor = "instalaciones@trebolgroup.com"
+        emailModel.whoCopy = technicalModel!!.email
+        emailModel.subject = notificationModel!!.series
+        emailModel.message = "Se ha terminado la ${notificationModel!!.type} en el cliente " +
+                "${notificationModel!!.businessName} en el día de $dateWork."
+        emailModel.client = notificationModel!!.businessName
+        emailModel.clip = notificationModel!!.code + ".pdf"
+        return emailModel
+    }
+
+    private fun executeEmail(emailModel: EmailModel){
+        val emailFragment = EmailFragment.newInstance(emailModel)
+        activity.supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.flContent, emailFragment,
+                        emailFragment.javaClass.simpleName)
+                .addToBackStack(null)
+                .commit()
     }
 
     private fun Context.toast(message: CharSequence) =

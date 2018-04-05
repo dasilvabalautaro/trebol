@@ -122,10 +122,15 @@ class TechnicalRemotePresenter @Inject constructor(private val getRemoteDataUseC
             saveDependentTechnicalUseCase.execute(SaveTechniciansObserver())
         }
     }
+    private fun stopProgress(){
+        view!!.executeTask(1)
+    }
 
     override fun destroy() {
         super.destroy()
         this.getRemoteDataUseCase.dispose()
+        this.saveListTechnicalUseCase.dispose()
+        this.saveDependentTechnicalUseCase.dispose()
     }
 
     inner class ListObserver: DisposableObserver<JSONArray>(){
@@ -154,6 +159,7 @@ class TechnicalRemotePresenter @Inject constructor(private val getRemoteDataUseC
                         Constants.PREFERENCE_TREBOL)
                 prefs[Constants.TECHNICAL_DB] = true
                 showMessage(context.resources.getString(R.string.technicals_save))
+                stopProgress()
             }
 
         }

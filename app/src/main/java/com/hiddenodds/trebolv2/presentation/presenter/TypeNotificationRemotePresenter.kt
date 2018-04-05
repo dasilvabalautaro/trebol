@@ -72,6 +72,16 @@ class TypeNotificationRemotePresenter @Inject constructor(private val getRemoteD
         saveListTypeNotification()
     }
 
+    override fun destroy() {
+        super.destroy()
+        getRemoteDataUseCase.dispose()
+        saveListTypeNotificationUseCase.dispose()
+
+    }
+    private fun stopProgress(){
+        view!!.executeTask(2)
+    }
+
     inner class ListObserver: DisposableObserver<JSONArray>(){
         override fun onNext(t: JSONArray) {
             buildObjets(t)
@@ -91,7 +101,7 @@ class TypeNotificationRemotePresenter @Inject constructor(private val getRemoteD
     inner class SaveTypeNotificationObserver: DisposableObserver<Boolean>(){
         override fun onNext(t: Boolean) {
             showMessage(context.resources.getString(R.string.type_notification_save))
-
+            stopProgress()
         }
 
         override fun onComplete() {

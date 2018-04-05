@@ -46,18 +46,18 @@
         android:layout_below="@+id/edt_password"
         android:layout_centerHorizontal="true"
         app:layout_widthPercent="53%"
-        app:layout_heightPercent="6.5%"
+        app:layout_heightPercent="10%"
         app:layout_marginTopPercent="6%"
         android:background="@drawable/button_login"/>
 
-    <Button
+    <!--<Button
         android:id="@+id/new_user"
         android:layout_below="@+id/btn_ok"
         android:layout_centerHorizontal="true"
         android:background="@drawable/newuser"
         app:layout_heightPercent="6.5%"
         app:layout_marginTopPercent="6%"
-        app:layout_widthPercent="53%" />
+        app:layout_widthPercent="53%" />-->
 
 </android.support.percent.PercentRelativeLayout>
 

@@ -5,10 +5,15 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.widget.Toast
 import com.hiddenodds.trebolv2.App
+import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.dagger.PresenterModule
+import com.hiddenodds.trebolv2.presentation.components.PdfEndTask
 import com.hiddenodds.trebolv2.presentation.components.PdfNotification
+import com.hiddenodds.trebolv2.presentation.model.EmailModel
 import com.hiddenodds.trebolv2.presentation.model.MaterialModel
+import com.hiddenodds.trebolv2.presentation.model.NotificationModel
 import com.hiddenodds.trebolv2.presentation.presenter.*
+import com.hiddenodds.trebolv2.presentation.view.activities.MainActivity
 import com.hiddenodds.trebolv2.tools.ManageImage
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -49,6 +54,8 @@ abstract class NotificationFragment: Fragment() {
     lateinit var pdfNotification: PdfNotification
     @Inject
     lateinit var sendEmailPresenter: SendEmailPresenter
+    @Inject
+    lateinit var pdfEndTask: PdfEndTask
 
     var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -65,9 +72,34 @@ abstract class NotificationFragment: Fragment() {
                 .subscribe { s ->
                     context.toast(s)
                 })
+        (activity as MainActivity).displayHome(true)
     }
 
+    fun getNotification(code: String,
+                                list: java.util.ArrayList<NotificationModel>):
+            NotificationModel? {
+        if (list.isNotEmpty()){
+            val sortedList = list.sortedWith(compareBy({ it.code }))
 
+            sortedList.forEach { notify: NotificationModel ->
+                if (notify.code == code){
+                    return notify
+                }
+            }
+        }
+
+        return null
+    }
+
+    fun executeEmail(emailModel: EmailModel){
+        val emailFragment = EmailFragment.newInstance(emailModel)
+        activity.supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.flContent, emailFragment,
+                        emailFragment.javaClass.simpleName)
+                .addToBackStack(null)
+                .commit()
+    }
 
     fun Context.toast(message: CharSequence) =
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()

@@ -19,7 +19,7 @@ interface IRepository {
                                         listener: ITaskCompleteListener): Boolean
 
     fun <E : RealmObject> deleteAll(clazz: Class<E>,
-                                    listener: ITaskCompleteListener)
+                                    listener: ITaskCompleteListener): Boolean
 
     fun <E : RealmObject> updateField(nameField: String, valueSearch: String,
                                       nameFieldUpdate: String, newValue: String,

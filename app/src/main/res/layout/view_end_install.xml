@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/back_options"
+    android:fillViewport="true">
+
+    <android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp">
+
+        <android.support.constraint.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/left_guideline"
+            app:layout_constraintGuide_percent=".05"
+            android:orientation="vertical"/>
+
+        <android.support.constraint.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/left_one_guideline"
+            app:layout_constraintGuide_percent=".65"
+            android:orientation="vertical"/>
+
+        <android.support.constraint.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/left_two_guideline"
+            app:layout_constraintGuide_percent=".75"
+            android:orientation="vertical"/>
+
+        <android.support.constraint.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/left_three_guideline"
+            app:layout_constraintGuide_percent=".85"
+            android:orientation="vertical"/>
+
+        <android.support.constraint.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/right_guideline"
+            app:layout_constraintGuide_percent=".95"
+            android:orientation="vertical"/>
+
+        <android.support.constraint.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/top_guideline"
+            app:layout_constraintGuide_percent=".05"
+            android:orientation="horizontal"/>
+
+        <android.support.constraint.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/bottom_guideline"
+            app:layout_constraintGuide_percent="0.95"
+            android:orientation="horizontal"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+            app:layout_constraintRight_toRightOf="@+id/right_guideline"
+            app:layout_constraintTop_toTopOf="@+id/top_guideline"
+            android:fontFamily="@font/calibri"
+            android:textSize="12sp"
+            android:text="@string/lbl_finish_install"
+            android:textColor="@color/colorLblTitle"
+            android:textAlignment="center"
+            android:id="@+id/tv_title"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+            app:layout_constraintRight_toRightOf="@+id/right_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title"
+            android:layout_marginTop="15dp"
+            android:fontFamily="@font/calibri"
+            android:text="@string/lbl_serie"
+            android:textSize="12sp"
+            android:textColor="@color/colorLblSubTitle"
+            android:textAlignment="textStart"
+            android:id="@+id/tv_model"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+            app:layout_constraintRight_toRightOf="@+id/right_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/tv_model"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/calibri"
+            android:textSize="12sp"
+            android:textColor="@color/colorTxt"
+            android:textAlignment="textStart"
+            android:id="@+id/tv_serie"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+            app:layout_constraintRight_toRightOf="@+id/right_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/tv_serie"
+            android:layout_marginTop="15dp"
+            android:fontFamily="@font/calibri"
+            android:text="@string/lbl_name_client"
+            android:textSize="12sp"
+            android:textColor="@color/colorLblSubTitle"
+            android:textAlignment="textStart"
+            android:id="@+id/tv_client"/>
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="28dp"
+            app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+            app:layout_constraintRight_toRightOf="@+id/right_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/tv_client"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/calibri"
+            android:inputType="textPersonName"
+            android:textSize="12sp"
+            android:textColor="@color/colorTxt"
+            android:textAlignment="textStart"
+            android:background="@drawable/rounded_pass"
+            android:id="@+id/et_client"
+            tools:ignore="LabelFor" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+            app:layout_constraintRight_toRightOf="@+id/left_one_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/et_client"
+            android:layout_marginTop="15dp"
+            android:fontFamily="@font/calibri"
+            android:text="@string/lbl_firma"
+            android:textSize="12sp"
+            android:textColor="@color/colorLblSubTitle"
+            android:textAlignment="textStart"
+            android:id="@+id/tv_signature"/>
+
+        <ImageButton
+            android:id="@+id/bt_save"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:adjustViewBounds="true"
+            android:background="@null"
+            android:contentDescription="@string/lbl_logo"
+            android:scaleType="fitXY"
+            android:src="@mipmap/ic_save"
+            app:layout_constraintLeft_toLeftOf="@+id/left_one_guideline"
+            app:layout_constraintRight_toRightOf="@+id/left_two_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/et_client" />
+
+        <ImageButton
+            android:id="@+id/bt_clear"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:adjustViewBounds="true"
+            android:background="@null"
+            android:contentDescription="@string/lbl_logo"
+            android:scaleType="fitXY"
+            android:src="@mipmap/ic_clear"
+            app:layout_constraintLeft_toLeftOf="@+id/left_two_guideline"
+            app:layout_constraintRight_toRightOf="@+id/left_three_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/et_client" />
+
+        <ImageButton
+            android:id="@+id/bt_pdf"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:adjustViewBounds="true"
+            android:background="@null"
+            android:contentDescription="@string/lbl_logo"
+            android:scaleType="fitXY"
+            android:src="@mipmap/ic_pdf"
+            app:layout_constraintLeft_toLeftOf="@+id/left_three_guideline"
+            app:layout_constraintRight_toRightOf="@+id/right_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/et_client" />
+
+        <com.github.gcacace.signaturepad.views.SignaturePad
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/signatureClient"
+            android:layout_width="0dp"
+            app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+            app:layout_constraintRight_toRightOf="@+id/right_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/bt_pdf"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/white"
+            android:layout_height="200dp"
+            app:penColor="@android:color/black" />
+
+        <Button
+            android:id="@+id/bt_email"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+            app:layout_constraintRight_toRightOf="@+id/right_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/signatureClient"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/email_update_thing"
+            tools:ignore="ButtonStyle" />
+
+    </android.support.constraint.ConstraintLayout>
+</ScrollView>

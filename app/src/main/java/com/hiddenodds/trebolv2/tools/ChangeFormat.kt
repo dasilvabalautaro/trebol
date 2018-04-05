@@ -5,8 +5,10 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.support.annotation.RequiresApi
+import android.support.percent.PercentLayoutHelper
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.RecyclerView
+import android.view.View
 import android.widget.EditText
 import com.hiddenodds.trebolv2.R
 import java.text.SimpleDateFormat
@@ -72,5 +74,44 @@ object ChangeFormat {
         rv.addItemDecoration(horizontalDecoration)
     }
 
+    @Suppress("DEPRECATION")
+    fun setHeightPercent(view: View, height: Float){
+        val params = view.layoutParams as PercentLayoutHelper.PercentLayoutParams
+        val info = params.percentLayoutInfo
+        info.heightPercent = height
+        view.requestLayout()
+    }
+
+    @Suppress("DEPRECATION")
+    fun setWidthPercent(view: View, width: Float){
+        val params = view.layoutParams as PercentLayoutHelper.PercentLayoutParams
+        val info = params.percentLayoutInfo
+        info.widthPercent = width
+        view.requestLayout()
+    }
+
+    @Suppress("DEPRECATION")
+    fun setWidthPercentLandscape(view: View){
+        val params = view.layoutParams as PercentLayoutHelper.PercentLayoutParams
+        val info = params.percentLayoutInfo
+        info.widthPercent = info.heightPercent * 0.5f
+        view.requestLayout()
+    }
+
+    @Suppress("DEPRECATION")
+    fun setLeftPercent(view: View, left: Float){
+        val params = view.layoutParams as PercentLayoutHelper.PercentLayoutParams
+        val info = params.percentLayoutInfo
+        info.leftMarginPercent = left
+        view.requestLayout()
+    }
+
+    @Suppress("DEPRECATION")
+    fun setRightPercent(view: View, right: Float){
+        val params = view.layoutParams as PercentLayoutHelper.PercentLayoutParams
+        val info = params.percentLayoutInfo
+        info.rightMarginPercent = right
+        view.requestLayout()
+    }
 
 }

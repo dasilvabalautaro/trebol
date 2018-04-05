@@ -71,8 +71,6 @@ class PdfNotificationView: FrameLayout {
     @JvmField var rvMatUse: RecyclerView? = null
     @BindView(R.id.signatureClient)
     @JvmField var signatureClient: ImageView? = null
-    /*@BindView(R.id.sv_pdf_notification)
-    @JvmField var svPdfNotification: ScrollView? = null*/
 
     init {
 

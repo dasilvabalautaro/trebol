@@ -128,6 +128,8 @@ class ProductFragment: NotificationFragment(), ILoadDataView {
 
             }
 
+        }else{
+            context.toast(context.getString(R.string.list_not_found))
         }
 
     }

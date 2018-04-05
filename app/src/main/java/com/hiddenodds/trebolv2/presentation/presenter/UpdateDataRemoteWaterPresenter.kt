@@ -58,7 +58,12 @@ class UpdateDataRemoteWaterPresenter @Inject constructor(private val getFinished
     inner class NotificationObserver: DisposableObserver<List<NotificationModel>>(){
         override fun onNext(t: List<NotificationModel>) {
             listNotification = ArrayList(t)
-            getUpdateNext()
+            if (listNotification.isNotEmpty()){
+                getUpdateNext()
+            }else{
+                showError(context.getString(R.string.list_not_found))
+            }
+
         }
 
         override fun onComplete() {

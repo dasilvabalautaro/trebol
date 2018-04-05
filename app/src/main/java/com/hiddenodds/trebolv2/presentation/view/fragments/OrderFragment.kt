@@ -345,7 +345,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
 
     @OnClick(R.id.bt_email)
     fun callEmail(){
-        executeEmail()
+        executeEmail(bluidEmailModel())
     }
 
     companion object Factory {
@@ -398,8 +398,8 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
     }
 
 
-    private fun setSignature(codeTech: String){
-        val bitmap = manageImage.getSignatureStore(codeTech)
+    private fun setSignature(codeNotification: String){
+        val bitmap = manageImage.getSignatureStore(codeNotification)
         if (bitmap != null){
             activity.runOnUiThread({
                 signatureClient!!.signatureBitmap = bitmap
@@ -474,21 +474,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
 
     }
 
-    private fun getNotification(code: String,
-                                list: ArrayList<NotificationModel>):
-            NotificationModel? {
-        if (list.isNotEmpty()){
-            val sortedList = list.sortedWith(compareBy({ it.code }))
 
-            sortedList.forEach { notify: NotificationModel ->
-                if (notify.code == code){
-                    return notify
-                }
-            }
-        }
-
-        return null
-    }
 
     private fun setControls(notify: NotificationModel?){
         if (notify != null){
@@ -717,13 +703,5 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         return emailModel
     }
 
-    private fun executeEmail(){
-        val emailFragment = EmailFragment.newInstance(bluidEmailModel())
-        activity.supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.flContent, emailFragment,
-                        emailFragment.javaClass.simpleName)
-                .addToBackStack(null)
-                .commit()
-    }
+
 }

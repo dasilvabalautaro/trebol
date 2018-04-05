@@ -4,6 +4,7 @@ import com.hiddenodds.trebolv2.domain.UIThread
 import com.hiddenodds.trebolv2.domain.interactor.*
 import com.hiddenodds.trebolv2.model.executor.*
 import com.hiddenodds.trebolv2.model.interfaces.*
+import com.hiddenodds.trebolv2.presentation.components.PdfEndTask
 import com.hiddenodds.trebolv2.presentation.components.PdfNotification
 import com.hiddenodds.trebolv2.presentation.presenter.*
 import com.hiddenodds.trebolv2.tools.ManageImage
@@ -46,6 +47,11 @@ class PresenterModule {
     @Provides
     fun providePdfNotification(): PdfNotification{
         return PdfNotification()
+    }
+
+    @Provides
+    fun providePdfEndTask(): PdfEndTask{
+        return PdfEndTask()
     }
 
     //////////////////////
@@ -182,6 +188,12 @@ class PresenterModule {
     }
 
     @Provides
+    fun provideDeleteListMaterialUseCase(uiThread: UIThread,
+                                         jobExecutor: JobExecutor,
+                                         materialExecutor: MaterialExecutor): DeleteListMaterialUseCase{
+        return DeleteListMaterialUseCase(jobExecutor, uiThread, materialExecutor)
+    }
+    @Provides
     fun provideGetListMaterialUseCase(uiThread: UIThread,
                                       jobExecutor: JobExecutor,
                                       materialExecutor: MaterialExecutor):
@@ -193,8 +205,12 @@ class PresenterModule {
     fun provideMaterialRemotePresenter(getRemoteDataUseCase:
                                        GetRemoteDataUseCase,
                                        saveListMaterialUseCase:
-                                       SaveListMaterialUseCase): MaterialRemotePresenter{
-        return MaterialRemotePresenter(getRemoteDataUseCase, saveListMaterialUseCase)
+                                       SaveListMaterialUseCase,
+                                       deleteListMaterialUseCase:
+                                       DeleteListMaterialUseCase):
+            MaterialRemotePresenter{
+        return MaterialRemotePresenter(getRemoteDataUseCase,
+                saveListMaterialUseCase, deleteListMaterialUseCase)
     }
 
     @Provides

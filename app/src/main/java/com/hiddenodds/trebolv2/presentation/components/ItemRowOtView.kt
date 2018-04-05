@@ -68,11 +68,6 @@ class ItemRowOtView: FrameLayout {
         }
 
     }
-    @OnClick(R.id.btnEmail)
-    fun openEmail(){
-
-    }
-
     /*@BindView(R.id.view_space)
     @JvmField var viewSpace: View? = null*/
     init {

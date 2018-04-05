@@ -6,32 +6,36 @@ import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
+import android.view.MenuItem
 import android.widget.Toast
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.hiddenodds.trebolv2.App
 import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.model.persistent.caching.CachingLruRepository
+import com.hiddenodds.trebolv2.presentation.view.fragments.MenuFragment
 import com.hiddenodds.trebolv2.presentation.view.fragments.SignInFragment
 import com.hiddenodds.trebolv2.tools.Constants
 import com.hiddenodds.trebolv2.tools.PreferenceHelper
 import com.hiddenodds.trebolv2.tools.PreferenceHelper.set
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
+import com.hiddenodds.trebolv2.tools.Variables
+import io.realm.Realm
 
 class MainActivity : AppCompatActivity() {
     @BindView(R.id.app_bar)
     @JvmField var appBarLayout: AppBarLayout? = null
 
     private var isWarnedToClose = false
+    private val ACTION_HOME = 16908332
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         ButterKnife.bind(this)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(false)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             supportActionBar!!.setBackgroundDrawable(getDrawable(R.drawable.head_back))
         }else{
@@ -43,27 +47,41 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-  /*  override fun onBackPressed() {
-        super.onBackPressed()
+    fun displayHome(flag: Boolean){
+        supportActionBar!!.setDisplayHomeAsUpEnabled(flag)
+    }
 
-        if (supportFragmentManager.backStackEntryCount > 0){
-            supportFragmentManager.popBackStack()
-        }else{
-            handleBackPressInThisActivity()
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        val id = item!!.itemId
+
+        if (id == ACTION_HOME){
+            Variables.endApp = false
+            supportFragmentManager.popBackStack(null,
+                    FragmentManager.POP_BACK_STACK_INCLUSIVE)
+
+            val fragmentMenu = MenuFragment()
+            addFragment(fragmentMenu)
         }
 
-    }*/
+        return super.onOptionsItemSelected(item)
 
-    private fun handleBackPressInThisActivity(){
-        if (isWarnedToClose){
-            (App.appComponent.context() as App).serviceRemote.closeConnection()
-            val prefs = PreferenceHelper.customPrefs(this,
-                    Constants.PREFERENCE_TREBOL)
-            prefs[Constants.TECHNICAL_KEY] = ""
-            prefs[Constants.TECHNICAL_PASSWORD] = ""
-            CachingLruRepository.instance.getLru().evictAll()
-            finish()
-            android.os.Process.killProcess(android.os.Process.myPid())
+    }
+
+
+    /*  override fun onBackPressed() {
+          super.onBackPressed()
+
+          if (supportFragmentManager.backStackEntryCount > 0){
+              supportFragmentManager.popBackStack()
+          }else{
+              handleBackPressInThisActivity()
+          }
+
+      }*/
+
+    fun handleBackPressInThisActivity(){
+        /*if (isWarnedToClose){
+
         }else{
             isWarnedToClose = true
             toast(getString(R.string.lbl_close_app))
@@ -71,7 +89,16 @@ class MainActivity : AppCompatActivity() {
                 delay(2000)
                 isWarnedToClose = false
             }
-        }
+        }*/
+        (App.appComponent.context() as App).serviceRemote.closeConnection()
+        val prefs = PreferenceHelper.customPrefs(this,
+                Constants.PREFERENCE_TREBOL)
+        prefs[Constants.TECHNICAL_KEY] = ""
+        prefs[Constants.TECHNICAL_PASSWORD] = ""
+        CachingLruRepository.instance.getLru().evictAll()
+        Realm.getDefaultInstance().close()
+        finish()
+        android.os.Process.killProcess(android.os.Process.myPid())
     }
 
     @SuppressLint("PrivateResource")
@@ -81,7 +108,6 @@ class MainActivity : AppCompatActivity() {
                 .setCustomAnimations(R.anim.design_bottom_sheet_slide_in,
                         R.anim.design_bottom_sheet_slide_out)
                 .replace(R.id.flContent, newFragment, newFragment.javaClass.simpleName)
-                .addToBackStack(null)
                 .commit()
     }
 

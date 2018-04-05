@@ -3,6 +3,7 @@ package com.hiddenodds.trebolv2.presentation.presenter
 import com.hiddenodds.trebolv2.App
 import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.domain.data.MapperMaterial
+import com.hiddenodds.trebolv2.domain.interactor.DeleteListMaterialUseCase
 import com.hiddenodds.trebolv2.domain.interactor.GetRemoteDataUseCase
 import com.hiddenodds.trebolv2.domain.interactor.SaveListMaterialUseCase
 import com.hiddenodds.trebolv2.model.persistent.network.StatementSQL
@@ -15,7 +16,9 @@ import javax.inject.Inject
 class MaterialRemotePresenter @Inject constructor(private val getRemoteDataUseCase:
                                                   GetRemoteDataUseCase,
                                                   private val saveListMaterialUseCase:
-                                                  SaveListMaterialUseCase):
+                                                  SaveListMaterialUseCase,
+                                                  private val deleteListMaterialUseCase:
+                                                  DeleteListMaterialUseCase):
         BasePresenter(){
     private val listMapperMaterial: ArrayList<MapperMaterial> = ArrayList()
 
@@ -52,7 +55,7 @@ class MaterialRemotePresenter @Inject constructor(private val getRemoteDataUseCa
 
     private fun buildObjets(jsonArray: JSONArray){
         buildListMapper(jsonArray)
-        saveListMaterial()
+        deleteListMaterial()
     }
 
     private fun saveListMaterial(){
@@ -66,14 +69,28 @@ class MaterialRemotePresenter @Inject constructor(private val getRemoteDataUseCa
         }
     }
 
+    private fun deleteListMaterial(){
+        if (listMapperMaterial.size != 0){
+            deleteListMaterialUseCase.execute(DeleteMaterialObserver())
+
+        }else{
+            showError(context.resources.getString(R.string.list_not_found))
+        }
+    }
     private fun stopProgress(){
-        view!!.executeTask(1)
+        view!!.executeTask(8)
+    }
+
+    override fun destroy() {
+        super.destroy()
+        getRemoteDataUseCase.dispose()
+        saveListMaterialUseCase.dispose()
+        deleteListMaterialUseCase.dispose()
     }
 
     inner class ListObserver: DisposableObserver<JSONArray>(){
         override fun onNext(t: JSONArray) {
             buildObjets(t)
-            stopProgress()
         }
 
         override fun onComplete() {
@@ -87,9 +104,26 @@ class MaterialRemotePresenter @Inject constructor(private val getRemoteDataUseCa
         }
     }
 
+    inner class DeleteMaterialObserver: DisposableObserver<Boolean>(){
+        override fun onNext(t: Boolean) {
+            saveListMaterial()
+        }
+
+        override fun onComplete() {
+            showMessage(context.resources.getString(R.string.delete_complete))
+        }
+
+        override fun onError(e: Throwable) {
+            if (e.message != null) {
+                showError(e.message!!)
+            }
+        }
+    }
+
     inner class SaveMaterialObserver: DisposableObserver<Boolean>(){
         override fun onNext(t: Boolean) {
             showMessage(context.resources.getString(R.string.material_save))
+            stopProgress()
         }
 
         override fun onComplete() {

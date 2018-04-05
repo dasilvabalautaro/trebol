@@ -1,6 +1,7 @@
 package com.hiddenodds.trebolv2.presentation.view.fragments
 
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -17,8 +18,12 @@ import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.dagger.PresenterModule
 import com.hiddenodds.trebolv2.presentation.interfaces.ILoadDataView
 import com.hiddenodds.trebolv2.presentation.presenter.*
+import com.hiddenodds.trebolv2.presentation.view.activities.MainActivity
+import com.hiddenodds.trebolv2.tools.ChangeFormat
+import com.hiddenodds.trebolv2.tools.Variables
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
+import org.jetbrains.anko.alert
 import javax.inject.Inject
 
 
@@ -45,16 +50,35 @@ class MenuFragment: Fragment(), ILoadDataView {
 
     @OnClick(R.id.btn_get)
     fun updateDataNotification(){
-        setViewForTransferData()
-        notificationDownloadPresenter.executeDownloadNotification()
+        activity.alert(R.string.lbl_delete_data) {
+            title = "Alerta"
+            positiveButton(R.string.lbl_confirm) {
+                setViewForTransferData()
+                notificationDownloadPresenter.executeDownloadNotification()
+            }
+
+            neutralPressed(R.string.lbl_cancel){}
+
+        }.show()
+
+
     }
 
     @OnClick(R.id.btn_update_thinks)
     fun updateDataGeneral(){
-        setViewForTransferData()
-        launch {
-            materialRemotePresenter.executeQueryRemote()
-        }
+        activity.alert(R.string.lbl_update_notification_data) {
+            title = "Alerta, el proceso tardará. "
+            positiveButton(R.string.lbl_confirm) {
+                setViewForTransferData()
+                launch {
+                    materialRemotePresenter.executeQueryRemote()
+                }
+            }
+
+            neutralPressed(R.string.lbl_cancel){}
+
+        }.show()
+
     }
 
     @OnClick(R.id.btn_ots)
@@ -94,6 +118,7 @@ class MenuFragment: Fragment(), ILoadDataView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         component.inject(this)
+
     }
 
     override fun onCreateView(inflater: LayoutInflater?,
@@ -102,6 +127,7 @@ class MenuFragment: Fragment(), ILoadDataView {
         val root: View = inflater!!.inflate(R.layout.view_menu,
                 container,false)
         ButterKnife.bind(this, root)
+
         return root
     }
 
@@ -117,6 +143,28 @@ class MenuFragment: Fragment(), ILoadDataView {
         activity.theme.applyStyle(R.style.AppTheme, true)
     }
 
+
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
+        if (newConfig!!.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            configLandscape()
+
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            configPortrait()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val orientation = this.resources.configuration.orientation
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            configPortrait()
+        }else {
+            configLandscape()
+        }
+        (activity as MainActivity).displayHome(false)
+    }
+
     override fun showMessage(message: String) {
         context.toast(message)
     }
@@ -124,6 +172,7 @@ class MenuFragment: Fragment(), ILoadDataView {
     override fun showError(message: String) {
         clearPresenter()
         clearWaterPresenter()
+        clearMaterialPresenter()
         enableView()
         context.toast(message)
     }
@@ -178,6 +227,12 @@ class MenuFragment: Fragment(), ILoadDataView {
                 clearWaterPresenter()
                 enableView()
             }
+            8 -> {
+                message = context.getString(R.string.download_complete) + " \n" +
+                        context.getString(R.string.lbl_download_notification)
+                clearMaterialPresenter()
+                enableView()
+            }
         }
         activity.runOnUiThread({
             context.toast(message)
@@ -194,12 +249,26 @@ class MenuFragment: Fragment(), ILoadDataView {
         updateDataRemoteWaterPresenter.destroy()
     }
 
+    private fun clearMaterialPresenter(){
+        materialRemotePresenter.destroy()
+    }
+
     override fun <T> executeTask(obj: T) {
         if (obj != null){
             val option = (obj as Int)
             processDownloadNotification(option)
         }else{
             enableView()
+        }
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (Variables.endApp){
+            (activity as MainActivity).handleBackPressInThisActivity()
+        }else{
+            Variables.endApp = true
         }
 
     }
@@ -228,6 +297,28 @@ class MenuFragment: Fragment(), ILoadDataView {
             enabledButton(true)
         })
 
+    }
+
+    private fun configLandscape() {
+        ChangeFormat.setWidthPercentLandscape(btUpdateWater!!)
+        ChangeFormat.setWidthPercentLandscape(btGetNotification!!)
+        ChangeFormat.setWidthPercentLandscape(btGetDataGeneral!!)
+        ChangeFormat.setWidthPercentLandscape(btShowOTS!!)
+        ChangeFormat.setLeftPercent(btUpdateWater!!, 0.32f)
+        ChangeFormat.setLeftPercent(btGetDataGeneral!!, 0.32f)
+        ChangeFormat.setRightPercent(btGetNotification!!, 0.32f)
+        ChangeFormat.setRightPercent(btShowOTS!!, 0.32f)
+    }
+
+    private fun configPortrait() {
+        ChangeFormat.setWidthPercent(btUpdateWater!!, 0.41f)
+        ChangeFormat.setWidthPercent(btGetNotification!!, 0.41f)
+        ChangeFormat.setWidthPercent(btGetDataGeneral!!, 0.41f)
+        ChangeFormat.setWidthPercent(btShowOTS!!, 0.41f)
+        ChangeFormat.setLeftPercent(btUpdateWater!!, 0.08f)
+        ChangeFormat.setLeftPercent(btGetDataGeneral!!, 0.08f)
+        ChangeFormat.setRightPercent(btGetNotification!!, 0.08f)
+        ChangeFormat.setRightPercent(btShowOTS!!, 0.08f)
     }
 
 }

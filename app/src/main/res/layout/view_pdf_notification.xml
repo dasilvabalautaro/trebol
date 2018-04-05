@@ -45,7 +45,6 @@
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
                 android:layout_below="@+id/img_left"
-                android:text="@string/lbl_orden_de_trabajo"
                 android:textColor="@color/colorLblTitle"
                 android:textSize="14sp"
                 android:textStyle="bold"

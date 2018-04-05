@@ -1,11 +1,13 @@
 package com.hiddenodds.trebolv2.presentation.view.fragments
 
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import butterknife.BindView
@@ -19,6 +21,7 @@ import com.hiddenodds.trebolv2.presentation.model.TechnicalModel
 import com.hiddenodds.trebolv2.presentation.presenter.TechnicalMasterPresenter
 import com.hiddenodds.trebolv2.presentation.presenter.TechnicalRemotePresenter
 import com.hiddenodds.trebolv2.presentation.presenter.TypeNotificationRemotePresenter
+import com.hiddenodds.trebolv2.tools.ChangeFormat
 import com.hiddenodds.trebolv2.tools.Constants
 import com.hiddenodds.trebolv2.tools.PreferenceHelper
 import com.hiddenodds.trebolv2.tools.PreferenceHelper.get
@@ -31,6 +34,8 @@ class SignInFragment: Fragment(), ILoadDataView {
     @JvmField var edt_user: EditText? = null
     @BindView(R.id.edt_password)
     @JvmField var edt_password: EditText? = null
+    @BindView(R.id.btn_ok)
+    @JvmField var btn_ok: Button? = null
     @OnClick(R.id.btn_ok)
     fun getTechnicalMaster(){
         if (validateInput()){
@@ -41,6 +46,8 @@ class SignInFragment: Fragment(), ILoadDataView {
             context.toast(context.resources
                     .getString(R.string.input_error))
         }
+
+
     }
 
     val Fragment.app: App
@@ -79,6 +86,19 @@ class SignInFragment: Fragment(), ILoadDataView {
         typeNotificationRemotePresenter.view = this
     }
 
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
+        if (newConfig!!.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            ChangeFormat.setHeightPercent(btn_ok!!, 0.15f)
+
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            ChangeFormat.setHeightPercent(btn_ok!!, 0.10f)
+
+        }
+    }
+
+
+
     override fun onResume() {
         super.onResume()
 
@@ -101,23 +121,42 @@ class SignInFragment: Fragment(), ILoadDataView {
 
     }
 
-
     override fun showMessage(message: String) {
         context.toast(message)
     }
 
     override fun showError(message: String) {
+        technicalRemotePresenter.destroy()
+        typeNotificationRemotePresenter.destroy()
         context.toast(message)
+    }
+
+    private fun clearRemotePresenter(option: Int){
+        when(option){
+            1 -> {
+                technicalRemotePresenter.destroy()
+            }
+            2 -> {
+                typeNotificationRemotePresenter.destroy()
+            }
+        }
     }
 
     override fun <T> executeTask(obj: T) {
         if (obj != null){
-            val nameTech = (obj as TechnicalModel).name
-            Variables.codeTechMaster = (obj as TechnicalModel).code
-            Variables.listTechnicals = ArrayList((obj as TechnicalModel).trd)
-            context.toast(context.resources.getString(R.string.welcome) +
-                    "\n" + nameTech)
-            callMenu()
+            if (obj is Int){
+                clearRemotePresenter(obj)
+
+            }else{
+                val nameTech = (obj as TechnicalModel).name
+                Variables.codeTechMaster = (obj as TechnicalModel).code
+                Variables.listTechnicals = ArrayList((obj as TechnicalModel).trd)
+
+                context.toast(context.resources.getString(R.string.welcome) +
+                        "\n" + nameTech)
+                callMenu()
+
+            }
         }
 
     }
@@ -140,7 +179,6 @@ class SignInFragment: Fragment(), ILoadDataView {
                 .beginTransaction()
                 .replace(R.id.flContent, fragmentMenu,
                         fragmentMenu.javaClass.simpleName)
-                .addToBackStack(null)
                 .commit()
     }
 }
