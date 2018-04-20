@@ -126,20 +126,44 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
-            app:layout_constraintRight_toRightOf="@+id/right_guideline"
+            app:layout_constraintRight_toRightOf="@+id/left_twice_guideline"
             app:layout_constraintTop_toBottomOf="@+id/lblMachine"
             android:layout_marginTop="5dp"
             android:textSize="12sp"
             android:textColor="@color/colorTxt"
             android:textAlignment="textStart"
             android:id="@+id/edtMachine"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/left_twice_guideline"
+            app:layout_constraintRight_toRightOf="@+id/right_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/edtAnnounce"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:text="@string/lbl_contact"
+            android:textColor="@color/colorLblSubTitle"
+            android:textAlignment="textStart"
+            android:id="@+id/lblContact"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/left_twice_guideline"
+            app:layout_constraintRight_toRightOf="@+id/right_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/lblContact"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:textColor="@color/colorTxt"
+            android:textAlignment="textStart"
+            android:id="@+id/edtContact"/>
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
             app:layout_constraintRight_toRightOf="@+id/left_twice_guideline"
-            app:layout_constraintTop_toBottomOf="@+id/edtMachine"
+            app:layout_constraintTop_toBottomOf="@+id/edtContact"
             android:layout_marginTop="5dp"
             android:textSize="12sp"
             android:text="@string/lbl_name"
@@ -163,34 +187,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
-            app:layout_constraintRight_toRightOf="@+id/right_guideline"
-            app:layout_constraintTop_toBottomOf="@+id/edtName"
-            android:layout_marginTop="5dp"
-            android:textSize="12sp"
-            android:text="@string/lbl_contact"
-            android:textColor="@color/colorLblSubTitle"
-            android:textAlignment="textStart"
-            android:id="@+id/lblContact"/>
-
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
-            app:layout_constraintRight_toRightOf="@+id/right_guideline"
-            app:layout_constraintTop_toBottomOf="@+id/lblContact"
-            android:layout_marginTop="5dp"
-            android:textSize="12sp"
-            android:textColor="@color/colorTxt"
-            android:textAlignment="textStart"
-            android:id="@+id/edtContact"/>
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
             app:layout_constraintRight_toRightOf="@+id/left_twice_guideline"
-            app:layout_constraintTop_toBottomOf="@+id/edtContact"
+            app:layout_constraintTop_toBottomOf="@+id/edtName"
             android:layout_marginTop="5dp"
             android:textSize="12sp"
             android:text="@string/lbl_fecha"
@@ -202,7 +200,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="@+id/left_twice_guideline"
             app:layout_constraintRight_toRightOf="@+id/right_guideline"
-            app:layout_constraintTop_toBottomOf="@+id/edtContact"
+            app:layout_constraintTop_toBottomOf="@+id/edtName"
             android:layout_marginTop="5dp"
             android:textSize="12sp"
             android:text="@string/lbl_date_finish"
@@ -367,7 +365,7 @@
             app:layout_constraintRight_toRightOf="@+id/left_twice_guideline"
             app:layout_constraintTop_toBottomOf="@+id/edtObservation"
             android:layout_marginEnd="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="20dp"
             android:id="@+id/btnOpenOt"
             android:background="@drawable/button_open_ot"/>
@@ -379,7 +377,7 @@
             app:layout_constraintLeft_toLeftOf="@+id/left_twice_guideline"
             app:layout_constraintTop_toBottomOf="@+id/edtObservation"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="20dp"
             android:id="@+id/btnEmail"
             android:background="@drawable/button_email"/>

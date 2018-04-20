@@ -11,9 +11,6 @@ import android.widget.ScrollView
 import com.hiddenodds.trebolv2.App
 import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.tools.ManageImage
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
 
 
@@ -51,12 +48,12 @@ class PdfEndTask @Inject constructor() {
     }
 
     private fun setSignature(codeNotify: String){
-        async {
-            val bitmap = manageImage!!.getSignatureStore(codeNotify)
-            if (bitmap != null){
-                (view as PdfEndTaskView).signatureClient!!.setImageBitmap(bitmap)
-            }
+        manageImage!!.code = codeNotify
+        val bitmap = manageImage!!.getFileOfGallery(activity)
+        if (bitmap != null){
+            (view as PdfEndTaskView).signatureClient!!.setImageBitmap(bitmap)
         }
+
     }
 
     fun saveImage(nameFile: String){
@@ -65,20 +62,16 @@ class PdfEndTask @Inject constructor() {
 
         val viewSv: View = view!!.findViewById(R.id.sv_pdf_end_task)
         val svScroll: ScrollView = view!!.findViewById(R.id.sv_pdf_end_task)
+        val viewBitmap : Bitmap = Bitmap.createBitmap(svScroll.getChildAt(0).measuredWidth,
+                svScroll.getChildAt(0).measuredHeight, Bitmap.Config.RGB_565)
+        val canvas = Canvas(viewBitmap)
+        view!!.layout(viewSv.left, viewSv.top, viewSv.right, viewSv.bottom)
+        view!!.draw(canvas)
 
-        launch(CommonPool) {
-
-            val viewBitmap : Bitmap = Bitmap.createBitmap(svScroll.getChildAt(0).measuredWidth,
-                    svScroll.getChildAt(0).measuredHeight, Bitmap.Config.ARGB_8888)
-            val canvas = Canvas(viewBitmap)
-            view!!.layout(viewSv.left, viewSv.top, viewSv.right, viewSv.bottom)
-            view!!.draw(canvas)
-            manageImage!!.image = viewBitmap
-            manageImage!!.code = nameFile
-            manageImage!!.flagPdf = true
-            manageImage!!.addFileToGallery(activity)
-
-        }
+        manageImage!!.image = viewBitmap
+        manageImage!!.code = nameFile
+        manageImage!!.flagPdf = true
+        manageImage!!.addFileToGallery(activity)
 
     }
 

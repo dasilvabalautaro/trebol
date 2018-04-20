@@ -146,6 +146,18 @@ class PresenterModule {
     }
 
     @Provides
+    fun provideVerifyConnectServerUseCase(uiThread: UIThread,
+                                          jobExecutor: JobExecutor): VerifyConnectServerUseCase{
+        return VerifyConnectServerUseCase(jobExecutor, uiThread)
+    }
+
+    @Provides
+    fun provideVerifyConnectServerPresenter(verifyConnectServerUseCase:
+                                            VerifyConnectServerUseCase): VerifyConnectServerPresenter{
+        return VerifyConnectServerPresenter(verifyConnectServerUseCase)
+    }
+
+    @Provides
     fun provideTechnicalRemotePresenter(getRemoteDataUseCase: GetRemoteDataUseCase,
                                         saveListTechnicalUseCase: SaveListTechnicalUseCase,
                                         saveDependentTechnicalUseCase: SaveDependentTechnicalUseCase): TechnicalRemotePresenter{

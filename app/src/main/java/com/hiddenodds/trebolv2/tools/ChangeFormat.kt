@@ -11,6 +11,9 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.EditText
 import com.hiddenodds.trebolv2.R
+import com.hiddenodds.trebolv2.model.persistent.caching.CachingLruRepository
+import com.hiddenodds.trebolv2.tools.PreferenceHelper.get
+import com.hiddenodds.trebolv2.tools.PreferenceHelper.set
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -27,6 +30,12 @@ object ChangeFormat {
         return result
     }
 
+    fun convertStringToDate(date: String): java.sql.Date{
+        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+        return java.sql.Date(formatter.parse(date).time)
+
+    }
+
     @Throws(NumberFormatException::class)
     fun substracHours(etIn: String, etOut: String): String{
         var difHrs = "0"
@@ -39,7 +48,7 @@ object ChangeFormat {
             val dif = minEnd - minInit
             val minWork = (dif % 60)
             val hrsWork = (dif / 60)
-            difHrs = hrsWork.toString() + ":" + minWork.toString()
+            difHrs = hrsWork.toString() + "." + minWork.toString()
         }
 
         return difHrs
@@ -114,4 +123,62 @@ object ChangeFormat {
         view.requestLayout()
     }
 
+    fun setVariablesConnect(context: Context){
+        try {
+            val prefs = PreferenceHelper.customPrefs(context,
+                    Constants.PREFERENCE_TREBOL)
+            val sqlServerKey: String? = prefs[Constants.SQLSERVER, ""]
+            if (sqlServerKey.isNullOrEmpty()){
+                prefs[Constants.SQLSERVER] = Variables.sqlServer
+                prefs[Constants.DATABASE] = Variables.database
+                prefs[Constants.USER] = Variables.user
+                prefs[Constants.PASSWORD] = Variables.password
+            }else{
+                Variables.sqlServer = prefs[Constants.SQLSERVER, ""]!!
+                Variables.database = prefs[Constants.DATABASE, ""]!!
+                Variables.user = prefs[Constants.USER, ""]!!
+                Variables.password = prefs[Constants.PASSWORD, ""]!!
+            }
+
+        }catch (ie: IllegalStateException){
+            println(ie.message)
+        }
+
+    }
+
+    fun changeVariablesConnect(context: Context){
+        val prefs = PreferenceHelper.customPrefs(context,
+                Constants.PREFERENCE_TREBOL)
+        prefs[Constants.SQLSERVER] = Variables.sqlServer
+        prefs[Constants.DATABASE] = Variables.database
+        prefs[Constants.USER] = Variables.user
+        prefs[Constants.PASSWORD] = Variables.password
+
+    }
+
+    fun refreshVariablesconnect(context: Context){
+        val prefs = PreferenceHelper.customPrefs(context,
+                Constants.PREFERENCE_TREBOL)
+        Variables.sqlServer = prefs[Constants.SQLSERVER, ""]!!
+        Variables.database = prefs[Constants.DATABASE, ""]!!
+        Variables.user = prefs[Constants.USER, ""]!!
+        Variables.password = prefs[Constants.PASSWORD, ""]!!
+    }
+
+    fun deleteCacheTechnical(codeTech: String){
+
+
+        if (Variables.changeTechnical.isNotEmpty()){
+
+            val code = Variables.changeTechnical.last()
+            if (code == codeTech){
+                Variables.changeTechnical.remove(code)
+                CachingLruRepository
+                        .instance
+                        .getLru()
+                        .remove(codeTech)
+            }
+            //Thread.sleep(1000)
+        }
+    }
 }

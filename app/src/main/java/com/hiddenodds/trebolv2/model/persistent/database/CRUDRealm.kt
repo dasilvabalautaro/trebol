@@ -13,6 +13,10 @@ import io.realm.RealmResults
 import java.util.*
 
 
+
+
+
+
 abstract class CRUDRealm: IRepository {
 
     override fun <E : RealmObject> save(clazz: Class<E>,
@@ -38,7 +42,7 @@ abstract class CRUDRealm: IRepository {
 
     }
 
-    fun saveAssignedMaterial(assignedMaterialModel: AssignedMaterialModel,
+    fun saveAssignedMat(assignedMaterialModel: AssignedMaterialModel,
                              listener: ITaskCompleteListener): AssignedMaterial?{
         val realm: Realm = Realm.getDefaultInstance()
         var assignedMaterial: AssignedMaterial? = null
@@ -52,14 +56,47 @@ abstract class CRUDRealm: IRepository {
                         UUID.randomUUID().toString())
                 assignedMaterial!!.quantity = assignedMaterialModel.quantity
                 assignedMaterial!!.material = material
+
                 listener.onSaveSucceeded()
             })
 
 
         }catch (e: Throwable){
             listener.onSaveFailed(e.message!!)
+        }finally {
+
         }
         return assignedMaterial
+    }
+
+    fun saveAssignedMaterial(assignedMaterialModel: AssignedMaterialModel,
+                             listener: ITaskCompleteListener): String?{
+        val realm: Realm = Realm.getDefaultInstance()
+
+        var id: String? = null
+        var assignedMaterial: AssignedMaterial? = null
+        try {
+            realm.executeTransaction({
+                val material = realm.where(Material::class.java)
+                        .equalTo("id", assignedMaterialModel.material!!.id)
+                        .findFirst()
+
+                assignedMaterial = it.createObject(AssignedMaterial::class.java,
+                        UUID.randomUUID().toString())
+                assignedMaterial!!.quantity = assignedMaterialModel.quantity
+                assignedMaterial!!.material = material
+                id = assignedMaterial!!.id
+                println("Id Assigned: " + assignedMaterial!!.id)
+                listener.onSaveSucceeded()
+            })
+
+
+        }catch (e: Throwable){
+            listener.onSaveFailed(e.message!!)
+        }finally {
+            realm.close()
+        }
+        return id
     }
 
     override fun <E : RealmObject> getAllData(clazz: Class<E>): RealmResults<E>? {
@@ -71,6 +108,7 @@ abstract class CRUDRealm: IRepository {
                                                   fieldName: String,
                                                   value: String): RealmResults<E>? {
         val realm: Realm = Realm.getDefaultInstance()
+        realm.refresh()
         return realm.where(clazz).equalTo(fieldName, value).findAll()
     }
 
@@ -90,6 +128,8 @@ abstract class CRUDRealm: IRepository {
         }catch (e: Throwable){
             listener.onSaveFailed(e.message!!)
             false
+        }finally {
+            realm.close()
         }
     }
     override fun <E : RealmObject> deleteAll(clazz: Class<E>,
@@ -113,6 +153,8 @@ abstract class CRUDRealm: IRepository {
         }catch (e: Throwable){
             listener.onSaveFailed(e.message!!)
             false
+        }finally {
+            realm.close()
         }
 
     }
@@ -148,7 +190,7 @@ abstract class CRUDRealm: IRepository {
             listener.onSaveFailed(e.message!!)
             return false
         }finally {
-
+            realm.close()
         }
 
     }
@@ -166,9 +208,12 @@ abstract class CRUDRealm: IRepository {
                 }
                 listener.onSaveSucceeded()
             }
+            realm.isAutoRefresh = true
         }catch (e: Throwable){
             listener.onSaveFailed(e.message!!)
             return false
+        }finally {
+            realm.close()
         }
         return true
     }
@@ -227,12 +272,16 @@ abstract class CRUDRealm: IRepository {
                         notification.dateEnd = newValue
                     }
                     realm.insertOrUpdate(notification)
+
                 }
                 listener.onSaveSucceeded()
             }
+            //realm.refresh()
         }catch (e: Throwable){
             listener.onSaveFailed(e.message!!)
             return false
+        }finally {
+            realm.close()
         }
         return true
     }
@@ -264,7 +313,7 @@ abstract class CRUDRealm: IRepository {
             listener.onSaveFailed(e.message!!)
             return false
         }finally {
-            //realm.close()
+            realm.close()
         }
 
     }
@@ -296,6 +345,8 @@ abstract class CRUDRealm: IRepository {
             println(e.message!!)
             listener.onSaveFailed(e.message!!)
             return false
+        }finally {
+            realm.close()
         }
 
         return true
@@ -332,6 +383,8 @@ abstract class CRUDRealm: IRepository {
         }catch (e: Throwable){
             listener.onSaveFailed(e.message!!)
             return false
+        }finally {
+            realm.close()
         }
         return true
     }
@@ -357,23 +410,27 @@ abstract class CRUDRealm: IRepository {
         }catch (e: Throwable){
             listener.onSaveFailed(e.message!!)
             return false
+        }finally {
+            realm.close()
         }
         return true
     }
 
     fun addAssignedMaterialToNotification(list:
-                                          ArrayList<AssignedMaterialModel>,
+                                          ArrayList<String>,
                                           id: String, flagUse: Boolean,
                                           listener: ITaskCompleteListener): Boolean{
         val realm: Realm = Realm.getDefaultInstance()
+
         try {
+
             realm.executeTransaction {
                 val notification = realm.where(Notification::class.java)
                         .equalTo("id", id).findFirst()
                 if (notification != null){
                     for (i in list.indices){
                         val assigned = realm.where(AssignedMaterial::class.java)
-                                .equalTo("id", list[i].id).findFirst()
+                                .equalTo("id", list[i]).findFirst()
                         when(flagUse){
                             true -> {
                                 notification.materialUse.add(assigned)
@@ -387,9 +444,12 @@ abstract class CRUDRealm: IRepository {
                     }
                 }
             }
+
         }catch (e: Throwable){
             listener.onSaveFailed(e.message!!)
             return false
+        }finally {
+            realm.close()
         }
         return true
     }
@@ -421,6 +481,8 @@ abstract class CRUDRealm: IRepository {
         }catch (e: Throwable){
             listener.onSaveFailed(e.message!!)
             return false
+        }finally {
+            realm.close()
         }
         return true
     }
@@ -447,6 +509,8 @@ abstract class CRUDRealm: IRepository {
         }catch (e: Throwable){
             listener.onSaveFailed(e.message!!)
             return false
+        }finally {
+            realm.close()
         }
 
         return true

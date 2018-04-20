@@ -27,6 +27,20 @@ class ProductFragment: NotificationFragment(), ILoadDataView {
     @BindView(R.id.sv_product)
     @JvmField var svProduct: SearchView? = null
 
+    companion object Factory {
+        private const val inputTechnical = "technical_"
+        fun newInstance(arg1: String? = null):
+                ProductFragment = ProductFragment().apply{
+            this.arguments = Bundle().apply {
+
+                this.putString(inputTechnical, arg1)
+            }
+
+        }
+    }
+
+    private val codeTechnical: String by lazy { this.arguments.getString(inputTechnical) }
+
     private var adapter: ItemProductAdapter? = null
     private var listMaterial: ArrayList<MaterialModel>? = null
     private var inputMethodManager: InputMethodManager ? = null
@@ -37,6 +51,12 @@ class ProductFragment: NotificationFragment(), ILoadDataView {
                 container,false)
         ButterKnife.bind(this, root)
         return root
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        ChangeFormat.deleteCacheTechnical(codeTechnical)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -104,6 +124,7 @@ class ProductFragment: NotificationFragment(), ILoadDataView {
         rvProducts!!.adapter = adapter
         rvProducts!!.adapter
     }
+
 
     override fun showMessage(message: String) {
         context.toast(message)

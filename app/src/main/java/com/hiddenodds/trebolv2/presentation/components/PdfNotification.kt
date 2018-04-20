@@ -16,9 +16,6 @@ import com.hiddenodds.trebolv2.presentation.model.NotificationModel
 import com.hiddenodds.trebolv2.presentation.model.TechnicalModel
 import com.hiddenodds.trebolv2.tools.ChangeFormat
 import com.hiddenodds.trebolv2.tools.ManageImage
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
 
 class PdfNotification @Inject constructor() {
@@ -29,7 +26,7 @@ class PdfNotification @Inject constructor() {
     private var view: View? = null
     private val pdfNotificationView = PdfNotificationView(context)
     private var codeNotification = ""
-
+    private val SUB_FIX = "_n"
     var manageImage: ManageImage? = null
 
     fun inflateView(){
@@ -83,12 +80,12 @@ class PdfNotification @Inject constructor() {
     }
 
     private fun setSignature(codeNotify: String){
-        async {
-            val bitmap = manageImage!!.getSignatureStore(codeNotify)
-            if (bitmap != null){
-                (view as PdfNotificationView).signatureClient!!.setImageBitmap(bitmap)
-            }
+        manageImage!!.code = codeNotify
+        val bitmap = manageImage!!.getFileOfGallery(activity)
+        if (bitmap != null){
+            (view as PdfNotificationView).signatureClient!!.setImageBitmap(bitmap)
         }
+
     }
 
     private fun setupRecyclerViewMaterialUse(){
@@ -130,20 +127,20 @@ class PdfNotification @Inject constructor() {
 
 
         val nameFile = this.codeNotification
-        launch(CommonPool) {
-
-            val viewBitmap : Bitmap = Bitmap.createBitmap(svScroll.getChildAt(0).measuredWidth,
-                    svScroll.getChildAt(0).measuredHeight, Bitmap.Config.ARGB_8888)
-            val canvas = Canvas(viewBitmap)
-            view!!.layout(viewSv.left, viewSv.top, viewSv.right, viewSv.bottom)
-            view!!.draw(canvas)
-            manageImage!!.image = viewBitmap
-            manageImage!!.code = nameFile
-            manageImage!!.flagPdf = true
-            manageImage!!.addFileToGallery(activity)
 
 
-        }
+        val viewBitmap : Bitmap = Bitmap.createBitmap(svScroll.getChildAt(0).measuredWidth,
+                svScroll.getChildAt(0).measuredHeight, Bitmap.Config.RGB_565
+        )
+
+        val canvas = Canvas(viewBitmap)
+        view!!.layout(viewSv.left, viewSv.top, viewSv.right, viewSv.bottom)
+        view!!.draw(canvas)
+
+        manageImage!!.image = viewBitmap
+        manageImage!!.code = nameFile
+        manageImage!!.flagPdf = true
+        manageImage!!.addFileToGallery(activity)
 
     }
 

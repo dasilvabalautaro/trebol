@@ -16,7 +16,6 @@ import com.hiddenodds.trebolv2.presentation.interfaces.ILoadDataView
 import com.hiddenodds.trebolv2.presentation.model.EmailModel
 import com.hiddenodds.trebolv2.presentation.model.NotificationModel
 import com.hiddenodds.trebolv2.presentation.model.TechnicalModel
-import com.hiddenodds.trebolv2.tools.Variables
 import kotlinx.coroutines.experimental.async
 import java.text.SimpleDateFormat
 import java.util.*
@@ -32,9 +31,10 @@ class NotificationFinishFragment: NotificationFragment(), ILoadDataView {
     @OnClick(R.id.bt_pdf)
     fun savePdf(){
         pdfEndTask.manageImage = this.manageImage
+        val client = etClient!!.text.toString()
         async {
             pdfEndTask.inflateView()
-            pdfEndTask.setData(notificationModel!!.code, etClient!!.text.toString())
+            pdfEndTask.setData(notificationModel!!.code, client)
             pdfEndTask.saveImage(notificationModel!!.code + PRE_FIX)
         }
     }
@@ -120,9 +120,9 @@ class NotificationFinishFragment: NotificationFragment(), ILoadDataView {
 
     override fun showMessage(message: String) {
         if (message == context.getString(R.string.change_field)){
-            val tech = technicalModel!!.code
-            Variables.changeTechnical = tech
-            println("Change technical : $tech")
+            /*val tech = technicalModel!!.code
+            Variables.changeTechnical = tech*/
+            context.toast(context.getString(R.string.change_good))
 
         }else{
             context.toast(message)
@@ -149,7 +149,8 @@ class NotificationFinishFragment: NotificationFragment(), ILoadDataView {
     }
 
     private fun setSignature(codeNotification: String){
-        val bitmap = manageImage.getSignatureStore(codeNotification)
+        manageImage.code = codeNotification
+        val bitmap = manageImage.getFileOfGallery(activity)
         if (bitmap != null){
             activity.runOnUiThread({
                 signatureClient!!.signatureBitmap = bitmap

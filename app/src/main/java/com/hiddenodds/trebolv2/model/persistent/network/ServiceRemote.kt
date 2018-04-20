@@ -4,7 +4,8 @@ import android.os.StrictMode
 import com.hiddenodds.trebolv2.model.exception.DatabaseOperationException
 import com.hiddenodds.trebolv2.presentation.model.AssignedMaterialModel
 import com.hiddenodds.trebolv2.presentation.model.NotificationModel
-import com.hiddenodds.trebolv2.tools.Constants
+import com.hiddenodds.trebolv2.tools.ChangeFormat
+import com.hiddenodds.trebolv2.tools.Variables
 import io.reactivex.Observable
 import org.json.JSONArray
 import org.json.JSONException
@@ -15,14 +16,91 @@ import javax.inject.Singleton
 
 @Singleton
 class ServiceRemote @Inject constructor() {
-    var ip: String = Constants.SQLSERVER
-    var database: String = Constants.DATABASE
-    var user: String = Constants.USER
-    var password: String = Constants.PASSWORD
+    var ip: String? = null
+    var database: String? = null
+    var user: String? = null
+    var password: String? = null
+    var ipAux: String? = null
+    var databaseAux: String? = null
+    var userAux: String? = null
+    var passwordAux: String? = null
 
     private var connect: java.sql.Connection? = null
     private var urlConnect: String = ""
     private var error: DatabaseOperationException? = null
+
+    init {
+        setVariablesConfiguration()
+        setVariablesConfigurationAuxiliar()
+    }
+
+    private fun setVariablesConfiguration(){
+        this.ip = Variables.sqlServer
+        this.database = Variables.database
+        this.user = Variables.user
+        this.password = Variables.password
+    }
+
+    private fun setVariablesConfigurationAuxiliar(){
+        this.ipAux = Variables.sqlServer
+        this.databaseAux = Variables.database
+        this.userAux = Variables.user
+        this.passwordAux = Variables.password
+    }
+
+    private fun restartVariablesConfiguration(){
+        this.ip = this.ipAux
+        this.database = this.databaseAux
+        this.user = this.userAux
+        this.password = this.passwordAux
+    }
+
+
+    fun verifyConnectObservable():
+            Observable<Boolean>{
+        setVariablesConfiguration()
+        return Observable.create { subscriber ->
+            val result = this.verifyConnect()
+            if (result){
+                subscriber.onNext(result)
+                subscriber.onComplete()
+            }else{
+                restartVariablesConfiguration()
+                subscriber.onError(Throwable(this.error))
+            }
+        }
+
+    }
+
+    private fun verifyConnect(): Boolean{
+        var result = false
+        try {
+            connection()
+            if (connect != null){
+                result = true
+            }
+
+        }catch (je: JSONException){
+            println(je.message)
+            if (!je.message.isNullOrEmpty()) {
+                this.error = DatabaseOperationException(je.message!!)
+
+            }
+        }catch (ex: Exception){
+            println(ex.message)
+            if (!ex.message.isNullOrEmpty()) {
+                this.error = DatabaseOperationException(ex.message!!)
+
+            }
+        }finally {
+
+            if (connect != null){
+                connect!!.close()
+            }
+
+        }
+        return result
+    }
 
     @Throws(Exception::class, SQLException::class)
     private fun connection(){
@@ -30,7 +108,6 @@ class ServiceRemote @Inject constructor() {
                 .permitAll()
                 .build()
         StrictMode.setThreadPolicy(policy)
-
 
         Class.forName("net.sourceforge.jtds.jdbc.Driver").newInstance()
         this.urlConnect = "jdbc:jtds:sqlserver://" + ip +
@@ -159,8 +236,29 @@ class ServiceRemote @Inject constructor() {
                 //Notification
                 preparedStatement = connect!!.prepareStatement(sqlNotification)
                 for (i in paramsNotification.indices){
-                    preparedStatement.setString(i + 1,
-                            paramsNotification[i])
+                    when(i){
+                        0, 1 ->{
+                            val dateIn = ChangeFormat
+                                    .convertStringToDate(paramsNotification[i])
+                            preparedStatement.setDate(i + 1,
+                                    dateIn)
+                        }
+                        4 -> {
+                            val num = paramsNotification[i].toDouble()
+                            preparedStatement.setDouble(i + 1,
+                                    num)
+                        }
+                        5 ->{
+                            val num = paramsNotification[i].toLong()
+                            preparedStatement.setLong(i + 1,
+                                    num)
+                        }
+                        else -> {
+                            preparedStatement.setString(i + 1,
+                                    paramsNotification[i])
+                        }
+                    }
+
                 }
                 preparedStatement.execute()
 
@@ -168,9 +266,20 @@ class ServiceRemote @Inject constructor() {
                 //Machine
                 preparedStatement = connect!!.prepareStatement(sqlMachine)
                 for (i in paramsMachine.indices){
-                    preparedStatement.setString(i + 1,
-                            paramsMachine[i])
+                    when(i){
+                        1, 2, 3 ->{
+                            val num = paramsMachine[i].toLong()
+                            preparedStatement.setLong(i + 1,
+                                    num)
+                        }
+                        else ->{
+                            preparedStatement.setString(i + 1,
+                                    paramsMachine[i])
+                        }
+                    }
+
                 }
+
                 preparedStatement.execute()
                 println("Execute Update Machine")
                 // Add Pieces
@@ -184,9 +293,17 @@ class ServiceRemote @Inject constructor() {
                         preparedStatement = connect!!.prepareStatement(sqlAddPieces)
                         val paramsPieces = listParamsPieces(notification, material)
                         for (i in paramsPieces.indices){
-                            preparedStatement.setString(i + 1,
-                                    paramsPieces[i])
+                            if (i == 1){
+                                val unity = paramsPieces[i].toLong()
+                                preparedStatement.setLong(i + 1,
+                                        unity)
+                            }else{
+                                preparedStatement.setString(i + 1,
+                                        paramsPieces[i])
+                            }
+
                         }
+                        println("Build Add Pieces")
                         preparedStatement.setLong(7, max)
                         preparedStatement.execute()
                         println("Execute Add Pieces")

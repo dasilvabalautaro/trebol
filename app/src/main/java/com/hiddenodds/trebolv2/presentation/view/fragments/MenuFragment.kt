@@ -16,6 +16,7 @@ import butterknife.OnClick
 import com.hiddenodds.trebolv2.App
 import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.dagger.PresenterModule
+import com.hiddenodds.trebolv2.model.persistent.caching.CachingLruRepository
 import com.hiddenodds.trebolv2.presentation.interfaces.ILoadDataView
 import com.hiddenodds.trebolv2.presentation.presenter.*
 import com.hiddenodds.trebolv2.presentation.view.activities.MainActivity
@@ -83,6 +84,7 @@ class MenuFragment: Fragment(), ILoadDataView {
 
     @OnClick(R.id.btn_ots)
     fun viewOTS(){
+        CachingLruRepository.instance.getLru().evictAll()
         val fragmentOtsFragment = OtsFragment()
         activity.supportFragmentManager
                 .beginTransaction()
@@ -91,6 +93,16 @@ class MenuFragment: Fragment(), ILoadDataView {
                 .addToBackStack(null)
                 .commit()
 
+    }
+    @OnClick(R.id.fa_test)
+    fun changeVariablesConnect(){
+        val configurationFragment = ConfigurationFragment()
+        activity.supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.flContent, configurationFragment,
+                        configurationFragment.javaClass.simpleName)
+                .addToBackStack(null)
+                .commit()
     }
 
     val Fragment.app: App

@@ -7,7 +7,7 @@ import io.reactivex.Observable
 interface IAssignedMaterialRepository {
     fun save(assigned: AssignedMaterialModel): Observable<AssignedMaterialModel>
     fun saveList(list: ArrayList<AssignedMaterialModel>):
-            ArrayList<AssignedMaterialModel>
+            ArrayList<String>
     fun addListAssignedMaterialToNotification(list: ArrayList<AssignedMaterialModel>,
                                               id: String, flagUse: Boolean):
             Observable<Boolean>

@@ -13,11 +13,13 @@ import android.widget.*
 import butterknife.*
 import com.github.gcacace.signaturepad.views.SignaturePad
 import com.hiddenodds.trebolv2.R
+import com.hiddenodds.trebolv2.model.persistent.file.ManageFile
 import com.hiddenodds.trebolv2.presentation.components.ItemProductSelectAdapter
 import com.hiddenodds.trebolv2.presentation.interfaces.ILoadDataView
 import com.hiddenodds.trebolv2.presentation.model.*
 import com.hiddenodds.trebolv2.tools.ChangeFormat
 import com.hiddenodds.trebolv2.tools.Variables
+import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.async
 import java.text.SimpleDateFormat
 import java.util.*
@@ -77,6 +79,23 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
     @JvmField var btnPDF: ImageButton? = null
     @BindView(R.id.btnClearSignature)
     @JvmField var btnClearSignature: ImageButton? = null
+
+    @OnClick(R.id.btnViewPDF)
+    fun viewPdf(){
+        if (ManageFile.isFileExist("$codeNotification.pdf")){
+            val pdfViewFragment = PdfViewFragment
+                    .newInstance(codeNotification)
+            activity.supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.flContent, pdfViewFragment,
+                            pdfViewFragment.javaClass.simpleName)
+                    .addToBackStack(null)
+                    .commit()
+        }else{
+            context.toast(context.getString(R.string.file_not_found))
+        }
+
+    }
 
     @OnClick(R.id.btnPDF)
     fun savePdf(){
@@ -224,21 +243,6 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         }
     }
 
-    @OnTextChanged(R.id.spnEntrada)
-    fun changeInside(){
-        if (notificationModel != null && spnEntrada!!.text.isNotEmpty()){
-            val value = spnEntrada!!.text.toString()
-            if (notificationModel!!.inside != spnEntrada!!.text.toString()){
-                async {
-                    updateFieldNotificationPresenter
-                            .updateNotification(notificationModel!!.id,
-                                    "inside", value)
-                }
-                notificationModel!!.inside = spnEntrada!!.text.toString()
-            }
-
-        }
-    }
 
     @OnTextChanged(R.id.edtVsoft1)
     fun changeVsoft1(){
@@ -299,6 +303,28 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
                 notificationModel!!.workHours = txtHrsTrabajo!!.text.toString()
             }
 
+        }
+    }
+
+    @OnTextChanged(R.id.spnEntrada)
+    fun changeInside(){
+        try{
+            if (notificationModel != null && spnEntrada!!.text.isNotEmpty()){
+                val value = spnEntrada!!.text.toString()
+                if (notificationModel!!.inside != spnEntrada!!.text.toString()){
+                    async {
+                        updateFieldNotificationPresenter
+                                .updateNotification(notificationModel!!.id,
+                                        "inside", value)
+                    }
+                    setHoursWork()
+                    notificationModel!!.inside = spnEntrada!!.text.toString()
+                }
+
+            }
+
+        }catch (ne: NumberFormatException){
+            println(ne.message)
         }
     }
 
@@ -397,9 +423,9 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
 
     }
 
-
     private fun setSignature(codeNotification: String){
-        val bitmap = manageImage.getSignatureStore(codeNotification)
+        manageImage.code = codeNotification
+        val bitmap = manageImage.getFileOfGallery(activity)
         if (bitmap != null){
             activity.runOnUiThread({
                 signatureClient!!.signatureBitmap = bitmap
@@ -412,7 +438,8 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         if (list.isNotEmpty()){
             val listSave = list.filter { it.id.trim().isEmpty() } as ArrayList
             if (listSave.isNotEmpty()){
-                Variables.changeTechnical = technicalModel!!.code
+
+                Variables.changeTechnical.add(codeTechnical)
                 async {
                     addAssignedMaterialToNotificationPresenter.addAsignedMaterial(listSave,
                             notificationModel!!.id, flagUse)
@@ -423,15 +450,18 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
 
     override fun onPause() {
         super.onPause()
-        addAssignedMaterialRepository(listMaterialUse, true)
-        addAssignedMaterialRepository(listMaterialOut, false)
+        async(CommonPool) {
+            addAssignedMaterialRepository(listMaterialUse, true)
+            addAssignedMaterialRepository(listMaterialOut, false)
+
+        }
     }
 
     override fun showMessage(message: String) {
         if (message == context.getString(R.string.change_field)){
-            val tech = technicalModel!!.code
-            Variables.changeTechnical = tech
-            println("Change technical : $tech")
+            /*val tech = technicalModel!!.code
+            Variables.changeTechnical = tech*/
+            context.toast(context.getString(R.string.change_good))
 
         }else{
             context.toast(message)
@@ -646,7 +676,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
     }
 
     private fun callProductsFragment(){
-        val productFragment = ProductFragment()
+        val productFragment = ProductFragment.newInstance(codeTechnical)
         activity.supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.flContent, productFragment,

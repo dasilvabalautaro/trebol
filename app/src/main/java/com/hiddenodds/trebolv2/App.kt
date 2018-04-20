@@ -25,7 +25,9 @@ class App: Application() {
 
     companion object{
         lateinit var appComponent: AppComponent
+
     }
+
 
     private val component: AppComponent by lazy {
         DaggerAppComponent
@@ -41,6 +43,7 @@ class App: Application() {
         localeUtils.setLocale(Locale("es"))
         localeUtils.updateConfiguration(this,
                 baseContext.resources.configuration)
+
     }
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
@@ -52,4 +55,6 @@ class App: Application() {
         appComponent = component
         return appComponent
     }
+
+
 }

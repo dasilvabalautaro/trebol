@@ -14,7 +14,6 @@ import com.hiddenodds.trebolv2.tools.Constants
 import com.hiddenodds.trebolv2.tools.PreferenceHelper
 import com.hiddenodds.trebolv2.tools.PreferenceHelper.get
 import com.hiddenodds.trebolv2.tools.PreferenceHelper.set
-import com.hiddenodds.trebolv2.tools.Variables
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -119,7 +118,7 @@ class TechnicalExecutor @Inject constructor(): CRUDRealm(),
     }
 
     override fun getTechnical(code: String): Observable<TechnicalModel> {
-        deleteCacheTechnical()
+        //deleteCacheTechnical()
         return Observable.create { subscriber ->
             var technicalModel: TechnicalModel?
             technicalModel = getTechicalOfCache(code)
@@ -148,7 +147,7 @@ class TechnicalExecutor @Inject constructor(): CRUDRealm(),
 
     override fun getMasterTechnical(code: String,
                                     password: String): Observable<TechnicalModel>{
-        deleteCacheTechnical()
+        //deleteCacheTechnical()
         return Observable.create { subscriber ->
             var technicalModel: TechnicalModel?
             technicalModel = getTechMasterOfCache()
@@ -215,14 +214,5 @@ class TechnicalExecutor @Inject constructor(): CRUDRealm(),
                 .get(code) as TechnicalModel?
     }
 
-    private fun deleteCacheTechnical(){
-        if (Variables.changeTechnical.isNotEmpty()){
-            CachingLruRepository
-                    .instance
-                    .getLru()
-                    .remove(Variables.changeTechnical)
-            Variables.changeTechnical = ""
-            Thread.sleep(1000)
-        }
-    }
+
 }

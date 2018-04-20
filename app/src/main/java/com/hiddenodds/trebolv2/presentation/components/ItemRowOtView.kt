@@ -56,6 +56,7 @@ class ItemRowOtView: FrameLayout {
     fun openOT(){
         val params = (btnOpenOt!!.tag as String).split("*")
         if (params.isNotEmpty()){
+
             val editOtFragment = OrderFragment.newInstance(params[0],
                     params[1])
             (context as FragmentActivity).supportFragmentManager

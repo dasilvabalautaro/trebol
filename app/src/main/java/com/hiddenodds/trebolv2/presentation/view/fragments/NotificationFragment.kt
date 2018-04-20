@@ -56,6 +56,8 @@ abstract class NotificationFragment: Fragment() {
     lateinit var sendEmailPresenter: SendEmailPresenter
     @Inject
     lateinit var pdfEndTask: PdfEndTask
+    @Inject
+    lateinit var verifyConnectServerPresenter: VerifyConnectServerPresenter
 
     var disposable: CompositeDisposable = CompositeDisposable()
 

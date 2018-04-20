@@ -28,6 +28,7 @@ import com.hiddenodds.trebolv2.presentation.model.NotificationModel
 import com.hiddenodds.trebolv2.presentation.model.TechnicalModel
 import com.hiddenodds.trebolv2.presentation.presenter.TechnicalMasterPresenter
 import com.hiddenodds.trebolv2.presentation.presenter.TechnicalPresenter
+import com.hiddenodds.trebolv2.tools.ChangeFormat
 import com.hiddenodds.trebolv2.tools.Constants
 import com.hiddenodds.trebolv2.tools.PreferenceHelper
 import com.hiddenodds.trebolv2.tools.PreferenceHelper.get
@@ -110,6 +111,12 @@ class OtsFragment: Fragment(), ILoadDataView {
                 }
                 .subscribe { result -> context.toast(result)})
     }
+
+    override fun onPause() {
+        super.onPause()
+        ChangeFormat.deleteCacheTechnical(this.codeTech)
+    }
+
 
     override fun showMessage(message: String) {
         context.toast(message)

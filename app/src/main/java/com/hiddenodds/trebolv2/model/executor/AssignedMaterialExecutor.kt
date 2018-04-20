@@ -40,7 +40,7 @@ class AssignedMaterialExecutor @Inject constructor(): CRUDRealm(),
 
     override fun save(assigned: AssignedMaterialModel): Observable<AssignedMaterialModel> {
         return Observable.create { subscriber ->
-            val newAssignedMaterial = this.saveAssignedMaterial(assigned, 
+            val newAssignedMaterial = this.saveAssignedMat(assigned,
                     taskListenerExecutor)
             if (newAssignedMaterial != null){
                 val assignedMaterialModel = this.assignedMaterialModelDataMapper
@@ -56,16 +56,16 @@ class AssignedMaterialExecutor @Inject constructor(): CRUDRealm(),
     }
 
     override fun saveList(list: ArrayList<AssignedMaterialModel>):
-            ArrayList<AssignedMaterialModel> {
-        val listAssigned: ArrayList<AssignedMaterialModel> = ArrayList()
+            ArrayList<String> {
+        val listAssigned: ArrayList<String> = ArrayList()
 
         for (i in list.indices){
             val newAssignedMaterial = this.saveAssignedMaterial(list[i],
                     taskListenerExecutor)
-            if (newAssignedMaterial != null){
-                val assignedMaterialModel = this.assignedMaterialModelDataMapper
-                        .transform(newAssignedMaterial)
-                listAssigned.add(assignedMaterialModel)
+            if (!newAssignedMaterial.isNullOrEmpty()){
+                /*val assignedMaterialModel = this.assignedMaterialModelDataMapper
+                        .transform(newAssignedMaterial)*/
+                listAssigned.add(newAssignedMaterial!!)
             }
         }
 

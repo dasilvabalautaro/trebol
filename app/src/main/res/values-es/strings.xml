@@ -90,6 +90,11 @@
     <string name="lbl_num_serie">N. SERIE</string>
     <string name="lbl_date_finish">FECHA REALIZACIÓN</string>
     <string name="lbl_finish_install">FÍN DE INSTALACIÓN</string>
+    <string name="lbl_config_server">CONFIGURACIÓN DEL SERVIDOR</string>
+    <string name="lbl_server">IP Servidor : Puerto</string>
+    <string name="lbl_name_database">Nombre Base de datos</string>
+    <string name="lbl_user_database">Usuario Base de datos</string>
+    <string name="lbl_password_database">Contraseña Base de datos</string>
     <string name="lbl_name_client">NOMBRE CLIENTE</string>
     <string name="lbl_report">Trebol Reporte</string>
     <string name="lbl_confirm">Confirmar</string>
@@ -102,4 +107,9 @@
     <string name="lbl_delete_data">¿Las actuales órdenes de trabajo del móvil, si existen, serán borradas. Confirme por favor.?</string>
     <string name="lbl_update_notification_data">Las tablas básicas serán modificadas. Después de finalizado el proceso debe oprimir "Recibir" para actualizar las órdenes de trabajo. </string>
     <string name="lbl_download_notification">Descargue las ordenes de trabajo.</string>
+    <string name="lbl_permission_enabled">Permisos habilitados. Intente de nuevo.</string>
+    <string name="lbl_connect_server">Conexión correcta.</string>
+    <string name="lbl_not_connect_server">Error Servidor no conecta.</string>
+    <string name="change_good">Cambio Ok</string>
+    <string name="file_not_found">El archivo no existe.</string>
 </resources>

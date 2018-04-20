@@ -11,6 +11,7 @@
     <string name="task_complete">Task Complete</string>
     <string name="get_complete">Get Complete</string>
     <string name="image_not_found">Image not found</string>
+    <string name="file_not_found">File not found</string>
     <string name="download_complete">Download Complete</string>
     <string name="add_notifications">Success Add Notification</string>
     <string name="add_customer">Add Customer</string>
@@ -32,8 +33,10 @@
     <string name="notification_save">Success Save Notification</string>
     <string name="image_save">Success Save Image</string>
     <string name="change_field">change</string>
+    <string name="change_good">Change is good</string>
     <string name="permission_write">"Cannot write images to external storage"</string>
     <string name="lbl_close_app">Tap again to close the application.</string>
+    <string name="lbl_permission_enabled">Permission enabled.</string>
     <string name="lbl_list_ots">Listado de las OTs</string>
     <string name="lbl_announce">AVISO No</string>
     <string name="lbl_type">TIPO</string>
@@ -56,6 +59,10 @@
     <string name="lbl_mod">MODELO</string>
     <string name="lbl_contract">CONTRATO</string>
     <string name="lbl_serie">NUM. DE SERIE</string>
+    <string name="lbl_server">IP Server : Port</string>
+    <string name="lbl_name_database">Name Database</string>
+    <string name="lbl_user_database">User Database</string>
+    <string name="lbl_password_database">Password Database</string>
     <string name="lbl_tinta">TINTA</string>
     <string name="lbl_hrs_trabajo">HORAS DE TRABAJO</string>
     <string name="lbl_peaje">PEAJE</string>
@@ -89,6 +96,7 @@
     <string name="lbl_num_serie">N. SERIE</string>
     <string name="lbl_date_finish">FECHA REALIZACIÓN</string>
     <string name="lbl_finish_install">FÍN DE INSTALACIÓN</string>
+    <string name="lbl_config_server">Server Configuration</string>
     <string name="lbl_name_client">NOMBRE CLIENTE</string>
     <string name="lbl_report">Trebol Reporte</string>
     <string name="lbl_confirm">Confirmar</string>
@@ -101,4 +109,6 @@
     <string name="lbl_delete_data">The data was delete. Is you sure?</string>
     <string name="lbl_update_notification_data"> The master tables was updated. Next push "Recibir" for update the Work orders. </string>
     <string name="lbl_download_notification">Downlod Notifications</string>
+    <string name="lbl_connect_server">Connect Server OK.</string>
+    <string name="lbl_not_connect_server">Error Not Connect Server.</string>
 </resources>

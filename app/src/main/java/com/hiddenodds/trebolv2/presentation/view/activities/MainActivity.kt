@@ -17,6 +17,7 @@ import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.model.persistent.caching.CachingLruRepository
 import com.hiddenodds.trebolv2.presentation.view.fragments.MenuFragment
 import com.hiddenodds.trebolv2.presentation.view.fragments.SignInFragment
+import com.hiddenodds.trebolv2.tools.ChangeFormat
 import com.hiddenodds.trebolv2.tools.Constants
 import com.hiddenodds.trebolv2.tools.PreferenceHelper
 import com.hiddenodds.trebolv2.tools.PreferenceHelper.set
@@ -27,7 +28,6 @@ class MainActivity : AppCompatActivity() {
     @BindView(R.id.app_bar)
     @JvmField var appBarLayout: AppBarLayout? = null
 
-    private var isWarnedToClose = false
     private val ACTION_HOME = 16908332
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +42,7 @@ class MainActivity : AppCompatActivity() {
             supportActionBar!!.setBackgroundDrawable(resources
                     .getDrawable(R.drawable.head_back))
         }
+        ChangeFormat.setVariablesConnect(this)
         val signInFragment = SignInFragment()
         addFragment(signInFragment)
 
@@ -80,16 +81,6 @@ class MainActivity : AppCompatActivity() {
       }*/
 
     fun handleBackPressInThisActivity(){
-        /*if (isWarnedToClose){
-
-        }else{
-            isWarnedToClose = true
-            toast(getString(R.string.lbl_close_app))
-            launch{
-                delay(2000)
-                isWarnedToClose = false
-            }
-        }*/
         (App.appComponent.context() as App).serviceRemote.closeConnection()
         val prefs = PreferenceHelper.customPrefs(this,
                 Constants.PREFERENCE_TREBOL)

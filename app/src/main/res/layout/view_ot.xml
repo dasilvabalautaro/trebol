@@ -558,7 +558,7 @@
             <TextView
                 android:id="@+id/lblFirma"
                 app:layout_marginLeftPercent="4%"
-                app:layout_widthPercent="60%"
+                app:layout_widthPercent="50%"
                 android:layout_below="@+id/rv_mat_use"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -575,6 +575,7 @@
                 android:contentDescription="@string/lbl_logo"
                 android:layout_toEndOf="@+id/lblFirma"
                 android:layout_alignTop="@+id/lblFirma"
+                android:scaleType="fitXY"
                 android:src="@mipmap/ic_save"
                 android:background="@null"/>
 
@@ -583,8 +584,10 @@
                 android:layout_height="30dp"
                 app:layout_widthPercent="8%"
                 android:contentDescription="@string/lbl_logo"
+                app:layout_marginRightPercent="2%"
                 android:layout_toEndOf="@+id/btnSaveSignature"
                 android:layout_alignTop="@+id/btnSaveSignature"
+                android:scaleType="fitXY"
                 android:src="@mipmap/ic_clear"
                 android:background="@null"/>
             <ImageButton
@@ -593,9 +596,21 @@
                 app:layout_widthPercent="8%"
                 app:layout_marginRightPercent="4%"
                 android:contentDescription="@string/lbl_logo"
+                android:layout_toEndOf="@+id/btnClearSignature"
+                android:layout_alignTop="@+id/btnSaveSignature"
+                android:scaleType="fitXY"
+                android:src="@mipmap/ic_pdf"
+                android:background="@null"/>
+            <ImageButton
+                android:id="@+id/btnViewPDF"
+                android:layout_height="30dp"
+                app:layout_widthPercent="8%"
+                app:layout_marginRightPercent="4%"
+                android:contentDescription="@string/lbl_logo"
                 android:layout_alignParentEnd="true"
                 android:layout_alignTop="@+id/btnSaveSignature"
-                android:src="@mipmap/ic_pdf"
+                android:scaleType="fitXY"
+                android:src="@mipmap/ic_pdf_view"
                 android:background="@null"/>
 
             <com.github.gcacace.signaturepad.views.SignaturePad
