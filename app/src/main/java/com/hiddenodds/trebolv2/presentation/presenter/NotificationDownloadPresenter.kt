@@ -19,7 +19,7 @@ class NotificationDownloadPresenter @Inject constructor(private val downloadNoti
                 .subscribe { s ->
                     flag = true
                     showError(s)
-                    downloadNotificationUseCase.destroy()
+                    //downloadNotificationUseCase.destroy()
                 })
         val success = downloadNotificationUseCase
                 .observableFinishDownload.map { f -> f }
@@ -32,7 +32,7 @@ class NotificationDownloadPresenter @Inject constructor(private val downloadNoti
                             }else{
                                 view!!.executeTask(6)
                             }
-                            downloadNotificationUseCase.destroy()
+                            //downloadNotificationUseCase.destroy()
                         }
                     }
 

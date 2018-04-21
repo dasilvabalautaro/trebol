@@ -18,7 +18,7 @@ class CustomerDownloadPresenter @Inject constructor(private val downloadCustomer
                 .subscribe { s ->
                     flag = true
                     showError(s)
-                    downloadCustomerUseCase.destroy()
+                    //downloadCustomerUseCase.destroy()
                 })
         val success = downloadCustomerUseCase
                 .observableFinishDownload.map { f -> f }
@@ -31,7 +31,7 @@ class CustomerDownloadPresenter @Inject constructor(private val downloadCustomer
                             }else{
                                 view!!.executeTask(6)
                             }
-                            downloadCustomerUseCase.destroy()
+                            //downloadCustomerUseCase.destroy()
                         }
                     }
 

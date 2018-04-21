@@ -112,4 +112,5 @@
     <string name="lbl_not_connect_server">Error Servidor no conecta.</string>
     <string name="change_good">Cambio Ok</string>
     <string name="file_not_found">El archivo no existe.</string>
+    <string name="lbl_finish_process">Fin del proceso.</string>
 </resources>

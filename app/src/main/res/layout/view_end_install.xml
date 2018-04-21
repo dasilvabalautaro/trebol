@@ -25,23 +25,34 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/left_one_guideline"
-            app:layout_constraintGuide_percent=".65"
+            app:layout_constraintGuide_percent=".45"
             android:orientation="vertical"/>
 
         <android.support.constraint.Guideline
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/left_two_guideline"
-            app:layout_constraintGuide_percent=".75"
+            app:layout_constraintGuide_percent=".55"
             android:orientation="vertical"/>
 
         <android.support.constraint.Guideline
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/left_three_guideline"
+            app:layout_constraintGuide_percent=".65"
+            android:orientation="vertical"/>
+        <android.support.constraint.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/left_four_guideline"
+            app:layout_constraintGuide_percent=".75"
+            android:orientation="vertical"/>
+        <android.support.constraint.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/left_five_guideline"
             app:layout_constraintGuide_percent=".85"
             android:orientation="vertical"/>
-
         <android.support.constraint.Guideline
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -186,7 +197,20 @@
             android:scaleType="fitXY"
             android:src="@mipmap/ic_pdf"
             app:layout_constraintLeft_toLeftOf="@+id/left_three_guideline"
-            app:layout_constraintRight_toRightOf="@+id/right_guideline"
+            app:layout_constraintRight_toRightOf="@+id/left_four_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/et_client" />
+        <ImageButton
+            android:id="@+id/bt_view_pdf"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:adjustViewBounds="true"
+            android:background="@null"
+            android:contentDescription="@string/lbl_logo"
+            android:scaleType="fitXY"
+            android:src="@mipmap/ic_pdf_view"
+            app:layout_constraintLeft_toLeftOf="@+id/left_four_guideline"
+            app:layout_constraintRight_toRightOf="@+id/left_five_guideline"
             app:layout_constraintTop_toBottomOf="@+id/et_client" />
 
         <com.github.gcacace.signaturepad.views.SignaturePad

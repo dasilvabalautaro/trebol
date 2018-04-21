@@ -12,6 +12,7 @@ import butterknife.ButterKnife
 import butterknife.OnClick
 import com.github.gcacace.signaturepad.views.SignaturePad
 import com.hiddenodds.trebolv2.R
+import com.hiddenodds.trebolv2.model.persistent.file.ManageFile
 import com.hiddenodds.trebolv2.presentation.interfaces.ILoadDataView
 import com.hiddenodds.trebolv2.presentation.model.EmailModel
 import com.hiddenodds.trebolv2.presentation.model.NotificationModel
@@ -28,6 +29,23 @@ class NotificationFinishFragment: NotificationFragment(), ILoadDataView {
     @JvmField var etClient: EditText? = null
     @BindView(R.id.signatureClient)
     @JvmField var signatureClient: SignaturePad? = null
+
+    @OnClick(R.id.bt_view_pdf)
+    fun viewPdf(){
+        if (ManageFile.isFileExist("$codeNotification$PRE_FIX.pdf")){
+            val pdfViewFragment = PdfViewFragment
+                    .newInstance(codeNotification + PRE_FIX)
+            activity.supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.flContent, pdfViewFragment,
+                            pdfViewFragment.javaClass.simpleName)
+                    .addToBackStack(null)
+                    .commit()
+        }else{
+            context.toast(context.getString(R.string.file_not_found))
+        }
+    }
+
     @OnClick(R.id.bt_pdf)
     fun savePdf(){
         pdfEndTask.manageImage = this.manageImage

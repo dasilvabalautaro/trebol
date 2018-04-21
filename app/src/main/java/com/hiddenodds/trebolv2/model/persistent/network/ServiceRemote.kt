@@ -216,133 +216,165 @@ class ServiceRemote @Inject constructor() {
         }
 
     }
-
-    private fun setDataNotification(notification: NotificationModel): Boolean{
-        var result = false
+    @Throws(Exception::class, SQLException::class)
+    private fun updateNotification(notification: NotificationModel){
         var preparedStatement: PreparedStatement? = null
-        val paramsNotification = listParamNotification(notification)
+        println("Init Update Notification ${notification.code}")
         val sqlNotification = StatementSQL.updateNotification()
-        val paramsMachine = listParamMachine(notification)
+        val paramsNotification = listParamNotification(notification)
+        preparedStatement = connect!!.prepareStatement(sqlNotification)
+        for (i in paramsNotification.indices){
+            when(i){
+                0, 1 ->{
+                    val dateIn = ChangeFormat
+                            .convertStringToDate(paramsNotification[i])
+                    preparedStatement.setDate(i + 1,
+                            dateIn)
+                }
+                4 -> {
+                    val num = paramsNotification[i].toDouble()
+                    preparedStatement.setDouble(i + 1,
+                            num)
+                }
+                5 ->{
+                    val num = paramsNotification[i].toDouble()
+                    preparedStatement.setDouble(i + 1,
+                            num)
+                }
+                else -> {
+                    preparedStatement.setString(i + 1,
+                            paramsNotification[i])
+                }
+            }
+
+        }
+        preparedStatement.execute()
+
+        println("Finish Update Notification")
+        if (preparedStatement != null){
+            preparedStatement.close()
+        }
+    }
+
+    @Throws(Exception::class, SQLException::class)
+    private fun updateMachine(notification: NotificationModel){
+        var preparedStatement: PreparedStatement? = null
+        println("Init Update Machine")
         val sqlMachine = StatementSQL.updateMachine()
+        val paramsMachine = listParamMachine(notification)
+
+        preparedStatement = connect!!.prepareStatement(sqlMachine)
+        for (i in paramsMachine.indices){
+            when(i){
+                1, 2, 3 ->{
+                    val num = paramsMachine[i].toLong()
+                    preparedStatement.setLong(i + 1,
+                            num)
+                }
+                else ->{
+                    preparedStatement.setString(i + 1,
+                            paramsMachine[i])
+                }
+            }
+
+        }
+
+        preparedStatement.execute()
+        println("Finish Update Machine")
+        if (preparedStatement != null){
+            preparedStatement.close()
+        }
+    }
+
+    @Throws(Exception::class, SQLException::class)
+    private fun changePieces(notification: NotificationModel){
+        var preparedStatement: PreparedStatement? = null
         val sqlMaxRow = StatementSQL.getMaxRowPieces()
         val sqlAddPieces = StatementSQL.addPieces()
         val sqlNameStore = StatementSQL.getNameStore()
         val sqlQuantityStore = StatementSQL.getQuantityInStore()
         val sqlUpdateQuantity = StatementSQL.updateQuantityInStore()
 
+        println("Init change Pieces: " + notification.materialUse.size.toString() +
+        " pieces out: " + notification.materialOut.size.toString())
+
+        for (material:AssignedMaterialModel in notification.materialUse){
+            println("Material asignado: " + material.material!!.code)
+            preparedStatement = connect!!.prepareStatement(sqlMaxRow)
+            val res: ResultSet = preparedStatement.executeQuery()
+            if (res.next()){
+                var max = res.getLong("BIG")
+                max += 1
+                println("Get Max: " + max.toString())
+                preparedStatement = connect!!.prepareStatement(sqlAddPieces)
+                val paramsPieces = listParamsPieces(notification,
+                        material)
+                for (i in paramsPieces.indices){
+                    if (i == 1){
+                        val unity = paramsPieces[i].toLong()
+                        preparedStatement.setLong(i + 1,
+                                unity)
+                    }else{
+                        preparedStatement.setString(i + 1,
+                                paramsPieces[i])
+                    }
+
+                }
+                println("Init Add Pieces")
+                preparedStatement.setLong(7, max)
+                preparedStatement.execute()
+                println("Finish Add Pieces")
+                preparedStatement = connect!!.prepareStatement(sqlNameStore)
+                preparedStatement.setString(1, notification.idTech)
+                val resStore = preparedStatement.executeQuery()
+                if (resStore.next()){
+                    val nameStore = resStore.getString("ALMACEN")
+                    println("Name store: $nameStore")
+
+                    if (nameStore.isNotEmpty()){
+                        preparedStatement = connect!!.prepareStatement(sqlQuantityStore)
+                        preparedStatement.setString(1,
+                                material.material!!.code)
+                        preparedStatement.setString(2,
+                                nameStore)
+                        val resExistence = preparedStatement.executeQuery()
+                        if (resExistence.next()){
+                            val existence = resExistence
+                                    .getLong("EXISTENCIA")
+                            val quantityUpdate = existence - material.quantity
+                            println("Finish existence update: " + quantityUpdate.toString())
+                            preparedStatement = connect!!
+                                    .prepareStatement(sqlUpdateQuantity)
+                            preparedStatement.setLong(1, quantityUpdate)
+                            preparedStatement.setString(2,
+                                    material.material!!.code)
+                            preparedStatement.setString(3,
+                                    nameStore)
+                            preparedStatement.execute()
+                            println("Finish Update Quantity")
+
+                        }
+
+                    }
+                }
+
+            }
+        }
+        if (preparedStatement != null){
+            preparedStatement.close()
+        }
+    }
+
+    private fun setDataNotification(notification: NotificationModel): Boolean{
+        var result = false
+
         try {
             connection()
             if (connect != null){
-                //Notification
-                preparedStatement = connect!!.prepareStatement(sqlNotification)
-                for (i in paramsNotification.indices){
-                    when(i){
-                        0, 1 ->{
-                            val dateIn = ChangeFormat
-                                    .convertStringToDate(paramsNotification[i])
-                            preparedStatement.setDate(i + 1,
-                                    dateIn)
-                        }
-                        4 -> {
-                            val num = paramsNotification[i].toDouble()
-                            preparedStatement.setDouble(i + 1,
-                                    num)
-                        }
-                        5 ->{
-                            val num = paramsNotification[i].toLong()
-                            preparedStatement.setLong(i + 1,
-                                    num)
-                        }
-                        else -> {
-                            preparedStatement.setString(i + 1,
-                                    paramsNotification[i])
-                        }
-                    }
 
-                }
-                preparedStatement.execute()
-
-                println("Execute Update Notification")
-                //Machine
-                preparedStatement = connect!!.prepareStatement(sqlMachine)
-                for (i in paramsMachine.indices){
-                    when(i){
-                        1, 2, 3 ->{
-                            val num = paramsMachine[i].toLong()
-                            preparedStatement.setLong(i + 1,
-                                    num)
-                        }
-                        else ->{
-                            preparedStatement.setString(i + 1,
-                                    paramsMachine[i])
-                        }
-                    }
-
-                }
-
-                preparedStatement.execute()
-                println("Execute Update Machine")
-                // Add Pieces
-                for (material:AssignedMaterialModel in notification.materialUse){
-                    preparedStatement = connect!!.prepareStatement(sqlMaxRow)
-                    val res: ResultSet = preparedStatement.executeQuery()
-                    if (res.next()){
-                        var max = res.getLong("BIG")
-                        max += 1
-                        println("Get Max" + max.toString())
-                        preparedStatement = connect!!.prepareStatement(sqlAddPieces)
-                        val paramsPieces = listParamsPieces(notification, material)
-                        for (i in paramsPieces.indices){
-                            if (i == 1){
-                                val unity = paramsPieces[i].toLong()
-                                preparedStatement.setLong(i + 1,
-                                        unity)
-                            }else{
-                                preparedStatement.setString(i + 1,
-                                        paramsPieces[i])
-                            }
-
-                        }
-                        println("Build Add Pieces")
-                        preparedStatement.setLong(7, max)
-                        preparedStatement.execute()
-                        println("Execute Add Pieces")
-                        preparedStatement = connect!!.prepareStatement(sqlNameStore)
-                        preparedStatement.setString(1, notification.idTech)
-                        val resStore = preparedStatement.executeQuery()
-                        if (resStore.next()){
-                            val nameStore = resStore.getString("ALMACEN")
-                            println("Name store: $nameStore")
-
-                            if (nameStore.isNotEmpty()){
-                                preparedStatement = connect!!.prepareStatement(sqlQuantityStore)
-                                preparedStatement.setString(1,
-                                        material.material!!.code)
-                                preparedStatement.setString(2,
-                                        nameStore)
-                                val resExistence = preparedStatement.executeQuery()
-                                if (resExistence.next()){
-                                    val existence = resExistence
-                                            .getLong("EXISTENCIA")
-                                    val quantityUpdate = existence - material.quantity
-                                    println("Quantity existence update: " + quantityUpdate.toString())
-                                    preparedStatement = connect!!
-                                            .prepareStatement(sqlUpdateQuantity)
-                                    preparedStatement.setLong(1, quantityUpdate)
-                                    preparedStatement.setString(2,
-                                            material.material!!.code)
-                                    preparedStatement.setString(3,
-                                            nameStore)
-                                    preparedStatement.execute()
-                                    println("Execute Update Quantity")
-
-                                }
-
-                            }
-                        }
-
-                    }
-                }
+                updateNotification(notification)
+                updateMachine(notification)
+                changePieces(notification)
                 result = true
             }
 
@@ -359,9 +391,9 @@ class ServiceRemote @Inject constructor() {
 
             }
         }finally {
-            if (preparedStatement != null){
+            /*if (preparedStatement != null){
                 preparedStatement.close()
-            }
+            }*/
 
             if (connect != null){
                 connect!!.close()

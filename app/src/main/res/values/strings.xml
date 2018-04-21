@@ -111,4 +111,5 @@
     <string name="lbl_download_notification">Downlod Notifications</string>
     <string name="lbl_connect_server">Connect Server OK.</string>
     <string name="lbl_not_connect_server">Error Not Connect Server.</string>
+    <string name="lbl_finish_process">Finish process.</string>
 </resources>

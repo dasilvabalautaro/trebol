@@ -22,7 +22,6 @@ import com.hiddenodds.trebolv2.presentation.presenter.*
 import com.hiddenodds.trebolv2.presentation.view.activities.MainActivity
 import com.hiddenodds.trebolv2.tools.ChangeFormat
 import com.hiddenodds.trebolv2.tools.Variables
-import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 import org.jetbrains.anko.alert
 import javax.inject.Inject
@@ -43,9 +42,8 @@ class MenuFragment: Fragment(), ILoadDataView {
     @OnClick(R.id.btn_update_water)
     fun updateDataInWater(){
         setViewForTransferData()
-        async {
-            updateDataRemoteWaterPresenter.executeUpdateRemoteWater()
-        }
+
+        updateDataRemoteWaterPresenter.executeUpdateRemoteWater()
 
     }
 
@@ -155,7 +153,6 @@ class MenuFragment: Fragment(), ILoadDataView {
         activity.theme.applyStyle(R.style.AppTheme, true)
     }
 
-
     override fun onConfigurationChanged(newConfig: Configuration?) {
         super.onConfigurationChanged(newConfig)
         if (newConfig!!.orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -182,9 +179,7 @@ class MenuFragment: Fragment(), ILoadDataView {
     }
 
     override fun showError(message: String) {
-        clearPresenter()
-        clearWaterPresenter()
-        clearMaterialPresenter()
+        //clearPresenter()
         enableView()
         context.toast(message)
     }
@@ -219,30 +214,29 @@ class MenuFragment: Fragment(), ILoadDataView {
             }
 
             5 -> {
-                message = context.resources.getString(R.string.add_notifications) +
-                        " End process."
+                message = context.resources.getString(R.string.add_notifications) + "\n" +
+                        context.getString(R.string.lbl_finish_process)
 
-                clearPresenter()
+                //clearPresenter()
                 enableView()
             }
 
             6 -> {
-                clearPresenter()
+                //clearPresenter()
                 enableView()
                 message = context.resources.getString(R.string.error_download)
 
             }
             7 -> {
-                message = context.resources.getString(R.string.add_notifications) +
-                        " End process."
+                message = context.resources.getString(R.string.add_notifications) + "\n" +
+                        context.getString(R.string.lbl_finish_process)
 
-                clearWaterPresenter()
                 enableView()
             }
             8 -> {
                 message = context.getString(R.string.download_complete) + " \n" +
                         context.getString(R.string.lbl_download_notification)
-                clearMaterialPresenter()
+
                 enableView()
             }
         }
@@ -255,6 +249,8 @@ class MenuFragment: Fragment(), ILoadDataView {
         saveNotificationPresenter.destroy()
         saveCustomerPresenter.destroy()
         addNotificationToTechnicalPresenter.destroy()
+        notificationDownloadPresenter.destroy()
+        customerDownloadPresenter.destroy()
     }
 
     private fun clearWaterPresenter(){
@@ -278,6 +274,9 @@ class MenuFragment: Fragment(), ILoadDataView {
     override fun onDestroy() {
         super.onDestroy()
         if (Variables.endApp){
+            clearWaterPresenter()
+            clearMaterialPresenter()
+            clearPresenter()
             (activity as MainActivity).handleBackPressInThisActivity()
         }else{
             Variables.endApp = true

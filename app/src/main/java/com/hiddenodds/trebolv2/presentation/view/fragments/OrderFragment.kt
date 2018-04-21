@@ -84,7 +84,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
     fun viewPdf(){
         if (ManageFile.isFileExist("$codeNotification.pdf")){
             val pdfViewFragment = PdfViewFragment
-                    .newInstance(codeNotification)
+                    .newInstance(codeNotification, codeTechnical)
             activity.supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.flContent, pdfViewFragment,
@@ -199,11 +199,12 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
     fun changeLastMount(){
         if (notificationModel != null){
             val value = edtUltimoMnto!!.text.toString()
+            if (value.isEmpty()) edtUltimoMnto!!.setText("0")
             if (notificationModel!!.lastAmount != edtUltimoMnto!!.text.toString()){
                 async {
                     updateFieldNotificationPresenter
                             .updateNotification(notificationModel!!.id,
-                                    "lastAmount", value)
+                                    "lastAmount", edtUltimoMnto!!.text.toString())
                 }
                 notificationModel!!.lastAmount = edtUltimoMnto!!.text.toString()
             }
@@ -215,11 +216,12 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
     fun changeTotalTeam(){
         if (notificationModel != null){
             val value = edtTotalesEquipo!!.text.toString()
+            if (value.isEmpty()) edtTotalesEquipo!!.setText("0")
             if (notificationModel!!.totalTeam != edtTotalesEquipo!!.text.toString()){
                 async {
                     updateFieldNotificationPresenter
                             .updateNotification(notificationModel!!.id,
-                                    "totalTeam", value)
+                                    "totalTeam", edtTotalesEquipo!!.text.toString())
                 }
                 notificationModel!!.totalTeam = edtTotalesEquipo!!.text.toString()
             }
@@ -231,11 +233,12 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
     fun changeHours(){
         if (notificationModel != null){
             val value = edtHrs!!.text.toString()
+            if (value.isEmpty()) edtHrs!!.setText("0")
             if (notificationModel!!.hours != edtHrs!!.text.toString()){
                 async {
                     updateFieldNotificationPresenter
                             .updateNotification(notificationModel!!.id,
-                                    "hours", value)
+                                    "hours", edtHrs!!.text.toString())
                 }
                 notificationModel!!.hours = edtHrs!!.text.toString()
             }
@@ -248,11 +251,12 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
     fun changeVsoft1(){
         if (notificationModel != null){
             val value = edtVsoft1!!.text.toString()
+            if (value.isEmpty()) edtVsoft1!!.setText("0")
             if (notificationModel!!.vSoft1 != edtVsoft1!!.text.toString()){
                 async {
                     updateFieldNotificationPresenter
                             .updateNotification(notificationModel!!.id,
-                                    "vSoft1", value)
+                                    "vSoft1", edtVsoft1!!.text.toString())
                 }
                 notificationModel!!.vSoft1 = edtVsoft1!!.text.toString()
             }
@@ -263,11 +267,12 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
     fun changeVsoft2(){
         if (notificationModel != null){
             val value = edtVsoft2!!.text.toString()
+            if (value.isEmpty()) edtVsoft2!!.setText("0")
             if (notificationModel!!.vSoft2 != edtVsoft2!!.text.toString()){
                 async {
                     updateFieldNotificationPresenter
                             .updateNotification(notificationModel!!.id,
-                                    "vSoft2", value)
+                                    "vSoft2", edtVsoft2!!.text.toString())
                 }
                 notificationModel!!.vSoft2 = edtVsoft2!!.text.toString()
             }
@@ -275,15 +280,17 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         }
 
     }
+
     @OnTextChanged(R.id.edtVsoft3)
     fun changeVsoft3(){
         if (notificationModel != null){
             val value = edtVsoft3!!.text.toString()
+            if (value.isEmpty()) edtVsoft3!!.setText("0")
             if (notificationModel!!.vSoft3 != edtVsoft3!!.text.toString()){
                 async {
                     updateFieldNotificationPresenter
                             .updateNotification(notificationModel!!.id,
-                                    "vSoft3", value)
+                                    "vSoft3", edtVsoft3!!.text.toString())
                 }
                 notificationModel!!.vSoft3 = edtVsoft3!!.text.toString()
             }

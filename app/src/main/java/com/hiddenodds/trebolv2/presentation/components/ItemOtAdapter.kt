@@ -3,6 +3,7 @@ package com.hiddenodds.trebolv2.presentation.components
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.presentation.model.NotificationModel
@@ -36,6 +37,9 @@ class ItemOtAdapter(private val listener:
 
     class ViewHolder(private val itemRowOtView: ItemRowOtView):
             RecyclerView.ViewHolder(itemRowOtView){
+        private val DEMO = "Demo"
+        private val INSTALATION = "Instalacion"
+
         fun bind(item: NotificationModel, listener:
         (NotificationModel) -> Unit) = with(itemRowOtView)  {
             edtAnnounce!!.text = item.code
@@ -53,6 +57,12 @@ class ItemOtAdapter(private val listener:
                 edtContact!!.text = item.customer!!.name
 
             }
+            if (item.type != DEMO && item.type != INSTALATION){
+                btnEmail!!.visibility = View.INVISIBLE
+            }else{
+                btnEmail!!.visibility = View.VISIBLE
+            }
+
             btnEmail!!.setOnClickListener {
                 listener(item)
             }
