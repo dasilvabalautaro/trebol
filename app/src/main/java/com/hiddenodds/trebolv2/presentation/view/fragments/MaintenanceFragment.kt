@@ -14,6 +14,7 @@ import com.hiddenodds.trebolv2.tools.ChangeFormat
 
 
 class MaintenanceFragment: TabBaseFragment() {
+
     @BindView(R.id.tl_options)
     @JvmField var tlOptions: TabLayout? = null
     @BindView(R.id.vp_list)

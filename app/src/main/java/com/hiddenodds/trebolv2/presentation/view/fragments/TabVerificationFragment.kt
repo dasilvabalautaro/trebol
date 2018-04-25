@@ -3,11 +3,9 @@ package com.hiddenodds.trebolv2.presentation.view.fragments
 import android.os.Build
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import butterknife.BindView
 import butterknife.ButterKnife
 import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.presentation.components.ItemTabAdapter
@@ -18,11 +16,6 @@ import kotlinx.coroutines.experimental.async
 
 
 class TabVerificationFragment: TabBaseFragment() {
-    @BindView(R.id.rv_verification)
-    @JvmField var rvVerification: RecyclerView? = null
-
-    private var adapter: ItemTabAdapter? = null
-
     init {
         val message = observableMessageLoad.map { s -> s }
         disposable.add(message.observeOn(AndroidSchedulers.mainThread())
@@ -30,6 +23,7 @@ class TabVerificationFragment: TabBaseFragment() {
                     kotlin.run {
                         if (s == YES){
                             setDataToControl()
+
                             println("SETDATACONTROL Reactive")
                         }
                     }
@@ -39,22 +33,16 @@ class TabVerificationFragment: TabBaseFragment() {
     override fun onCreateView(inflater: LayoutInflater?,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val root: View = inflater!!.inflate(R.layout.view_tab_verification,
+        return inflater!!.inflate(R.layout.view_tab_verification,
                 container,false)
-        ButterKnife.bind(this, root)
-        return root
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        ButterKnife.bind(this, view!!)
         executeGetMaintenance()
         setupRecyclerView()
     }
-
- /*   override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-
-    }*/
 
     private fun setDataToControl(){
 
@@ -82,14 +70,7 @@ class TabVerificationFragment: TabBaseFragment() {
         rvVerification!!.adapter = adapter
     }
 
-    private fun sendUpdate(nameField: String, value: String){
-        async {
-            updateFieldMaintenancePresenter
-                    .updateMaintenance(maintenanceModel!!.id,
-                            nameField,
-                            value)
-        }
-    }
+
     private fun updateField(nameField: String, value: String){
         if (maintenanceModel != null){
             var flag = false

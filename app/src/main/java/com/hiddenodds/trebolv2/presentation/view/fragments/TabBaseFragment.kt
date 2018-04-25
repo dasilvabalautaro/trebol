@@ -3,10 +3,13 @@ package com.hiddenodds.trebolv2.presentation.view.fragments
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.view.View
+import android.support.v7.widget.RecyclerView
 import android.widget.Toast
+import butterknife.BindView
 import com.hiddenodds.trebolv2.App
+import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.dagger.PresenterModule
+import com.hiddenodds.trebolv2.presentation.components.ItemTabAdapter
 import com.hiddenodds.trebolv2.presentation.interfaces.ILoadDataView
 import com.hiddenodds.trebolv2.presentation.model.MaintenanceModel
 import com.hiddenodds.trebolv2.presentation.presenter.GetMaintenancePresenter
@@ -25,6 +28,7 @@ abstract class TabBaseFragment: Fragment(), ILoadDataView {
         var codeNotify: String? = null
         var messageLoad = "NO"
         var observableMessageLoad: Subject<String> = PublishSubject.create()
+
     }
 
     val Fragment.app: App
@@ -40,17 +44,17 @@ abstract class TabBaseFragment: Fragment(), ILoadDataView {
 
     protected val YES = "YES"
     protected var disposable: CompositeDisposable = CompositeDisposable()
+    var adapter: ItemTabAdapter? = null
+    @BindView(R.id.rv_verification)
+    @JvmField var rvVerification: RecyclerView? = null
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        component.inject(this)
+    init {
         observableMessageLoad
                 .subscribe { messageLoad }
     }
-
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        component.inject(this)
         getMaintenancePresenter.view = this
         updateFieldMaintenancePresenter.view = this
     }
@@ -83,6 +87,15 @@ abstract class TabBaseFragment: Fragment(), ILoadDataView {
             getMaintenancePresenter.executeGet(codeNotify!!)
         }
 
+    }
+
+    protected fun sendUpdate(nameField: String, value: String){
+        async {
+            updateFieldMaintenancePresenter
+                    .updateMaintenance(maintenanceModel!!.id,
+                            nameField,
+                            value)
+        }
     }
 
     override fun onDestroy() {

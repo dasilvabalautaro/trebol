@@ -366,6 +366,113 @@ abstract class CRUDRealm: IRepository {
                     if (nameFieldUpdate == "verification14"){
                         maintenance.verification14 = newValue
                     }
+                    
+                    if (nameFieldUpdate == "maintenance1"){
+                        maintenance.maintenance1 = newValue
+                    }
+                    if (nameFieldUpdate == "maintenance2"){
+                        maintenance.maintenance2 = newValue
+                    }
+                    if (nameFieldUpdate == "maintenance3"){
+                        maintenance.maintenance3 = newValue
+                    }
+                    if (nameFieldUpdate == "maintenance4"){
+                        maintenance.maintenance4 = newValue
+                    }
+                    if (nameFieldUpdate == "maintenance5"){
+                        maintenance.maintenance5 = newValue
+                    }
+                    if (nameFieldUpdate == "maintenance6"){
+                        maintenance.maintenance6 = newValue
+                    }
+                    if (nameFieldUpdate == "maintenance7"){
+                        maintenance.maintenance7 = newValue
+                    }
+                    if (nameFieldUpdate == "maintenance8"){
+                        maintenance.maintenance8 = newValue
+                    }
+                    if (nameFieldUpdate == "maintenance9"){
+                        maintenance.maintenance9 = newValue
+                    }
+                    if (nameFieldUpdate == "maintenance10"){
+                        maintenance.maintenance10 = newValue
+                    }
+                    if (nameFieldUpdate == "maintenance11"){
+                        maintenance.maintenance11 = newValue
+                    }
+                    if (nameFieldUpdate == "maintenance12"){
+                        maintenance.maintenance12 = newValue
+                    }
+                    if (nameFieldUpdate == "maintenance13"){
+                        maintenance.maintenance13 = newValue
+                    }
+                    if (nameFieldUpdate == "maintenance14"){
+                        maintenance.maintenance14 = newValue
+                    }
+                    if (nameFieldUpdate == "test1"){
+                        maintenance.test1 = newValue
+                    }
+                    if (nameFieldUpdate == "test2"){
+                        maintenance.test2 = newValue
+                    }
+                    if (nameFieldUpdate == "test3"){
+                        maintenance.test3 = newValue
+                    }
+                    if (nameFieldUpdate == "test4"){
+                        maintenance.test4 = newValue
+                    }
+                    if (nameFieldUpdate == "test5"){
+                        maintenance.test5 = newValue
+                    }
+                    if (nameFieldUpdate == "test6"){
+                        maintenance.test6 = newValue
+                    }
+                    if (nameFieldUpdate == "test7"){
+                        maintenance.test7 = newValue
+                    }
+                    if (nameFieldUpdate == "test8"){
+                        maintenance.test8 = newValue
+                    }
+                    if (nameFieldUpdate == "test9"){
+                        maintenance.test9 = newValue
+                    }
+                    if (nameFieldUpdate == "test10"){
+                        maintenance.test10 = newValue
+                    }
+                    if (nameFieldUpdate == "test11"){
+                        maintenance.test11 = newValue
+                    }
+                    if (nameFieldUpdate == "test12"){
+                        maintenance.test12 = newValue
+                    }
+                    if (nameFieldUpdate == "test13"){
+                        maintenance.test13 = newValue
+                    }
+                    if (nameFieldUpdate == "test14"){
+                        maintenance.test14 = newValue
+                    }
+                    if (nameFieldUpdate == "test15"){
+                        maintenance.test15 = newValue
+                    }
+                    if (nameFieldUpdate == "test16"){
+                        maintenance.test16 = newValue
+                    }
+                    if (nameFieldUpdate == "security"){
+                        maintenance.security = newValue
+                    }
+                    if (nameFieldUpdate == "documentation"){
+                        maintenance.documentation = newValue
+                    }
+                    if (nameFieldUpdate == "knowPrint"){
+                        maintenance.knowPrint = newValue
+                    }
+                    if (nameFieldUpdate == "nextHours"){
+                        maintenance.nextHours = newValue
+                    }
+                    if (nameFieldUpdate == "reportTechnical"){
+                        maintenance.reportTechnical = newValue
+                    }
+
                     realm.insertOrUpdate(maintenance)
 
                 }

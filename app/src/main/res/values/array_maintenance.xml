@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="lbl_maintenance">
+        <item>Backup del software. Anotar versión.</item>
+        <item>Actualización de software.</item>
+        <item>Drenaje de tinta.</item>
+        <item>Limpieza del circuito de tinta.</item>
+        <item>Cambio de filtros (ver última hoja).</item>
+        <item>Comprobación de electroválvulas.</item>
+        <item>Comprobación de la bomba.</item>
+        <item>Llenado de tinta.</item>
+        <item>Ajuste de presión, último valor.</item>
+        <item>Ajuste de chorro.</item>
+        <item>Tensión de excitación, nuevo valor.</item>
+        <item>Test de boquilla: valor inicial, rango final y gotas usadas.</item>
+        <item>Ajuste de la ganancia de auto fase: último valor, valor final.</item>
+        <item>Actualización de la tensión de exitación.</item>
+    </string-array>
+</resources>

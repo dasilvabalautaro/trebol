@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="lbl_test">
+        <item>LEDs/ Baliza de alarmas.</item>
+        <item>Preparada/Fallo/Alarma Relés.</item>
+        <item>Niveles de los depósitos de tinta y aditivo.</item>
+        <item>Switch de la tapoa del cabezal.</item>
+        <item>Comprobación de la tensión de +12VDC en la tarjeta I/O EZJ-95.</item>
+        <item>Test del viscosimetro, coef. de viscosidad y viscosidad.</item>
+        <item>Pantalla táctil:</item>
+        <item>Funcionamiento.</item>
+        <item>Coordinación de los botones.</item>
+        <item>Fotocélula/Señal de impresión.</item>
+        <item>Encoder.</item>
+        <item>Puertos I/O Adicionales.</item>
+        <item>Ventilador.</item>
+        <item>Muestras de impresión.</item>
+        <item>Comprobación en línea.</item>
+        <item>Nuevo backup del software.</item>
+
+    </string-array>
+</resources>
