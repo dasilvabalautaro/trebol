@@ -42,6 +42,30 @@ abstract class CRUDRealm: IRepository {
 
     }
 
+    override fun <E : RealmObject> save(clazz: Class<E>,
+                                        listener: ITaskCompleteListener):String? {
+        val realm: Realm = Realm.getDefaultInstance()
+        var id: String? = null
+        var e: E? = null
+        try {
+            realm.executeTransaction({
+                e = it.createObject(clazz, UUID.randomUUID().toString())
+                if (e != null && e is Maintenance){
+                    id = (e as Maintenance).id
+                }
+
+                listener.onSaveSucceeded()
+
+            })
+        }catch (e: Throwable){
+            listener.onSaveFailed(e.message!!)
+        }finally {
+            realm.close()
+        }
+        return id
+
+    }
+
     fun saveAssignedMat(assignedMaterialModel: AssignedMaterialModel,
                              listener: ITaskCompleteListener): AssignedMaterial?{
         val realm: Realm = Realm.getDefaultInstance()
@@ -108,7 +132,7 @@ abstract class CRUDRealm: IRepository {
                                                   fieldName: String,
                                                   value: String): RealmResults<E>? {
         val realm: Realm = Realm.getDefaultInstance()
-        realm.refresh()
+
         return realm.where(clazz).equalTo(fieldName, value).findAll()
     }
 
@@ -285,6 +309,79 @@ abstract class CRUDRealm: IRepository {
         }
         return true
     }
+
+    fun updateFieldMaintenance(id: String, nameFieldUpdate: String,
+                                newValue: String,
+                                listener: ITaskCompleteListener): Boolean{
+        val realm: Realm = Realm.getDefaultInstance()
+        try {
+
+            realm.executeTransaction {
+                val maintenance = realm.where(Maintenance::class.java)
+                        .equalTo("id", id).findFirst()
+
+                if (maintenance != null){
+                    if (nameFieldUpdate == "codeNotify"){
+                        maintenance.codeNotify = newValue
+                    }
+                    if (nameFieldUpdate == "verification1"){
+                        maintenance.verification1 = newValue
+                    }
+                    if (nameFieldUpdate == "verification2"){
+                        maintenance.verification2 = newValue
+                    }
+                    if (nameFieldUpdate == "verification3"){
+                        maintenance.verification3 = newValue
+                    }
+                    if (nameFieldUpdate == "verification4"){
+                        maintenance.verification4 = newValue
+                    }
+                    if (nameFieldUpdate == "verification5"){
+                        maintenance.verification5 = newValue
+                    }
+                    if (nameFieldUpdate == "verification6"){
+                        maintenance.verification6 = newValue
+                    }
+                    if (nameFieldUpdate == "verification7"){
+                        maintenance.verification7 = newValue
+                    }
+                    if (nameFieldUpdate == "verification8"){
+                        maintenance.verification8 = newValue
+                    }
+                    if (nameFieldUpdate == "verification9"){
+                        maintenance.verification9 = newValue
+                    }
+                    if (nameFieldUpdate == "verification10"){
+                        maintenance.verification10 = newValue
+                    }
+                    if (nameFieldUpdate == "verification11"){
+                        maintenance.verification11 = newValue
+                    }
+                    if (nameFieldUpdate == "verification12"){
+                        maintenance.verification12 = newValue
+                    }
+                    if (nameFieldUpdate == "verification13"){
+                        maintenance.verification13 = newValue
+                    }
+                    if (nameFieldUpdate == "verification14"){
+                        maintenance.verification14 = newValue
+                    }
+                    realm.insertOrUpdate(maintenance)
+
+                }
+                listener.onSaveSucceeded()
+            }
+
+        }catch (e: Throwable){
+            listener.onSaveFailed(e.message!!)
+            return false
+        }finally {
+            realm.close()
+        }
+        return true
+    }
+
+
 
     override fun <E : RealmObject> updateField(nameField: String,
                                                valueSearch: String,

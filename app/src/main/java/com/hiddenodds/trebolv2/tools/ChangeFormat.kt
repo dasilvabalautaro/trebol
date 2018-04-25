@@ -181,4 +181,15 @@ object ChangeFormat {
             //Thread.sleep(1000)
         }
     }
+
+    fun deleteCache(key: String){
+        try {
+            CachingLruRepository
+                    .instance
+                    .getLru()
+                    .remove(key)
+        }catch (ex: Exception){
+            println(ex.message)
+        }
+    }
 }

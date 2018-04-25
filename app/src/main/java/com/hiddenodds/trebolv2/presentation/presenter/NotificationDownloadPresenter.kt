@@ -46,5 +46,8 @@ class NotificationDownloadPresenter @Inject constructor(private val downloadNoti
         downloadNotificationUseCase.executeDeleteDownload()
     }
 
-
+    override fun destroy() {
+        super.destroy()
+        downloadNotificationUseCase.destroy()
+    }
 }

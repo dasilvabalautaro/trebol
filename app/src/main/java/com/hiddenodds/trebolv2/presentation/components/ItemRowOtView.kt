@@ -11,6 +11,7 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import com.hiddenodds.trebolv2.R
+import com.hiddenodds.trebolv2.presentation.view.fragments.MaintenanceFragment
 import com.hiddenodds.trebolv2.presentation.view.fragments.OrderFragment
 
 class ItemRowOtView: FrameLayout {
@@ -48,6 +49,9 @@ class ItemRowOtView: FrameLayout {
     @BindView(R.id.edtObservation)
     @JvmField var edtObservation: TextView? = null
 
+    @BindView(R.id.btnGuide)
+    @JvmField var btnGuide: Button? = null
+
     @BindView(R.id.btnOpenOt)
     @JvmField var btnOpenOt: Button? = null
     @BindView(R.id.btnEmail)
@@ -67,6 +71,23 @@ class ItemRowOtView: FrameLayout {
                     .commit()
 
         }
+
+    }
+
+    @OnClick(R.id.btnGuide)
+    fun openGuide(){
+        val params = (btnOpenOt!!.tag as String).split("*")
+        if (params.isNotEmpty()){
+            val maintenanceFragment = MaintenanceFragment.newInstance(params[0],
+                    params[1])
+            (context as FragmentActivity).supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.flContent, maintenanceFragment,
+                            maintenanceFragment.javaClass.simpleName)
+                    .addToBackStack(null)
+                    .commit()
+        }
+
 
     }
     /*@BindView(R.id.view_space)

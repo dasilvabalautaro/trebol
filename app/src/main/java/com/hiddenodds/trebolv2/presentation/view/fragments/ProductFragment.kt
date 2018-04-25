@@ -122,7 +122,7 @@ class ProductFragment: NotificationFragment(), ILoadDataView {
         }
 
         rvProducts!!.adapter = adapter
-        rvProducts!!.adapter
+        //rvProducts!!.adapter
     }
 
 

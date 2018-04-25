@@ -3,10 +3,7 @@ package com.hiddenodds.trebolv2.presentation.presenter
 import android.os.Handler
 import android.os.Looper
 import com.hiddenodds.trebolv2.domain.data.MapperNotification
-import com.hiddenodds.trebolv2.domain.interactor.DeleteNotificationsOfTechnicalUseCase
-import com.hiddenodds.trebolv2.domain.interactor.GetDownloadUseCase
-import com.hiddenodds.trebolv2.domain.interactor.GetLisTypeNotificationUseCase
-import com.hiddenodds.trebolv2.domain.interactor.SaveListNotificationUseCase
+import com.hiddenodds.trebolv2.domain.interactor.*
 import com.hiddenodds.trebolv2.presentation.model.DownloadModel
 import com.hiddenodds.trebolv2.presentation.model.TypeNotificationModel
 import com.hiddenodds.trebolv2.tools.ChangeFormat
@@ -26,7 +23,9 @@ class SaveNotificationPresenter @Inject constructor(private val getDownloadUseCa
                                                     private val deleteNotificationsOfTechnicalUseCase:
                                                       DeleteNotificationsOfTechnicalUseCase,
                                                     private val getLisTypeNotificationUseCase:
-                                                      GetLisTypeNotificationUseCase):
+                                                      GetLisTypeNotificationUseCase,
+                                                    private val deleteMaintenanceUseCase:
+                                                    DeleteMaintenanceUseCase):
         BasePresenter(){
     private var listMapperNotification: ArrayList<MapperNotification> = ArrayList()
     private var listTypeNotification: List<TypeNotificationModel> = ArrayList()
@@ -154,8 +153,12 @@ class SaveNotificationPresenter @Inject constructor(private val getDownloadUseCa
                     mapperNotification.trade = mapperNotification.trade.trim()
                 }
 
-                listMapperNotification.add(mapperNotification)
+                async {
+                    deleteMaintenanceUseCase.codeNotify = mapperNotification.code
+                    deleteMaintenanceUseCase.execute(DeleteMaintenanceObserver())
+                }
 
+                listMapperNotification.add(mapperNotification)
 
             }
 
@@ -216,6 +219,7 @@ class SaveNotificationPresenter @Inject constructor(private val getDownloadUseCa
         saveListNotificationUseCase.dispose()
         deleteNotificationsOfTechnicalUseCase.dispose()
         getLisTypeNotificationUseCase.dispose()
+        deleteMaintenanceUseCase.dispose()
     }
     inner class ListTypeNotificationObserver:
             DisposableObserver<List<TypeNotificationModel>>(){
@@ -255,10 +259,31 @@ class SaveNotificationPresenter @Inject constructor(private val getDownloadUseCa
     inner class DeleteNotificationObserver: DisposableObserver<Boolean>(){
         override fun onNext(t: Boolean) {
             //saveListNotification()
+            println("Delete Notification")
         }
 
         override fun onComplete() {
             //showMessage(context.resources.getString(R.string.delete_complete))
+            println("Delete Notification complete")
+        }
+
+        override fun onError(e: Throwable) {
+            println("Error: Delete Notification")
+            if (e.message != null) {
+                showError(e.message!!)
+            }
+        }
+    }
+
+    inner class DeleteMaintenanceObserver: DisposableObserver<Boolean>(){
+        override fun onNext(t: Boolean) {
+            //saveListNotification()
+            println("Delete Maintenance")
+        }
+
+        override fun onComplete() {
+            //showMessage(context.resources.getString(R.string.delete_complete))
+            println("Delete Maintenance complete")
         }
 
         override fun onError(e: Throwable) {

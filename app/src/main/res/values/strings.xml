@@ -103,6 +103,8 @@
     <string name="lbl_not_confirm">Rechazar</string>
     <string name="lbl_cancel">Cancelar</string>
     <string name="lbl_error">Trebol Error</string>
+    <string name="lbl_get_maintenance">Get maintenance complete.</string>
+    <string name="lbl_save_maintenance">Create maintenance complete.</string>
     <string name="lbl_end_instalation">ACEPTACION DE FINALIZACION \nDE LA INSTALACION</string>
     <string name="new_filter">New Filter</string>
     <string name="address_empty">Address empty. Verify.</string>
@@ -112,4 +114,9 @@
     <string name="lbl_connect_server">Connect Server OK.</string>
     <string name="lbl_not_connect_server">Error Not Connect Server.</string>
     <string name="lbl_finish_process">Finish process.</string>
+    <string name="lbl_tab_verify">Verification</string>
+    <string name="lbl_tab_maintenance">Maintenance</string>
+    <string name="lbl_tab_test">Test</string>
+    <string name="lbl_tab_observations">Observations</string>
+
 </resources>

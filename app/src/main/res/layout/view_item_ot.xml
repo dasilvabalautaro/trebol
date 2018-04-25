@@ -30,14 +30,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/left_one_guideline"
-            app:layout_constraintGuide_percent=".35"
+            app:layout_constraintGuide_percent=".30"
             android:orientation="vertical"/>
 
         <android.support.constraint.Guideline
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/left_two_guideline"
-            app:layout_constraintGuide_percent=".65"
+            app:layout_constraintGuide_percent=".70"
             android:orientation="vertical"/>
 
         <android.support.constraint.Guideline
@@ -362,9 +362,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
-            app:layout_constraintRight_toRightOf="@+id/left_twice_guideline"
+            app:layout_constraintRight_toRightOf="@+id/left_one_guideline"
             app:layout_constraintTop_toBottomOf="@+id/edtObservation"
-            android:layout_marginEnd="20dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="20dp"
             android:id="@+id/btnOpenOt"
@@ -373,10 +372,22 @@
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintRight_toRightOf="@+id/right_guideline"
-            app:layout_constraintLeft_toLeftOf="@+id/left_twice_guideline"
+            app:layout_constraintLeft_toLeftOf="@+id/left_one_guideline"
+            app:layout_constraintRight_toRightOf="@+id/left_two_guideline"
             app:layout_constraintTop_toBottomOf="@+id/edtObservation"
-            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
+            android:id="@+id/btnGuide"
+            android:background="@drawable/button_guia"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toRightOf="@+id/right_guideline"
+            app:layout_constraintLeft_toLeftOf="@+id/left_two_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/edtObservation"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="20dp"
             android:id="@+id/btnEmail"

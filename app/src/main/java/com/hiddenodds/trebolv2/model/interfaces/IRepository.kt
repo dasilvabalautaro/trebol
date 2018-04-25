@@ -25,4 +25,6 @@ interface IRepository {
                                       nameFieldUpdate: String, newValue: String,
                                       clazz: Class<E>,
                                       listener: ITaskCompleteListener): Boolean
+    fun <E : RealmObject> save(clazz: Class<E>,
+                               listener: ITaskCompleteListener): String?
 }

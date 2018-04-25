@@ -57,6 +57,17 @@ class PresenterModule {
     //////////////////////
 
     @Provides
+    fun provideMaintenanceExecutor(): MaintenanceExecutor{
+        return MaintenanceExecutor()
+    }
+
+    @Provides
+    fun provideIMaintenanceRepository(maintenanceExecutor: MaintenanceExecutor):
+            IMaintenanceRepository{
+        return maintenanceExecutor
+    }
+
+    @Provides
     fun provideCustomerExecutor(): CustomerExecutor{
         return CustomerExecutor()
     }
@@ -408,14 +419,26 @@ class PresenterModule {
     }
 
     @Provides
+    fun provideDeleteMaintenanceUseCase(uiThread: UIThread,
+                                        jobExecutor: JobExecutor,
+                                        maintenanceExecutor:
+                                        MaintenanceExecutor): DeleteMaintenanceUseCase{
+        return DeleteMaintenanceUseCase(jobExecutor, uiThread,
+                maintenanceExecutor)
+    }
+
+    @Provides
     fun provideUpdateDataRemoteWaterPresenter(getFinishedNotificationUseCase:
                                               GetFinishedNotificationUseCase,
                                               setRemoteNotificationDataUseCase:
                                               SetRemoteNotificationDataUseCase,
                                               deleteNotificationUseCase:
-                                              DeleteNotificationUseCase): UpdateDataRemoteWaterPresenter{
+                                              DeleteNotificationUseCase,
+                                              deleteMaintenanceUseCase:
+                                              DeleteMaintenanceUseCase): UpdateDataRemoteWaterPresenter{
         return UpdateDataRemoteWaterPresenter(getFinishedNotificationUseCase,
-                setRemoteNotificationDataUseCase, deleteNotificationUseCase)
+                setRemoteNotificationDataUseCase, deleteNotificationUseCase,
+                deleteMaintenanceUseCase)
     }
 
     @Provides
@@ -523,12 +546,14 @@ class PresenterModule {
                                          deleteNotificationsOfTechnicalUseCase:
                                          DeleteNotificationsOfTechnicalUseCase,
                                          getLisTypeNotificationUseCase:
-                                         GetLisTypeNotificationUseCase):
+                                         GetLisTypeNotificationUseCase,
+                                         deleteMaintenanceUseCase:
+                                         DeleteMaintenanceUseCase):
             SaveNotificationPresenter{
         return SaveNotificationPresenter(getDownloadUseCase,
                 saveListNotificationUseCase,
                 deleteNotificationsOfTechnicalUseCase,
-                getLisTypeNotificationUseCase)
+                getLisTypeNotificationUseCase, deleteMaintenanceUseCase)
     }
 
     @Provides
@@ -549,4 +574,50 @@ class PresenterModule {
         return SendEmailPresenter()
     }
 
+    ////////////////
+
+
+
+    @Provides
+    fun provideGetMaintenanceUseCase(uiThread: UIThread,
+                                     jobExecutor: JobExecutor,
+                                     maintenanceExecutor:
+                                     MaintenanceExecutor): GetMaintenanceUseCase{
+        return GetMaintenanceUseCase(jobExecutor, uiThread,
+                maintenanceExecutor)
+    }
+
+    @Provides
+    fun provideSaveMaintenanceUseCase(uiThread: UIThread,
+                                      jobExecutor: JobExecutor,
+                                      maintenanceExecutor:
+                                      MaintenanceExecutor): SaveMaintenanceUseCase{
+        return SaveMaintenanceUseCase(jobExecutor, uiThread,
+                maintenanceExecutor)
+    }
+
+    @Provides
+    fun provideUpdateFieldMaintenanceUseCase(uiThread: UIThread,
+                                             jobExecutor: JobExecutor,
+                                             maintenanceExecutor:
+                                             MaintenanceExecutor): UpdateFieldMaintenanceUseCase{
+        return UpdateFieldMaintenanceUseCase(jobExecutor, uiThread,
+                maintenanceExecutor)
+    }
+
+
+
+    @Provides
+    fun provideGetMaintenancePresenter(getMaintenanceUseCase:
+                                       GetMaintenanceUseCase,
+                                       saveMaintenanceUseCase:
+                                       SaveMaintenanceUseCase): GetMaintenancePresenter{
+        return GetMaintenancePresenter(getMaintenanceUseCase, saveMaintenanceUseCase)
+    }
+
+    @Provides
+    fun provideUpdateFieldMaintenancePresenter(updateFieldMaintenanceUseCase:
+                                               UpdateFieldMaintenanceUseCase): UpdateFieldMaintenancePresenter{
+        return  UpdateFieldMaintenancePresenter(updateFieldMaintenanceUseCase)
+    }
 }

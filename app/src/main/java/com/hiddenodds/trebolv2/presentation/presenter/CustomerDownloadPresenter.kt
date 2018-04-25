@@ -43,4 +43,9 @@ class CustomerDownloadPresenter @Inject constructor(private val downloadCustomer
         downloadCustomerUseCase.listTechnicals.add(Variables.codeTechMaster)
         downloadCustomerUseCase.getCustomersNextTechnical()
     }
+
+    override fun destroy() {
+        super.destroy()
+        downloadCustomerUseCase.destroy()
+    }
 }

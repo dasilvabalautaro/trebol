@@ -25,6 +25,11 @@ class ModelsModule(val context: Context) {
     }
 
     @Provides
+    fun provideMaintenanceModelDataMapper(): MaintenanceModelDataMapper{
+        return MaintenanceModelDataMapper(context)
+    }
+
+    @Provides
     fun provideTypeNotificationModelDataMapper(): TypeNotificationModelDataMapper{
         return TypeNotificationModelDataMapper(context)
     }

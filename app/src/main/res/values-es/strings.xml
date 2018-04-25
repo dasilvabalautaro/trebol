@@ -110,7 +110,14 @@
     <string name="lbl_permission_enabled">Permisos habilitados. Intente de nuevo.</string>
     <string name="lbl_connect_server">Conexión correcta.</string>
     <string name="lbl_not_connect_server">Error Servidor no conecta.</string>
+    <string name="lbl_get_maintenance">Obtención de mantenimiento completado.</string>
+    <string name="lbl_save_maintenance">Creación de mantenimiento completado.</string>
     <string name="change_good">Cambio Ok</string>
     <string name="file_not_found">El archivo no existe.</string>
     <string name="lbl_finish_process">Fin del proceso.</string>
+    <string name="lbl_tab_verify">Verificación</string>
+    <string name="lbl_tab_maintenance">Mantenimiento</string>
+    <string name="lbl_tab_test">Test</string>
+    <string name="lbl_tab_observations">Observaciones</string>
+
 </resources>

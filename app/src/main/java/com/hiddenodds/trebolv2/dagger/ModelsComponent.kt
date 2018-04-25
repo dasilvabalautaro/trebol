@@ -12,4 +12,5 @@ interface ModelsComponent {
     fun inject(notificationExecutor: NotificationExecutor)
     fun inject(downloadExecutor: DownloadExecutor)
     fun inject(assignedMaterialExecutor: AssignedMaterialExecutor)
+    fun inject(maintenanceExecutor: MaintenanceExecutor)
 }

@@ -68,7 +68,7 @@ class ItemOtAdapter(private val listener:
             }
 
             btnOpenOt!!.tag = item.code + "*" + item.idTech
-
+            btnGuide!!.tag = item.code + "*" + item.idTech
         }
     }
 }

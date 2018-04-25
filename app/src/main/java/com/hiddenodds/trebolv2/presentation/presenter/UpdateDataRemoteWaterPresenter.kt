@@ -2,6 +2,7 @@ package com.hiddenodds.trebolv2.presentation.presenter
 
 import com.hiddenodds.trebolv2.App
 import com.hiddenodds.trebolv2.R
+import com.hiddenodds.trebolv2.domain.interactor.DeleteMaintenanceUseCase
 import com.hiddenodds.trebolv2.domain.interactor.DeleteNotificationUseCase
 import com.hiddenodds.trebolv2.domain.interactor.GetFinishedNotificationUseCase
 import com.hiddenodds.trebolv2.domain.interactor.SetRemoteNotificationDataUseCase
@@ -16,7 +17,9 @@ class UpdateDataRemoteWaterPresenter @Inject constructor(private val getFinished
                                                          private val setRemoteNotificationDataUseCase:
                                                          SetRemoteNotificationDataUseCase,
                                                          private val deleteNotificationUseCase:
-                                                         DeleteNotificationUseCase):
+                                                         DeleteNotificationUseCase,
+                                                         private val deleteMaintenanceUseCase:
+                                                         DeleteMaintenanceUseCase):
         BasePresenter(){
 
     private var listNotification: ArrayList<NotificationModel> = ArrayList()
@@ -47,9 +50,14 @@ class UpdateDataRemoteWaterPresenter @Inject constructor(private val getFinished
         getFinishedNotificationUseCase.dispose()
         setRemoteNotificationDataUseCase.dispose()
         deleteNotificationUseCase.dispose()
+        deleteMaintenanceUseCase.dispose()
     }
 
     private fun deleteNotification(){
+        async {
+            deleteMaintenanceUseCase.codeNotify = notificationModel!!.code
+            deleteMaintenanceUseCase.execute(DeleteMaintenanceObserver())
+        }
         deleteNotificationUseCase.id = notificationModel!!.id
         deleteNotificationUseCase.codeTech = notificationModel!!.idTech
         deleteNotificationUseCase.execute(DeleteNotificationObserver())
@@ -103,6 +111,22 @@ class UpdateDataRemoteWaterPresenter @Inject constructor(private val getFinished
 
         override fun onComplete() {
             println("Delete Notification : Complete")
+        }
+
+        override fun onError(e: Throwable) {
+            if (e.message != null) {
+                showError(e.message!!)
+            }
+        }
+    }
+
+    inner class DeleteMaintenanceObserver: DisposableObserver<Boolean>(){
+        override fun onNext(t: Boolean) {
+            println("Delete Maintenance : Ok")
+        }
+
+        override fun onComplete() {
+            println("Delete Maintenance : Complete")
         }
 
         override fun onError(e: Throwable) {
