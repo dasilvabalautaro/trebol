@@ -1,34 +1,49 @@
 package com.hiddenodds.trebolv2.presentation.view.fragments
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.widget.Toast
-import butterknife.BindView
 import com.hiddenodds.trebolv2.App
-import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.dagger.PresenterModule
 import com.hiddenodds.trebolv2.presentation.components.ItemTabAdapter
 import com.hiddenodds.trebolv2.presentation.interfaces.ILoadDataView
-import com.hiddenodds.trebolv2.presentation.model.MaintenanceModel
+import com.hiddenodds.trebolv2.presentation.model.*
 import com.hiddenodds.trebolv2.presentation.presenter.GetMaintenancePresenter
+import com.hiddenodds.trebolv2.presentation.presenter.TechnicalPresenter
 import com.hiddenodds.trebolv2.presentation.presenter.UpdateFieldMaintenancePresenter
+import com.hiddenodds.trebolv2.tools.ChangeFormat
+import com.hiddenodds.trebolv2.tools.ManageImage
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.set
+
+
 
 abstract class TabBaseFragment: Fragment(), ILoadDataView {
     companion object Factory{
         var maintenanceModel: MaintenanceModel? = null
+        var technicalModel: TechnicalModel? = null
+        var outState: Bundle? = null
         var codeNotify: String? = null
+        var codeTech: String? = null
         var messageLoad = "NO"
         var observableMessageLoad: Subject<String> = PublishSubject.create()
-
+        val mapImage: LinkedHashMap<String, ProxyBitmap> = LinkedHashMap()
+        val pdfGuideModel = PdfGuideModel()
+        var notificationModel: NotificationModel? = null
     }
 
     val Fragment.app: App
@@ -41,12 +56,14 @@ abstract class TabBaseFragment: Fragment(), ILoadDataView {
     lateinit var getMaintenancePresenter: GetMaintenancePresenter
     @Inject
     lateinit var updateFieldMaintenancePresenter: UpdateFieldMaintenancePresenter
+    @Inject
+    lateinit var manageImage: ManageImage
+    @Inject
+    lateinit var technicalPresenter: TechnicalPresenter
 
     protected val YES = "YES"
     protected var disposable: CompositeDisposable = CompositeDisposable()
-    var adapter: ItemTabAdapter? = null
-    @BindView(R.id.rv_verification)
-    @JvmField var rvVerification: RecyclerView? = null
+
 
     init {
         observableMessageLoad
@@ -57,15 +74,22 @@ abstract class TabBaseFragment: Fragment(), ILoadDataView {
         component.inject(this)
         getMaintenancePresenter.view = this
         updateFieldMaintenancePresenter.view = this
+        technicalPresenter.view = this
     }
-
 
     override fun <T> executeTask(obj: T) {
         if (obj != null){
-            maintenanceModel = (obj as MaintenanceModel)
-            setCodeNotification()
-            messageLoad = YES
-            observableMessageLoad.onNext(messageLoad)
+            if (obj is MaintenanceModel){
+                maintenanceModel = obj
+                setCodeNotification()
+                messageLoad = YES
+                observableMessageLoad.onNext(messageLoad)
+            }
+            if (obj is TechnicalModel){
+                technicalModel = obj
+                notificationModel = getNotification(maintenanceModel!!.codeNotify)
+            }
+
         }
     }
 
@@ -84,7 +108,60 @@ abstract class TabBaseFragment: Fragment(), ILoadDataView {
 
     protected fun executeGetMaintenance(){
         launch(CommonPool) {
-            getMaintenancePresenter.executeGet(codeNotify!!)
+            println("Codigo notification: $codeNotify")
+            if (codeNotify != null){
+                getMaintenancePresenter.executeGet(codeNotify!!)
+            }
+
+        }
+
+    }
+
+    protected fun saveTableToBitmap(sufix: String,
+                          rvVerification: RecyclerView) {
+        var heightAllItems = 0
+
+        if (rvVerification.adapter.itemCount > 0) {
+            val holderSize = rvVerification
+                    .findViewHolderForAdapterPosition(0)
+            val heightHolder = holderSize.itemView.measuredHeight
+            heightAllItems = heightHolder * rvVerification.adapter.itemCount
+
+            val bigBitmap = Bitmap.createBitmap(rvVerification.measuredWidth,
+                    heightAllItems, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bigBitmap)
+            var iHeight = 0
+            val paint = Paint()
+            for (i in 0 until rvVerification.adapter.itemCount) {
+                val holder = rvVerification
+                        .findViewHolderForAdapterPosition(i)
+
+                holder.itemView.isDrawingCacheEnabled = true
+                holder.itemView.buildDrawingCache()
+                val bitmap = holder.itemView
+                        .drawingCache.copy(Bitmap.Config.ARGB_8888, true)
+                println("${bitmap.height} item: $i")
+                canvas.drawBitmap(bitmap,
+                        0f, iHeight.toFloat(),
+                        paint)
+                iHeight += bitmap.height
+                bitmap.recycle()
+            }
+
+            val proxyBitmap = ProxyBitmap(bigBitmap)
+
+            mapImage[sufix] = proxyBitmap
+        }else{
+            println("Items vacios")
+        }
+    }
+
+    protected fun executeGetTechnical(){
+        async(CommonPool) {
+            if (codeTech != null){
+                technicalPresenter.executeGetTechnical(codeTech!!)
+            }
+
         }
 
     }
@@ -96,6 +173,71 @@ abstract class TabBaseFragment: Fragment(), ILoadDataView {
                             nameField,
                             value)
         }
+    }
+    @Throws(NullPointerException::class)
+    abstract fun buildListOfData(): ArrayList<GuideModel>
+    abstract fun updateField(nameField: String, value: String): Boolean
+
+    protected fun setupRecyclerView(rvVerification: RecyclerView){
+        rvVerification.isNestedScrollingEnabled = false
+        rvVerification.setHasFixedSize(true)
+        rvVerification.layoutManager = LinearLayoutManager(activity,
+                LinearLayoutManager.VERTICAL, false)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ChangeFormat.addDecorationRecycler(rvVerification, context)
+        }
+
+    }
+
+
+    @Throws(NullPointerException::class)
+    protected fun setDataToControl(adapter: ItemTabAdapter,
+                                   rvVerification: RecyclerView){
+
+         async {
+            val list = buildListOfData()
+            adapter.setObjectList(list)
+            activity.runOnUiThread({
+                rvVerification.scrollToPosition(0)
+            })
+        }
+
+
+    }
+
+    protected fun isCreateImage(rvVerification: RecyclerView?,
+                                flagChange: Boolean, sufix: String):Boolean{
+        if (rvVerification == null) return false
+        return if (!mapImage.containsKey(sufix)){
+            true
+        }else{
+            flagChange
+        }
+    }
+
+    private fun getNotification(codeNotify: String):
+            NotificationModel? {
+
+        if (technicalModel != null){
+            val list = technicalModel!!.notifications
+
+            if (list.isNotEmpty()){
+                val sortedList = list.sortedWith(compareBy({ it.code }))
+
+                sortedList.forEach { notify: NotificationModel ->
+                    if (notify.code == codeNotify){
+                        pdfGuideModel.client = notify.businessName
+                        pdfGuideModel.series = notify.series
+                        println("Client: ${pdfGuideModel.client} " +
+                                "Series ${pdfGuideModel.series}")
+                        return notify
+                    }
+                }
+            }
+
+        }
+
+        return null
     }
 
     override fun onDestroy() {

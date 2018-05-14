@@ -154,9 +154,17 @@ class ServiceRemote @Inject constructor() {
         list.add(value)
         value = notify.observations
         list.add(value)
-        value = notify.workHours
+        value = if (notify.workHours.isEmpty()){
+            "0"
+        }else{
+            notify.workHours
+        }
         list.add(value)
-        value = notify.satd
+        value = if (notify.satd.isEmpty()){
+            "0"
+        }else{
+            notify.satd
+        }
         list.add(value)
         value = notify.diet
         list.add(value)
@@ -173,11 +181,23 @@ class ServiceRemote @Inject constructor() {
                 notify.vSoft2 + " " +
                 notify.vSoft3
         list.add(value)
-        value = notify.hours
+        value = if (notify.hours.isEmpty()){
+            "0"
+        }else{
+            notify.hours
+        }
         list.add(value)
-        value = notify.totalTeam
+        value = if (notify.totalTeam.isEmpty()){
+            "0"
+        }else{
+            notify.totalTeam
+        }
         list.add(value)
-        value = notify.lastAmount
+        value = if (notify.lastAmount.isEmpty()){
+            "0"
+        }else{
+            notify.lastAmount
+        }
         list.add(value)
         value = notify.machine
         list.add(value)
@@ -216,9 +236,10 @@ class ServiceRemote @Inject constructor() {
         }
 
     }
+
     @Throws(Exception::class, SQLException::class)
     private fun updateNotification(notification: NotificationModel){
-        var preparedStatement: PreparedStatement? = null
+        var preparedStatement: PreparedStatement?
         println("Init Update Notification ${notification.code}")
         val sqlNotification = StatementSQL.updateNotification()
         val paramsNotification = listParamNotification(notification)
@@ -258,7 +279,7 @@ class ServiceRemote @Inject constructor() {
 
     @Throws(Exception::class, SQLException::class)
     private fun updateMachine(notification: NotificationModel){
-        var preparedStatement: PreparedStatement? = null
+        var preparedStatement: PreparedStatement?
         println("Init Update Machine")
         val sqlMachine = StatementSQL.updateMachine()
         val paramsMachine = listParamMachine(notification)

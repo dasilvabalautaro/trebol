@@ -33,6 +33,7 @@ class ItemOtAdapter(private val listener:
         this.items.clear()
         this.items.addAll(itemList)
         diffResult.dispatchUpdatesTo(this)
+
     }
 
     class ViewHolder(private val itemRowOtView: ItemRowOtView):
@@ -40,35 +41,38 @@ class ItemOtAdapter(private val listener:
         private val DEMO = "Demo"
         private val INSTALATION = "Instalacion"
 
-        fun bind(item: NotificationModel, listener:
+        fun bind(item: NotificationModel?, listener:
         (NotificationModel) -> Unit) = with(itemRowOtView)  {
-            edtAnnounce!!.text = item.code
-            edtMachine!!.text = item.series
-            edtType!!.text = item.type
-            edtName!!.text = item.businessName
-            edtDate!!.text = item.dateInit
-            edtDateFinish!!.text = item.dateCompleted
-            edtProvince!!.text = item.province
-            edtLocation!!.text = item.locality
-            edtObservation!!.text = item.symptom
-            edtAddress!!.text = item.address
-            if (item.customer != null){
-                edtPhone!!.text = item.customer!!.phone
-                edtContact!!.text = item.customer!!.name
+            if (item != null){
+                edtAnnounce!!.text = item.code
+                edtMachine!!.text = item.series
+                edtType!!.text = item.type
+                edtName!!.text = item.businessName
+                edtDate!!.text = item.dateInit
+                edtDateFinish!!.text = item.dateCompleted
+                edtProvince!!.text = item.province
+                edtLocation!!.text = item.locality
+                edtObservation!!.text = item.symptom
+                edtAddress!!.text = item.address
+                if (item.customer != null){
+                    edtPhone!!.text = item.customer!!.phone
+                    edtContact!!.text = item.customer!!.name
 
-            }
-            if (item.type != DEMO && item.type != INSTALATION){
-                btnEmail!!.visibility = View.INVISIBLE
-            }else{
-                btnEmail!!.visibility = View.VISIBLE
+                }
+                if (item.type != DEMO && item.type != INSTALATION){
+                    btnEmail!!.visibility = View.INVISIBLE
+                }else{
+                    btnEmail!!.visibility = View.VISIBLE
+                }
+
+                btnEmail!!.setOnClickListener {
+                    listener(item)
+                }
+
+                btnOpenOt!!.tag = item.code + "*" + item.idTech
+                btnGuide!!.tag = item.code + "*" + item.idTech
             }
 
-            btnEmail!!.setOnClickListener {
-                listener(item)
-            }
-
-            btnOpenOt!!.tag = item.code + "*" + item.idTech
-            btnGuide!!.tag = item.code + "*" + item.idTech
         }
     }
 }

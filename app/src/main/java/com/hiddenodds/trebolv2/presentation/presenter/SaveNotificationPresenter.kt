@@ -192,8 +192,6 @@ class SaveNotificationPresenter @Inject constructor(private val getDownloadUseCa
         if (this.listMapperNotification.size != 0){
             saveListNotificationUseCase
                     .listMapperNotification = ArrayList(this.listMapperNotification)
-            /*println("listas cargadas:" + this.codeTechnical +
-                    "  cantidad:" + this.listMapperNotification.size.toString())*/
             this.listMapperNotification = ArrayList()
             saveListNotificationUseCase.execute(SaveNotificationObserver())
 

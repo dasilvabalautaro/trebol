@@ -39,12 +39,14 @@ object ManageFile {
     }
 
     fun deleteFileOfWork(code: String){
+        val PRE_FIX = "end"
         val file = File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES), DIRECTORY_WORK)
         if (file.isDirectory) {
             val files = file.listFiles()
             files?.asSequence()?.filter {
-                (it.name == "$code.jpg" || it.name == "$code.pdf")
+                (it.name == "$code.jpg" || it.name == "$code.pdf"
+                        || it.name == "$code$PRE_FIX.pdf")
                         && it.delete() }?.forEach { println("Delete OK") }
         }
     }

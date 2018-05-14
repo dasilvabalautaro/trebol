@@ -24,7 +24,8 @@ class PdfEndTask @Inject constructor() {
 
     fun inflateView(){
         val viewGroup: ViewGroup = pdfEndTaskView.rootView as ViewGroup
-        val inflater = context.getSystemService(Service.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val inflater = context
+                .getSystemService(Service.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         view = inflater
                 .inflate(R.layout.view_pdf_end_task_frame, viewGroup,
                         false) as PdfEndTaskView

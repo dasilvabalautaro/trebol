@@ -46,7 +46,7 @@ abstract class CRUDRealm: IRepository {
                                         listener: ITaskCompleteListener):String? {
         val realm: Realm = Realm.getDefaultInstance()
         var id: String? = null
-        var e: E? = null
+        var e: E?
         try {
             realm.executeTransaction({
                 e = it.createObject(clazz, UUID.randomUUID().toString())
@@ -98,7 +98,7 @@ abstract class CRUDRealm: IRepository {
         val realm: Realm = Realm.getDefaultInstance()
 
         var id: String? = null
-        var assignedMaterial: AssignedMaterial? = null
+        var assignedMaterial: AssignedMaterial?
         try {
             realm.executeTransaction({
                 val material = realm.where(Material::class.java)

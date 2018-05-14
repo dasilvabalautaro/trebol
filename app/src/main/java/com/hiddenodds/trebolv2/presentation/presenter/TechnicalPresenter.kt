@@ -28,7 +28,8 @@ class TechnicalPresenter @Inject constructor(private val
         }
 
         override fun onComplete() {
-            showMessage(context.resources.getString(R.string.task_complete))
+            println(context.resources.getString(R.string.task_complete))
+            //showMessage(context.resources.getString(R.string.task_complete))
         }
 
         override fun onError(e: Throwable) {

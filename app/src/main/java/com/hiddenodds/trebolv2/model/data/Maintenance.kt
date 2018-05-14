@@ -51,9 +51,9 @@ open class Maintenance: RealmObject() {
     var test14 = ""
     var test15 = ""
     var test16 = ""
-    var security = "SI"
-    var documentation = "SI"
-    var knowPrint = "SI"
+    var security = ""
+    var documentation = ""
+    var knowPrint = ""
     var nextHours = "0"
     var reportTechnical = ""
 }

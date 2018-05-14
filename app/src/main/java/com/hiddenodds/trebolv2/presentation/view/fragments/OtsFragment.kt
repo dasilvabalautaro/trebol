@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.support.annotation.RequiresApi
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DividerItemDecoration
@@ -21,6 +22,7 @@ import butterknife.ButterKnife
 import com.hiddenodds.trebolv2.App
 import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.dagger.PresenterModule
+import com.hiddenodds.trebolv2.presentation.components.EndlessRecyclerOnScrollListener
 import com.hiddenodds.trebolv2.presentation.components.ItemOtAdapter
 import com.hiddenodds.trebolv2.presentation.interfaces.ILoadDataView
 import com.hiddenodds.trebolv2.presentation.model.EmailModel
@@ -42,6 +44,7 @@ import org.jetbrains.anko.alert
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 class OtsFragment: Fragment(), ILoadDataView {
 
@@ -51,11 +54,13 @@ class OtsFragment: Fragment(), ILoadDataView {
     private var disposable: CompositeDisposable = CompositeDisposable()
     private var technicalModel: TechnicalModel? = null
     private var notificationModel: NotificationModel? = null
+    private var positionSpinner = -1
+    var outState: Bundle? = null
+    private var listNotification: ArrayList<NotificationModel> = ArrayList()
+    private var listNotificationView: ArrayList<NotificationModel> = ArrayList()
 
     @BindView(R.id.sp_tech)
     @JvmField var spTech: Spinner? = null
-    /*@BindView(R.id.sr_data)
-    @JvmField var srData: SwipeRefreshLayout? = null*/
     @BindView(R.id.rv_ots)
     @JvmField var rvOts: RecyclerView? = null
 
@@ -85,6 +90,21 @@ class OtsFragment: Fragment(), ILoadDataView {
         return root
     }
 
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        if (outState != null){
+            positionSpinner = outState!!.getInt("position")
+        }
+
+        rvOts!!.addOnScrollListener(object: EndlessRecyclerOnScrollListener(){
+            override fun onLoadMore() {
+                addDataToList()
+            }
+
+        })
+
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         technicalMasterPresenter.view = this
@@ -100,6 +120,7 @@ class OtsFragment: Fragment(), ILoadDataView {
                 .observeOn(AndroidSchedulers.mainThread())
                 .map { position ->
                     run{
+                        positionSpinner = position
                         this.codeTech = spTech!!.getItemAtPosition(position) as String
 
                         async {
@@ -109,14 +130,45 @@ class OtsFragment: Fragment(), ILoadDataView {
                         return@map resources.getString(com.hiddenodds.trebolv2.R.string.new_filter)
                     }
                 }
-                .subscribe { result -> context.toast(result)})
+                .subscribe { result -> println(result)})
+    }
+
+    override fun onResume() {
+        super.onResume()
+        async {
+            removeFragment()
+        }
     }
 
     override fun onPause() {
         super.onPause()
         ChangeFormat.deleteCacheTechnical(this.codeTech)
+        outState = Bundle()
+        outState!!.putInt("position", positionSpinner)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        outState = null
+    }
+
+    private fun removeFragment(){
+        try {
+            val manager = activity.supportFragmentManager
+
+            for (i in 0 until manager.backStackEntryCount){
+                val fragment = manager.fragments[i]
+                if (fragment is MaintenanceFragment){
+                    manager.beginTransaction().remove(fragment).commit()
+                    fragment.onDestroy()
+                }
+
+            }
+
+        }catch(ex: Exception){
+            println(ex.message)
+        }
+    }
 
     override fun showMessage(message: String) {
         context.toast(message)
@@ -133,18 +185,72 @@ class OtsFragment: Fragment(), ILoadDataView {
             if (code == this.techMasterCode && spTech!!.adapter == null){
                 val listTech = ArrayList((obj as TechnicalModel).trd)
                 setDataSpinner(listTech)
+                verifyInstance()
+            }else{
+                setListRecycler()
             }
-
-            async {
-                val listNotification = ArrayList((obj as TechnicalModel).notifications)
-                adapter!!.setObjectList(listNotification)
-            }
-
-            rvOts!!.scrollToPosition(0)
 
         }
 
     }
+
+    private fun addDataToList(){
+        Handler().postDelayed(Runnable {
+
+            var firstVisibleItem = 0
+            val itemView = listNotificationView.size
+
+            println("Notifications Number: ${listNotification.size}")
+            println("Notifications Number: ${listNotificationView.size}")
+            if (listNotificationView.size != listNotification.size){
+                println("DATOS EN CARGA")
+                var count = 0
+                for (i in itemView until listNotification.size){
+                    listNotificationView.add(listNotification[i])
+                    if (count > 6){
+                        break
+                    }
+                    count++
+                }
+
+                async {
+                    adapter!!.setObjectList(listNotificationView)
+                }
+
+                activity.runOnUiThread {
+                    if (itemView != 0){
+                        firstVisibleItem = (rvOts!!
+                                .layoutManager as LinearLayoutManager)
+                                .findFirstVisibleItemPosition()
+                    }
+                    rvOts!!.refreshDrawableState()
+                    rvOts!!.scrollToPosition(firstVisibleItem)
+                }
+            }
+
+
+        }, 1000)
+
+    }
+
+    private fun setListRecycler(){
+
+        listNotification = ArrayList(technicalModel!!.notifications)
+        listNotificationView.removeAll(listNotificationView)
+        addDataToList()
+
+    }
+
+    private fun verifyInstance(){
+        if (positionSpinner == -1){
+            //setListRecycler()
+            spTech!!.setSelection(spTech!!.adapter.count - 1)
+        }else{
+            spTech!!.setSelection(positionSpinner)
+        }
+    }
+
+
     override fun <T> executeTask(objList: List<T>) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -177,8 +283,12 @@ class OtsFragment: Fragment(), ILoadDataView {
         val spinnerAdapter: ArrayAdapter<String> = ArrayAdapter(context,
                 android.R.layout.simple_list_item_1, list)
         spTech!!.adapter = spinnerAdapter
-        spTech!!.setSelection(list.size - 1)
 
+        /*if (positionSpinner == 0){
+            spTech!!.setSelection(list.size - 1)
+        }else{
+            spTech!!.setSelection(positionSpinner)
+        }*/
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)

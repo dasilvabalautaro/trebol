@@ -13,6 +13,7 @@ import butterknife.OnClick
 import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.presentation.view.fragments.MaintenanceFragment
 import com.hiddenodds.trebolv2.presentation.view.fragments.OrderFragment
+import com.hiddenodds.trebolv2.presentation.view.fragments.OtsFragment
 
 class ItemRowOtView: FrameLayout {
     constructor(context: Context): super(context)
@@ -76,6 +77,7 @@ class ItemRowOtView: FrameLayout {
 
     @OnClick(R.id.btnGuide)
     fun openGuide(){
+
         val params = (btnOpenOt!!.tag as String).split("*")
         if (params.isNotEmpty()){
             val maintenanceFragment = MaintenanceFragment.newInstance(params[0],
@@ -90,9 +92,9 @@ class ItemRowOtView: FrameLayout {
 
 
     }
-    /*@BindView(R.id.view_space)
-    @JvmField var viewSpace: View? = null*/
+
     init {
+        val TAG = OtsFragment::class.java.name!!
         LayoutInflater.from(context)
                 .inflate(R.layout.view_item_ot, this, true)
         ButterKnife.bind(this)

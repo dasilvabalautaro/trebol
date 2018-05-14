@@ -1,29 +1,38 @@
 package com.hiddenodds.trebolv2.presentation.view.fragments
 
-import android.os.Build
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import android.support.v4.widget.NestedScrollView
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import butterknife.BindView
 import butterknife.ButterKnife
 import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.presentation.components.ItemTabAdapter
 import com.hiddenodds.trebolv2.presentation.model.GuideModel
-import com.hiddenodds.trebolv2.tools.ChangeFormat
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.coroutines.experimental.async
 
 
 class TabMaintenanceFragment: TabBaseFragment(){
+    private val sufix = "_t1"
+    private var adapter: ItemTabAdapter? = null
+    private var flagChange = false
+    @BindView(R.id.sv_tab)
+    @JvmField var svTab: NestedScrollView? = null
+    @BindView(R.id.rv_verification)
+    @JvmField var rvVerification: RecyclerView? = null
 
     init {
+
         val message = observableMessageLoad.map { s -> s }
         disposable.add(message.observeOn(AndroidSchedulers.mainThread())
                 .subscribe { s ->
                     kotlin.run {
                         if (s == YES){
-                            setDataToControl()
+                            setDataToControl(adapter!!, rvVerification!!)
+
                             println("SETDATACONTROL Reactive Maintenance")
                         }
                     }
@@ -41,27 +50,35 @@ class TabMaintenanceFragment: TabBaseFragment(){
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         ButterKnife.bind(this, view!!)
-        setupRecyclerView()
+        setupRecyclerView(rvVerification!!)
+        setAdapter()
     }
 
-    private fun setupRecyclerView(){
-        rvVerification!!.setHasFixedSize(true)
-        rvVerification!!.layoutManager = LinearLayoutManager(activity,
-                LinearLayoutManager.VERTICAL, false)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ChangeFormat.addDecorationRecycler(rvVerification!!, context)
+    fun setTableToBitmap(){
+        if (rvVerification != null) rvVerification!!.clearFocus()
+        if (isCreateImage(rvVerification, flagChange, sufix)){
+
+            async {
+                saveTableToBitmap(sufix, rvVerification!!)
+                pdfGuideModel.nameMaintenance = sufix
+            }
+            flagChange = false
+
         }
+    }
+
+    private fun setAdapter(){
         adapter = ItemTabAdapter{
-            updateField(it.nameField, it.value)
+            flagChange = updateField(it.nameField, it.value)
+
         }
 
         rvVerification!!.adapter = adapter
     }
 
-    private fun updateField(nameField: String, value: String){
+    override fun updateField(nameField: String, value: String): Boolean{
+        var flag = false
         if (maintenanceModel != null){
-            var flag = false
-
             when(nameField){
                 maintenanceModel!!::maintenance1.name -> {
                     if (maintenanceModel!!.maintenance1 != value){
@@ -151,12 +168,16 @@ class TabMaintenanceFragment: TabBaseFragment(){
 
             }
 
-            if (flag) sendUpdate(nameField, value)
+            if (flag){
+                sendUpdate(nameField, value)
+            }
 
         }
+
+        return flag
     }
 
-    private fun buildListOfData(): ArrayList<GuideModel>{
+    override fun buildListOfData(): ArrayList<GuideModel>{
         val lbl = "maintenance"
         val free = listOf(0, 1, 8, 10, 11, 12, 13)
 
@@ -195,17 +216,4 @@ class TabMaintenanceFragment: TabBaseFragment(){
         return items
     }
 
-    private fun setDataToControl(){
-
-        async {
-            val list = buildListOfData()
-
-            adapter!!.setObjectList(list)
-            activity.runOnUiThread({
-                rvVerification!!.scrollToPosition(0)
-            })
-        }
-
-
-    }
 }

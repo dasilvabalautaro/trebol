@@ -97,7 +97,7 @@ class MaterialExecutor @Inject constructor(): CRUDRealm(),
             val clazz: Class<Material> = Material::class.java
             val listMaterial: RealmResults<Material>? = this.getAllData(clazz)
             println("Mostrar lista: ${listMaterial!!.size}")
-            if (listMaterial != null){
+            if (listMaterial.isNotEmpty()){
                 val materialModelCollection: Collection<MaterialModel> = this
                         .materialModelDataMapper
                         .transform(listMaterial)

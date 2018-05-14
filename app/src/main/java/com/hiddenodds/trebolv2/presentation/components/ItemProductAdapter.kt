@@ -43,7 +43,7 @@ class ItemProductAdapter(private val listener: (MaterialModel) -> Unit):
             tvCode!!.text = item.code
             tvDescription!!.text = item.detail
             setOnClickListener {
-                itemView.background = resources.getDrawable(R.color.colorPrimary)
+                itemView.background =  resources.getDrawable(R.color.colorPrimary)
                 listener(item)
             }
         }

@@ -1,6 +1,6 @@
 package com.hiddenodds.trebolv2.presentation.model
 
-class TechnicalModel {
+class TechnicalModel{
     var id: String = ""
     var code: String = ""
     var name: String = ""

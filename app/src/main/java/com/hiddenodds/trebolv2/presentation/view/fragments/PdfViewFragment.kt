@@ -1,5 +1,6 @@
 package com.hiddenodds.trebolv2.presentation.view.fragments
 
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import com.github.barteksc.pdfviewer.PDFView
 import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.model.persistent.file.ManageFile
 import com.hiddenodds.trebolv2.tools.ChangeFormat
+import kotlinx.coroutines.experimental.async
 
 
 class PdfViewFragment: Fragment(){
@@ -35,6 +37,7 @@ class PdfViewFragment: Fragment(){
     private val codeTechnical: String by lazy {
         this.arguments.getString(inputTechnical)}
 
+    private var uri: Uri? = null
 
     override fun onCreateView(inflater: LayoutInflater?,
                               container: ViewGroup?,
@@ -42,13 +45,24 @@ class PdfViewFragment: Fragment(){
         val root: View = inflater!!.inflate(R.layout.view_pdf,
                 container,false)
         ButterKnife.bind(this, root)
+
         return root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         ChangeFormat.deleteCacheTechnical(codeTechnical)
-        pdfView!!.fromUri(ManageFile.getFile("$codeNotification.pdf")).load()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        async {
+            uri = ManageFile.getFile("$codeNotification.pdf")
+            activity.runOnUiThread({
+                pdfView!!.fromUri(uri).load()
+            })
+        }
 
     }
+
 }

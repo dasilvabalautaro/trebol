@@ -198,8 +198,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
     @OnTextChanged(R.id.edtUltimoMnto)
     fun changeLastMount(){
         if (notificationModel != null){
-            val value = edtUltimoMnto!!.text.toString()
-            if (value.isEmpty()) edtUltimoMnto!!.setText("0")
+
             if (notificationModel!!.lastAmount != edtUltimoMnto!!.text.toString()){
                 async {
                     updateFieldNotificationPresenter
@@ -215,8 +214,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
     @OnTextChanged(R.id.edtTotalesEquipo)
     fun changeTotalTeam(){
         if (notificationModel != null){
-            val value = edtTotalesEquipo!!.text.toString()
-            if (value.isEmpty()) edtTotalesEquipo!!.setText("0")
+
             if (notificationModel!!.totalTeam != edtTotalesEquipo!!.text.toString()){
                 async {
                     updateFieldNotificationPresenter
@@ -232,8 +230,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
     @OnTextChanged(R.id.edtHrs)
     fun changeHours(){
         if (notificationModel != null){
-            val value = edtHrs!!.text.toString()
-            if (value.isEmpty()) edtHrs!!.setText("0")
+
             if (notificationModel!!.hours != edtHrs!!.text.toString()){
                 async {
                     updateFieldNotificationPresenter
@@ -250,8 +247,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
     @OnTextChanged(R.id.edtVsoft1)
     fun changeVsoft1(){
         if (notificationModel != null){
-            val value = edtVsoft1!!.text.toString()
-            if (value.isEmpty()) edtVsoft1!!.setText("0")
+
             if (notificationModel!!.vSoft1 != edtVsoft1!!.text.toString()){
                 async {
                     updateFieldNotificationPresenter
@@ -266,8 +262,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
     @OnTextChanged(R.id.edtVsoft2)
     fun changeVsoft2(){
         if (notificationModel != null){
-            val value = edtVsoft2!!.text.toString()
-            if (value.isEmpty()) edtVsoft2!!.setText("0")
+
             if (notificationModel!!.vSoft2 != edtVsoft2!!.text.toString()){
                 async {
                     updateFieldNotificationPresenter
@@ -284,8 +279,6 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
     @OnTextChanged(R.id.edtVsoft3)
     fun changeVsoft3(){
         if (notificationModel != null){
-            val value = edtVsoft3!!.text.toString()
-            if (value.isEmpty()) edtVsoft3!!.setText("0")
             if (notificationModel!!.vSoft3 != edtVsoft3!!.text.toString()){
                 async {
                     updateFieldNotificationPresenter
@@ -465,13 +458,9 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
     }
 
     override fun showMessage(message: String) {
-        if (message == context.getString(R.string.change_field)){
-            /*val tech = technicalModel!!.code
-            Variables.changeTechnical = tech*/
-            context.toast(context.getString(R.string.change_good))
-
-        }else{
+        if (message != context.getString(R.string.change_field)){
             context.toast(message)
+
         }
     }
 
@@ -617,11 +606,13 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         }
         rvMatOut!!.adapter = adapterMaterialOut
     }
+
     private fun updateAssignedMaterialRepository(idAssigned: String,
                                                  quantity: Int){
         updateAssignedMaterialPresenter.updateAssignedMaterial(idAssigned,
                 quantity)
     }
+
     private fun deleteAssignedMaterialRepository(idNotification: String,
                                                  idAssigned: String, flagUse: Boolean){
         if (idAssigned.trim().isNotEmpty()){

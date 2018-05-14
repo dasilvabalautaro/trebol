@@ -3,6 +3,7 @@ package com.hiddenodds.trebolv2.presentation.view.fragments
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
+import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -22,7 +23,7 @@ import com.hiddenodds.trebolv2.presentation.presenter.*
 import com.hiddenodds.trebolv2.presentation.view.activities.MainActivity
 import com.hiddenodds.trebolv2.tools.ChangeFormat
 import com.hiddenodds.trebolv2.tools.Variables
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.async
 import org.jetbrains.anko.alert
 import javax.inject.Inject
 
@@ -38,13 +39,13 @@ class MenuFragment: Fragment(), ILoadDataView {
     @JvmField var btGetDataGeneral: Button? = null
     @BindView(R.id.btn_ots)
     @JvmField var btShowOTS: Button? = null
+    @BindView(R.id.fa_test)
+    @JvmField var faTest: FloatingActionButton? = null
 
     @OnClick(R.id.btn_update_water)
     fun updateDataInWater(){
         setViewForTransferData()
-
         updateDataRemoteWaterPresenter.executeUpdateRemoteWater()
-
     }
 
     @OnClick(R.id.btn_get)
@@ -53,7 +54,10 @@ class MenuFragment: Fragment(), ILoadDataView {
             title = "Alerta"
             positiveButton(R.string.lbl_confirm) {
                 setViewForTransferData()
-                notificationDownloadPresenter.executeDownloadNotification()
+                async {
+                    notificationDownloadPresenter.executeDownloadNotification()
+                }
+
             }
 
             neutralPressed(R.string.lbl_cancel){}
@@ -66,12 +70,10 @@ class MenuFragment: Fragment(), ILoadDataView {
     @OnClick(R.id.btn_update_thinks)
     fun updateDataGeneral(){
         activity.alert(R.string.lbl_update_notification_data) {
-            title = "Alerta, el proceso tardará. "
+            title = "Alerta"
             positiveButton(R.string.lbl_confirm) {
                 setViewForTransferData()
-                launch {
-                    materialRemotePresenter.executeQueryRemote()
-                }
+                materialRemotePresenter.executeQueryRemote()
             }
 
             neutralPressed(R.string.lbl_cancel){}
@@ -196,21 +198,25 @@ class MenuFragment: Fragment(), ILoadDataView {
                 Thread.sleep(3000)
                 message = context.resources.getString(R.string.notification_download)
                 customerDownloadPresenter.executeDownloadCustomer()
+
             }
             2 -> {
                 message = context.resources.getString(R.string.customer_download)
                 saveNotificationPresenter.executeSaveNotification()
+
 
             }
             3 -> {
                 message = context.resources.getString(R.string.notification_save)
                 saveCustomerPresenter.executeGetCustomer()
 
+
             }
 
             4 -> {
                 message = context.resources.getString(R.string.customer_save)
                 addNotificationToTechnicalPresenter.executeAddNotification()
+
             }
 
             5 -> {
@@ -234,9 +240,7 @@ class MenuFragment: Fragment(), ILoadDataView {
                 enableView()
             }
             8 -> {
-                message = context.getString(R.string.download_complete) + " \n" +
-                        context.getString(R.string.lbl_download_notification)
-
+                message = context.getString(R.string.download_complete)
                 enableView()
             }
         }
@@ -258,7 +262,7 @@ class MenuFragment: Fragment(), ILoadDataView {
     }
 
     private fun clearMaterialPresenter(){
-        materialRemotePresenter.destroy()
+        //materialRemotePresenter.destroy()
     }
 
     override fun <T> executeTask(obj: T) {
@@ -292,6 +296,7 @@ class MenuFragment: Fragment(), ILoadDataView {
         btGetNotification!!.isEnabled = value
         btShowOTS!!.isEnabled = value
         btUpdateWater!!.isEnabled = value
+        faTest!!.isEnabled = value
     }
 
     private fun setViewForTransferData(){

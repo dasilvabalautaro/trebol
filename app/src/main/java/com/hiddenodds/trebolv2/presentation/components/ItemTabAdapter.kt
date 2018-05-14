@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.presentation.model.GuideModel
 import com.hiddenodds.trebolv2.tools.DataListDiffCallback
+import java.util.*
 
 
 class ItemTabAdapter(private val listener: (GuideModel) -> Unit):
@@ -44,17 +45,32 @@ class ItemTabAdapter(private val listener: (GuideModel) -> Unit):
             etValue!!.setText(item.value)
             tvDescription!!.text = item.description
             if (item.free == 1){
-                etValue!!.inputType = InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
+                if (item.nameField != "nextHours"){
+                    etValue!!.inputType = InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
+                }else{
+                    etValue!!.inputType = InputType.TYPE_CLASS_NUMBER
+                }
+
             }else{
                 etValue!!.inputType = InputType.TYPE_NULL
             }
 
+            etValue!!.setOnFocusChangeListener { v, hasFocus ->
+                if (!hasFocus) {
+                    if (item.free == 1){
+                        listener(item)
+                    }
+
+                }
+            }
 
             etValue!!.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable?) {
                     if (s != null){
                         item.value = s.toString()
-                        listener(item)
+                       if (item.free != 1){
+                            listener(item)
+                       }
                     }
                 }
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {

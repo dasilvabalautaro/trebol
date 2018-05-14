@@ -52,7 +52,6 @@ class EmailFragment: NotificationFragment(), ILoadDataView {
     private val emailModel: EmailModel by lazy { this.arguments
             .getSerializable(inputEmailModel) as EmailModel}
 
-
     override fun onCreateView(inflater: LayoutInflater?,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -95,5 +94,6 @@ class EmailFragment: NotificationFragment(), ILoadDataView {
     override fun <T> executeTask(objList: List<T>) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
 
 }

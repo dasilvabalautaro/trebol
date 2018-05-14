@@ -56,7 +56,7 @@
     <string name="lbl_comercial">COMERCIAL</string>
     <string name="lbl_mod">MODELO</string>
     <string name="lbl_contract">CONTRATO</string>
-    <string name="lbl_serie">NUM. DE SERIE</string>
+    <string name="lbl_serie">No. SERIE</string>
     <string name="lbl_tinta">TINTA</string>
     <string name="lbl_hrs_trabajo">HORAS DE TRABAJO</string>
     <string name="lbl_peaje">PEAJE</string>
@@ -74,7 +74,7 @@
     <string name="lbl_material_retirado">MATERIAL RETIRADO</string>
     <string name="lbl_material_empleado">MATERIAL EMPLEADO</string>
     <string name="lbl_firma">FIRMA CLIENTE</string>
-    <string name="lbl_fecha">FECHA AVISO:</string>
+    <string name="lbl_fecha">FECHA</string>
     <string name="lbl_logo">LOGO</string>
     <string name="lbl_title_materiales">Lista de Materiales</string>
     <string name="lbl_hint_search">Código Material(3)</string>
@@ -91,7 +91,8 @@
     <string name="lbl_date_finish">FECHA REALIZACIÓN</string>
     <string name="lbl_finish_install">FÍN DE INSTALACIÓN</string>
     <string name="lbl_config_server">CONFIGURACIÓN DEL SERVIDOR</string>
-    <string name="lbl_server">IP Servidor : Puerto</string>
+    <string name="lbl_server">IP Servidor: </string>
+    <string name="lbl_port">Puerto: </string>
     <string name="lbl_name_database">Nombre Base de datos</string>
     <string name="lbl_user_database">Usuario Base de datos</string>
     <string name="lbl_password_database">Contraseña Base de datos</string>
@@ -119,5 +120,16 @@
     <string name="lbl_tab_maintenance">Mantenimiento</string>
     <string name="lbl_tab_test">Test</string>
     <string name="lbl_tab_observations">Observaciones</string>
-
+    <string name="lbl_tab_report">Observaciones del técnico.</string>
+    <string name="lbl_signature_technical">FIRMA TECNICO</string>
+    <string name="lbl_signature_client">FIRMA CLIENTE</string>
+    <string name="lbl_title_veridication">GUÍA DE MANTENIMIENTO HITACHI INKJET</string>
+    <string name="lbl_part">No. PARTE</string>
+    <string name="lbl_note">Las revisiones de los equipos se deben realizar según las horas indicadas por el instalador o, al menos, una vez al año.</string>
+    <string name="lbl_verification_visual">1. VERIFICACIÓN VISUAL</string>
+    <string name="lbl_maintenance_visual">2. MANTENIMIENTO</string>
+    <string name="lbl_test_visual">3. TEST POSTERIOR AL MANTENIMIENTO</string>
+    <string name="lbl_know_visual">4. CONOCIMIENTOS DEL USUARIO</string>
+    <string name="lbl_build_reference">Oficinas centrales:\nNicolas Mórales. 38 40, 3 Nave 9 28019 Madrid\nTel: +34915398142 Fax: +34914670038\ntrebolgroup@trebolgroup.com www.trebolgroup.com\nCIF: 8 83198705</string>
+    <string name="lbl_footer">Delegaciones: Madrid Catalunya Levante Andalucia P.Vasco Galicia Navarra Murcia Canarias Lisboa Oporto</string>
 </resources>

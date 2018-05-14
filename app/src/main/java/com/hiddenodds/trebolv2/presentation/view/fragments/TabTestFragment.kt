@@ -1,20 +1,28 @@
 package com.hiddenodds.trebolv2.presentation.view.fragments
 
-import android.os.Build
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import android.support.v4.widget.NestedScrollView
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import butterknife.BindView
 import butterknife.ButterKnife
 import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.presentation.components.ItemTabAdapter
 import com.hiddenodds.trebolv2.presentation.model.GuideModel
-import com.hiddenodds.trebolv2.tools.ChangeFormat
 import kotlinx.coroutines.experimental.async
 
 
 class TabTestFragment: TabBaseFragment(){
+    private val sufix = "_t2"
+    private var adapter: ItemTabAdapter? = null
+    private var flagChange = false
+    @BindView(R.id.sv_tab)
+    @JvmField var svTab: NestedScrollView? = null
+    @BindView(R.id.rv_verification)
+    @JvmField var rvVerification: RecyclerView? = null
+
 
     override fun onCreateView(inflater: LayoutInflater?,
                               container: ViewGroup?,
@@ -27,44 +35,39 @@ class TabTestFragment: TabBaseFragment(){
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         ButterKnife.bind(this, view!!)
-        setupRecyclerView()
+        setupRecyclerView(rvVerification!!)
+        setAdapter()
     }
 
     override fun onStart() {
         super.onStart()
-        setDataToControl()
+        setDataToControl(adapter!!, rvVerification!!)
     }
 
-    private fun setupRecyclerView(){
-        rvVerification!!.setHasFixedSize(true)
-        rvVerification!!.layoutManager = LinearLayoutManager(activity,
-                LinearLayoutManager.VERTICAL, false)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ChangeFormat.addDecorationRecycler(rvVerification!!, context)
+    fun setTableToBitmap(){
+        if (rvVerification != null) rvVerification!!.clearFocus()
+        if (isCreateImage(rvVerification, flagChange, sufix)){
+
+            async {
+                saveTableToBitmap(sufix, rvVerification!!)
+                pdfGuideModel.nameTest = sufix
+            }
+            flagChange = false
         }
+    }
+
+    private fun setAdapter(){
         adapter = ItemTabAdapter{
-            updateField(it.nameField, it.value)
+            flagChange = updateField(it.nameField, it.value)
+
         }
 
         rvVerification!!.adapter = adapter
     }
 
-    private fun setDataToControl(){
-
-        async {
-            val list = buildListOfData()
-            adapter!!.setObjectList(list)
-            activity.runOnUiThread({
-                rvVerification!!.scrollToPosition(0)
-            })
-        }
-
-
-    }
-
-    private fun updateField(nameField: String, value: String){
+    override fun updateField(nameField: String, value: String): Boolean{
+        var flag = false
         if (maintenanceModel != null){
-            var flag = false
 
             when(nameField){
                 maintenanceModel!!::test1.name -> {
@@ -166,12 +169,15 @@ class TabTestFragment: TabBaseFragment(){
                 }
             }
 
-            if (flag) sendUpdate(nameField, value)
-
+            if (flag){
+                sendUpdate(nameField, value)
+            }
         }
+
+        return flag
     }
 
-    private fun buildListOfData(): ArrayList<GuideModel>{
+    override fun buildListOfData(): ArrayList<GuideModel>{
         val lbl = "test"
         val free = listOf(4, 5)
 

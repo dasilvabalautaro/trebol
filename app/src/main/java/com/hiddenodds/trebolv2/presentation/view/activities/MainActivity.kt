@@ -25,6 +25,7 @@ import com.hiddenodds.trebolv2.tools.Variables
 import io.realm.Realm
 
 class MainActivity : AppCompatActivity() {
+
     @BindView(R.id.app_bar)
     @JvmField var appBarLayout: AppBarLayout? = null
 
@@ -39,8 +40,13 @@ class MainActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             supportActionBar!!.setBackgroundDrawable(getDrawable(R.drawable.head_back))
         }else{
-            supportActionBar!!.setBackgroundDrawable(resources
-                    .getDrawable(R.drawable.head_back))
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                supportActionBar!!.setBackgroundDrawable(this.getDrawable(R.drawable.head_back))
+            }else{
+                supportActionBar!!.setBackgroundDrawable(this.resources
+                        .getDrawable(R.drawable.head_back))
+            }
         }
         ChangeFormat.setVariablesConnect(this)
         val signInFragment = SignInFragment()
@@ -51,6 +57,7 @@ class MainActivity : AppCompatActivity() {
     fun displayHome(flag: Boolean){
         supportActionBar!!.setDisplayHomeAsUpEnabled(flag)
     }
+
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         val id = item!!.itemId

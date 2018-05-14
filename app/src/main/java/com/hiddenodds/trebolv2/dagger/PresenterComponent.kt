@@ -10,4 +10,5 @@ interface PresenterComponent {
     fun inject(otsFragment: OtsFragment)
     fun inject(notificationFragment: NotificationFragment)
     fun inject(tabBaseFragment: TabBaseFragment)
+    fun inject(pdfTabFragment: PdfTabFragment)
 }

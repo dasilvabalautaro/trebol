@@ -18,21 +18,15 @@ import com.hiddenodds.trebolv2.tools.Variables
 class ConfigurationFragment: NotificationFragment(), ILoadDataView {
     @BindView(R.id.et_server)
     @JvmField var etServer: EditText? = null
-    @BindView(R.id.et_database)
-    @JvmField var etDatabase: EditText? = null
-    @BindView(R.id.et_user)
-    @JvmField var etUser: EditText? = null
-    @BindView(R.id.et_password)
-    @JvmField var etPassword: EditText? = null
+    @BindView(R.id.et_port)
+    @JvmField var etPort: EditText? = null
     @BindView(R.id.pb_connect)
     @JvmField var pbConnect: ProgressBar? = null
     @OnClick(R.id.bt_save)
     fun saveConfigurationServer(){
         if (validateInput()){
-            Variables.sqlServer = etServer!!.text.toString()
-            Variables.database = etDatabase!!.text.toString()
-            Variables.user = etUser!!.text.toString()
-            Variables.password = etPassword!!.text.toString()
+            Variables.sqlServer = etServer!!.text.toString() + ":" +
+                    etPort!!.text.toString()
             pbConnect!!.visibility = View.VISIBLE
             verifyConnectServerPresenter.verifyConnect()
         }else{
@@ -57,9 +51,7 @@ class ConfigurationFragment: NotificationFragment(), ILoadDataView {
 
     private fun validateInput(): Boolean{
         return etServer!!.text.isNotEmpty() &&
-                etDatabase!!.text.isNotEmpty() &&
-                etUser!!.text.isNotEmpty() &&
-                etPassword!!.text.isNotEmpty()
+                etPort!!.text.isNotEmpty()
     }
 
     override fun showMessage(message: String) {

@@ -3,11 +3,7 @@ package com.hiddenodds.trebolv2.tools
 import android.Manifest
 import android.app.Activity
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.pdf.PdfDocument
+import android.graphics.*
 import android.net.Uri
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
@@ -16,12 +12,15 @@ import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.model.persistent.file.ManageFile
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
+import org.apache.pdfbox.pdmodel.PDDocument
+import org.apache.pdfbox.pdmodel.PDPage
+import org.apache.pdfbox.pdmodel.PDPageContentStream
+import org.apache.pdfbox.pdmodel.common.PDRectangle
+import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject
+import java.io.*
 import javax.inject.Inject
 import javax.inject.Singleton
-
 
 @Singleton
 class ManageImage @Inject constructor(private val permissionUtils:
@@ -32,6 +31,7 @@ class ManageImage @Inject constructor(private val permissionUtils:
     var image: Bitmap? = null
     var code: String = ""
     var flagPdf = false
+    var scale: Boolean = false
     val WRITE_EXTERNAL_STORAGE = 1
     val READ_EXTERNAL_STORAGE = 2
     private var message: String = ""
@@ -118,7 +118,9 @@ class ManageImage @Inject constructor(private val permissionUtils:
                                 .permissionGranted(requestCode,
                                         WRITE_EXTERNAL_STORAGE,
                                         grantResults)) {
-                    executeSaveImage()
+                    //executeSaveImage()
+                    message = context.getString(R.string.lbl_permission_enabled)
+                    observableMessage.onNext(message)
                 }
             }
             READ_EXTERNAL_STORAGE ->{
@@ -138,43 +140,64 @@ class ManageImage @Inject constructor(private val permissionUtils:
         return ManageFile.getAlbumStorageDir()
     }
 
+    fun scaleBitmap(bitmap: Bitmap): Bitmap{
+        val newWidth = bitmap.width/2
+        val newHeight = bitmap.height/(bitmap.width/newWidth)
+        val newBitmap = Bitmap.createBitmap(newWidth,
+                newHeight, Bitmap.Config.ARGB_8888)
+
+        val ratioX = newWidth / bitmap.width.toFloat()
+        val ratioY = newHeight / bitmap.height.toFloat()
+        val middleX = newWidth / 2.0f
+        val middleY = newHeight / 2.0f
+
+        val scaleMatrix = Matrix()
+        scaleMatrix.setScale(ratioX, ratioY, middleX, middleY)
+
+        val c = Canvas(newBitmap)
+        c.matrix = scaleMatrix
+        c.drawBitmap(bitmap, middleX - bitmap.width / 2,
+                middleY - bitmap.height / 2, Paint(Paint.FILTER_BITMAP_FLAG))
+        return newBitmap
+    }
+
     @Throws(IOException::class)
     private fun saveBitmapToJPG(bitmap: Bitmap, signature: File) {
-        val newWidth = bitmap.width/2
-        val newHeight = bitmap.height/(bitmap.width/newWidth)
-
-        val newBitmap = Bitmap.createBitmap(newWidth,
-                newHeight, Bitmap.Config.RGB_565)
-
-        val bitmapScaled = Bitmap.createScaledBitmap(bitmap,
-                newWidth, newHeight, false)
-
-        val canvas = Canvas(newBitmap)
-        canvas.drawColor(Color.WHITE)
-        canvas.drawBitmap(bitmapScaled, 0f, 0f, null)
+        val newBitmap = scaleBitmap(bitmap)
         val stream = FileOutputStream(signature)
-        bitmapScaled.compress(Bitmap.CompressFormat.JPEG, 40, stream)
+        newBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
         stream.close()
     }
+
     @Throws(IOException::class)
     private fun saveBitmapToPDF(bitmap: Bitmap, filePdf: File){
-        val newWidth = bitmap.width/2
-        val newHeight = bitmap.height/(bitmap.width/newWidth)
-        val document = PdfDocument()
-        val pageInfo = PdfDocument.PageInfo.Builder(newWidth,
-                newHeight, 1).create()
-        val page = document.startPage(pageInfo)
+        var newBitmap: Bitmap? = null
 
-        val canvas = page.canvas
-        val bitmapScaled = Bitmap.createScaledBitmap(bitmap,
-                newWidth, newHeight, false)
+        newBitmap = if (scale){
+            bitmap
+        }else{
+            scaleBitmap(bitmap)
+        }
 
-        canvas.drawBitmap(bitmapScaled, 0f, 0f, null)
+        val stream = ByteArrayOutputStream()
+        newBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+        val imageInByte = stream.toByteArray()
+        val imageInput = ByteArrayInputStream(imageInByte)
 
-        document.finishPage(page)
+        val document = PDDocument()
+        val rec = PDRectangle(newBitmap.width.toFloat(), newBitmap.height.toFloat())
+        val page = PDPage(rec)
+        document.addPage(page)
+        val contentStream = PDPageContentStream(document, page)
 
-        document.writeTo(FileOutputStream(filePdf))
+        val img: PDImageXObject = JPEGFactory
+                .createFromStream(document, imageInput)
+        
+        contentStream.drawImage(img, 0f, 0f)
+        contentStream.close()
+        document.save(filePdf)
         document.close()
+
     }
 
     private fun getSignatureStore(): Bitmap?{

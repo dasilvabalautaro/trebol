@@ -31,10 +31,12 @@ class PdfNotification @Inject constructor() {
 
     fun inflateView(){
         val viewGroup: ViewGroup = pdfNotificationView.rootView as ViewGroup
-        val inflater = context.getSystemService(Service.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val inflater = context
+                .getSystemService(Service.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         view = inflater
                 .inflate(R.layout.view_pdf_notification_frame, viewGroup,
                         false) as PdfNotificationView
+
         initControls()
     }
 
@@ -128,9 +130,8 @@ class PdfNotification @Inject constructor() {
 
         val nameFile = this.codeNotification
 
-
         val viewBitmap : Bitmap = Bitmap.createBitmap(svScroll.getChildAt(0).measuredWidth,
-                svScroll.getChildAt(0).measuredHeight, Bitmap.Config.RGB_565
+                svScroll.getChildAt(0).measuredHeight, Bitmap.Config.ARGB_8888
         )
 
         val canvas = Canvas(viewBitmap)

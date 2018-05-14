@@ -82,6 +82,7 @@ class ProductFragment: NotificationFragment(), ILoadDataView {
                                 .filter{ it.code.contains(newText.toUpperCase())} as ArrayList
                         if (queryList.isNotEmpty()){
                             adapter!!.setObjectList(queryList)
+                            adapter!!.notifyDataSetChanged()
                             activity.runOnUiThread({
                                 rvProducts!!.refreshDrawableState()
                                 rvProducts!!.scrollToPosition(0)

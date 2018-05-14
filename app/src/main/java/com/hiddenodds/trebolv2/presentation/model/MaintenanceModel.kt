@@ -1,7 +1,9 @@
 package com.hiddenodds.trebolv2.presentation.model
 
+import java.io.Serializable
 
-class MaintenanceModel {
+
+class MaintenanceModel: Serializable {
     var id: String = ""
     var codeNotify = ""
     var verification1 = ""

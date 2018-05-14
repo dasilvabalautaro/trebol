@@ -94,7 +94,10 @@ class MaterialRemotePresenter @Inject constructor(private val getRemoteDataUseCa
         }
 
         override fun onComplete() {
-            showMessage(context.resources.getString(R.string.download_complete))
+            //showMessage(context.resources.getString(R.string.download_complete))
+            stopProgress()
+            getRemoteDataUseCase.dispose()
+
         }
 
         override fun onError(e: Throwable) {
@@ -110,29 +113,36 @@ class MaterialRemotePresenter @Inject constructor(private val getRemoteDataUseCa
         }
 
         override fun onComplete() {
-            showMessage(context.resources.getString(R.string.delete_complete))
+            println(context.resources.getString(R.string.delete_complete))
+            deleteListMaterialUseCase.dispose()
+            //showMessage(context.resources.getString(R.string.delete_complete))
         }
 
         override fun onError(e: Throwable) {
             if (e.message != null) {
-                showError(e.message!!)
+                println(e.message!!)
+                //showError(e.message!!)
             }
         }
     }
 
     inner class SaveMaterialObserver: DisposableObserver<Boolean>(){
         override fun onNext(t: Boolean) {
-            showMessage(context.resources.getString(R.string.material_save))
-            stopProgress()
+            println(context.resources.getString(R.string.material_save))
+            //showMessage(context.resources.getString(R.string.material_save))
+
         }
 
         override fun onComplete() {
-            showMessage(context.resources.getString(R.string.task_complete))
+            println(context.resources.getString(R.string.task_complete))
+            //showMessage(context.resources.getString(R.string.task_complete))
+            saveListMaterialUseCase.dispose()
         }
 
         override fun onError(e: Throwable) {
             if (e.message != null) {
-                showError(e.message!!)
+                println(e.message!!)
+                //showError(e.message!!)
             }
         }
     }
