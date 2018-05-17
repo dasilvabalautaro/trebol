@@ -10,13 +10,11 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/sv_ot"
         android:fillViewport="true">
 
         <android.support.percent.PercentRelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/view_update">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/lbl_title"
@@ -41,7 +39,6 @@
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"/>
             <TextView
-                android:id="@+id/lblMod"
                 app:layout_marginRightPercent="4%"
                 app:layout_widthPercent="50%"
                 android:layout_height="wrap_content"
@@ -85,7 +82,6 @@
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"/>
             <TextView
-                android:id="@+id/lblTinta"
                 app:layout_marginRightPercent="4%"
                 app:layout_widthPercent="50%"
                 android:layout_height="wrap_content"
@@ -130,7 +126,6 @@
                 android:textAlignment="textStart"/>
 
             <TextView
-                android:id="@+id/lblPeaje"
                 app:layout_widthPercent="50%"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorLblSubTitle"
@@ -174,7 +169,6 @@
                 app:layout_marginLeftPercent="4%"
                 app:layout_widthPercent="50%" />
             <TextView
-                android:id="@+id/lblSatdk"
                 app:layout_widthPercent="50%"
                 app:layout_marginRightPercent="4%"
                 android:layout_height="wrap_content"

@@ -149,6 +149,7 @@ class MaintenanceFragment: TabBaseFragment() {
                 if (fragment is EmailFragment){
                     manager.beginTransaction().remove(fragment).commit()
                     fragment.onDestroy()
+                    break
                 }
 
             }

@@ -42,7 +42,6 @@
             app:layout_constraintGuide_percent="0" />
 
         <android.support.constraint.Guideline
-            android:id="@+id/bottom_guideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"

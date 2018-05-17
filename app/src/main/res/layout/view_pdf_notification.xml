@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/rl_parent_pdf"
     android:background="@drawable/back_options">
 
     <ScrollView
@@ -17,8 +16,7 @@
 
         <android.support.percent.PercentRelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/view_pdf">
+            android:layout_height="wrap_content">
 
             <ImageView
                 app:layout_marginLeftPercent="4%"
@@ -62,7 +60,6 @@
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"/>
             <TextView
-                android:id="@+id/lblMod"
                 app:layout_marginRightPercent="4%"
                 app:layout_widthPercent="50%"
                 android:layout_height="wrap_content"
@@ -106,7 +103,6 @@
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"/>
             <TextView
-                android:id="@+id/lblContract"
                 app:layout_marginRightPercent="4%"
                 app:layout_widthPercent="50%"
                 android:layout_height="wrap_content"
@@ -150,7 +146,6 @@
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"/>
             <TextView
-                android:id="@+id/lblTinta"
                 app:layout_marginRightPercent="4%"
                 app:layout_widthPercent="50%"
                 android:layout_height="wrap_content"
@@ -247,7 +242,6 @@
                 android:textAlignment="textStart"/>
 
             <TextView
-                android:id="@+id/lblPeaje"
                 app:layout_widthPercent="50%"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorLblSubTitle"
@@ -291,7 +285,6 @@
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"/>
             <TextView
-                android:id="@+id/lblSatdk"
                 app:layout_widthPercent="50%"
                 app:layout_marginRightPercent="4%"
                 android:layout_height="wrap_content"

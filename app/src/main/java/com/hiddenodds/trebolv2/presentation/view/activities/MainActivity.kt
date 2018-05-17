@@ -51,7 +51,6 @@ class MainActivity : AppCompatActivity() {
         ChangeFormat.setVariablesConnect(this)
         val signInFragment = SignInFragment()
         addFragment(signInFragment)
-
     }
 
     fun displayHome(flag: Boolean){
@@ -74,18 +73,6 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
 
     }
-
-
-    /*  override fun onBackPressed() {
-          super.onBackPressed()
-
-          if (supportFragmentManager.backStackEntryCount > 0){
-              supportFragmentManager.popBackStack()
-          }else{
-              handleBackPressInThisActivity()
-          }
-
-      }*/
 
     fun handleBackPressInThisActivity(){
         (App.appComponent.context() as App).serviceRemote.closeConnection()

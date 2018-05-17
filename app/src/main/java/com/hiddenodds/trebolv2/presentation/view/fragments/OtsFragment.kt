@@ -217,14 +217,19 @@ class OtsFragment: Fragment(), ILoadDataView {
                     adapter!!.setObjectList(listNotificationView)
                 }
 
-                activity.runOnUiThread {
-                    if (itemView != 0){
-                        firstVisibleItem = (rvOts!!
-                                .layoutManager as LinearLayoutManager)
-                                .findFirstVisibleItemPosition()
+                try {
+                    activity.runOnUiThread {
+                        if (itemView != 0){
+                            firstVisibleItem = (rvOts!!
+                                    .layoutManager as LinearLayoutManager)
+                                    .findFirstVisibleItemPosition()
+                        }
+                        rvOts!!.refreshDrawableState()
+                        rvOts!!.scrollToPosition(firstVisibleItem)
                     }
-                    rvOts!!.refreshDrawableState()
-                    rvOts!!.scrollToPosition(firstVisibleItem)
+
+                }catch (ne: NullPointerException){
+                    println(ne.message)
                 }
             }
 

@@ -17,6 +17,9 @@ import com.hiddenodds.trebolv2.presentation.components.ItemProductAdapter
 import com.hiddenodds.trebolv2.presentation.interfaces.ILoadDataView
 import com.hiddenodds.trebolv2.presentation.model.MaterialModel
 import com.hiddenodds.trebolv2.tools.ChangeFormat
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.Subject
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.async
 
@@ -28,22 +31,59 @@ class ProductFragment: NotificationFragment(), ILoadDataView {
     @JvmField var svProduct: SearchView? = null
 
     companion object Factory {
+        private const val inputNotification = "notify_"
         private const val inputTechnical = "technical_"
-        fun newInstance(arg1: String? = null):
+        fun newInstance(arg1: String? = null, arg2: String? = null):
                 ProductFragment = ProductFragment().apply{
             this.arguments = Bundle().apply {
-
-                this.putString(inputTechnical, arg1)
+                this.putString(inputNotification, arg1)
+                this.putString(inputTechnical, arg2)
             }
 
         }
     }
 
-    private val codeTechnical: String by lazy { this.arguments.getString(inputTechnical) }
+    private val codeNotification: String by lazy { this.arguments
+            .getString(inputNotification) }
+    private val codeTechnical: String by lazy { this.arguments
+            .getString(inputTechnical) }
 
+
+    private var observableList: Subject<List<MaterialModel>> = PublishSubject.create()
     private var adapter: ItemProductAdapter? = null
     private var listMaterial: ArrayList<MaterialModel>? = null
     private var inputMethodManager: InputMethodManager ? = null
+
+    init {
+        observableList.subscribe {
+            listMaterialSelect
+        }
+
+        val list = observableList.map { l -> l }
+        disposable.add(list.observeOn(AndroidSchedulers.mainThread())
+                .subscribe { l ->
+                    kotlin.run {
+                        if (l.isNotEmpty()){
+
+                            removeFragmentProduct()
+                            val frg = activity.supportFragmentManager
+                                    .findFragmentByTag(OrderFragment::class
+                                            .java.simpleName)
+                            activity.supportFragmentManager
+                                    .popBackStack(OrderFragment::class.java.simpleName,
+                                            1)
+                            activity.supportFragmentManager
+                                    .beginTransaction()
+                                    .replace(R.id.flContent, frg)
+                                    .commit()
+
+                            onDestroy()
+                        }
+                    }
+                })
+    }
+
+
     override fun onCreateView(inflater: LayoutInflater?,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -79,7 +119,8 @@ class ProductFragment: NotificationFragment(), ILoadDataView {
                 return if (newText.length > 2){
                     async(CommonPool) {
                         val queryList = listMaterial!!
-                                .filter{ it.code.contains(newText.toUpperCase())} as ArrayList
+                                .filter{ it.code.contains(newText
+                                        .toUpperCase())} as ArrayList
                         if (queryList.isNotEmpty()){
                             adapter!!.setObjectList(queryList)
                             adapter!!.notifyDataSetChanged()
@@ -104,6 +145,7 @@ class ProductFragment: NotificationFragment(), ILoadDataView {
             }
 
         })
+
     }
 
     private fun setupRecyclerView(){
@@ -119,13 +161,12 @@ class ProductFragment: NotificationFragment(), ILoadDataView {
             materialModel.detail = it.detail
             materialModel.id = it.id
             listMaterialSelect.add(materialModel)
-
+            observableList.onNext(listMaterialSelect)
         }
 
         rvProducts!!.adapter = adapter
         //rvProducts!!.adapter
     }
-
 
     override fun showMessage(message: String) {
         context.toast(message)
@@ -155,6 +196,5 @@ class ProductFragment: NotificationFragment(), ILoadDataView {
         }
 
     }
-
 
 }

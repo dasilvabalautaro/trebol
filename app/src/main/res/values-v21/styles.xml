@@ -8,5 +8,4 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
-    <style name="AppTheme.PopupOverlay" parent="@android:style/ThemeOverlay.Material.Dark.ActionBar"/>
 </resources>

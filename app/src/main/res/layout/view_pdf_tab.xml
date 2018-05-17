@@ -15,8 +15,7 @@
         <android.support.percent.PercentRelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/back_options"
-            android:id="@+id/view_pdf">
+            android:background="@drawable/back_options">
 
             <TextView
                 android:id="@+id/tv_title"
@@ -160,7 +159,6 @@
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"/>
             <TextView
-                android:id="@+id/tv_tab_test"
                 app:layout_marginRightPercent="4%"
                 app:layout_widthPercent="50%"
                 android:text="@string/lbl_test_visual"
@@ -202,7 +200,6 @@
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"/>
             <TextView
-                android:id="@+id/tv_tab_know"
                 app:layout_marginRightPercent="4%"
                 app:layout_widthPercent="50%"
                 android:text="@string/lbl_know_visual"
@@ -270,7 +267,6 @@
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"/>
             <TextView
-                android:id="@+id/tv_signature_client"
                 app:layout_marginRightPercent="4%"
                 app:layout_widthPercent="50%"
                 android:text="@string/lbl_signature_client"
@@ -324,7 +320,6 @@
                 android:textSize="10sp"
                 android:textAlignment="textEnd"/>
             <TextView
-                android:id="@+id/tv_footer"
                 app:layout_marginLeftPercent="4%"
                 app:layout_marginRightPercent="4%"
                 app:layout_widthPercent="100%"

@@ -93,6 +93,26 @@ abstract class NotificationFragment: Fragment() {
         return null
     }
 
+    protected fun removeFragmentProduct(){
+        try {
+
+            val manager = activity.supportFragmentManager
+
+            for (i in 0 until manager.backStackEntryCount){
+
+                val fragment = manager.fragments[i]
+                if (fragment is ProductFragment){
+                    manager.beginTransaction().remove(fragment).commit()
+                    break
+                }
+
+            }
+
+        }catch(ex: Exception){
+            println(ex.message)
+        }
+    }
+
     fun executeEmail(emailModel: EmailModel){
         val emailFragment = EmailFragment.newInstance(emailModel)
         activity.supportFragmentManager

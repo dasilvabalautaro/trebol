@@ -420,7 +420,6 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
             technicalPresenter.executeGetTechnical(codeTechnical)
         }
 
-
     }
 
     private fun setSignature(codeNotification: String){
@@ -499,8 +498,6 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         }
 
     }
-
-
 
     private fun setControls(notify: NotificationModel?){
         if (notify != null){
@@ -674,12 +671,13 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
     }
 
     private fun callProductsFragment(){
-        val productFragment = ProductFragment.newInstance(codeTechnical)
+        val productFragment = ProductFragment.newInstance(codeNotification,
+                codeTechnical)
         activity.supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.flContent, productFragment,
                         productFragment.javaClass.simpleName)
-                .addToBackStack(null)
+                .addToBackStack(OrderFragment::class.java.simpleName)
                 .commit()
     }
 
