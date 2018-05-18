@@ -231,6 +231,9 @@ class OtsFragment: Fragment(), ILoadDataView {
                 }catch (ne: NullPointerException){
                     println(ne.message)
                 }
+            }else if ((listNotificationView.size == 0) &&
+                    (listNotification.size == 0)){
+                adapter!!.setObjectList(listNotificationView)
             }
 
 
@@ -241,7 +244,9 @@ class OtsFragment: Fragment(), ILoadDataView {
     private fun setListRecycler(){
 
         listNotification = ArrayList(technicalModel!!.notifications)
-        listNotificationView.removeAll(listNotificationView)
+        //listNotificationView.removeAll(listNotificationView)
+        listNotificationView = ArrayList()
+
         addDataToList()
 
     }
@@ -289,11 +294,6 @@ class OtsFragment: Fragment(), ILoadDataView {
                 android.R.layout.simple_list_item_1, list)
         spTech!!.adapter = spinnerAdapter
 
-        /*if (positionSpinner == 0){
-            spTech!!.setSelection(list.size - 1)
-        }else{
-            spTech!!.setSelection(positionSpinner)
-        }*/
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)

@@ -85,9 +85,9 @@ class TabObservationFragment: TabBaseFragment() {
     fun saveSignatureClient(){
         val signatureBitmap: Bitmap? = spClient!!.signatureBitmap
         if (signatureBitmap != null){
-            pdfGuideModel.signatureClient = maintenanceModel!!.id + SUFIX_CLIENT
+            pdfGuideModel.signatureClient = nameFileSignature
             manageImage.image = signatureBitmap
-            manageImage.code = maintenanceModel!!.id + SUFIX_CLIENT
+            manageImage.code = nameFileSignature
             manageImage.addFileToGallery(activity)
 
         }else{
@@ -98,7 +98,7 @@ class TabObservationFragment: TabBaseFragment() {
     @OnClick(R.id.bt_clear_client)
     fun clearSignatureClient(){
         spClient!!.clear()
-        val file = maintenanceModel!!.id + SUFIX_CLIENT
+        val file = nameFileSignature
         manageImage.deleteSignatureStore(file)
         pdfGuideModel.signatureClient = ""
     }
@@ -141,11 +141,7 @@ class TabObservationFragment: TabBaseFragment() {
         }else{
             context.toast(context.getString(R.string.file_not_found))
         }
-
-
     }
-
-
 
     override fun onCreateView(inflater: LayoutInflater?,
                               container: ViewGroup?,
@@ -160,7 +156,6 @@ class TabObservationFragment: TabBaseFragment() {
         ButterKnife.bind(this, view!!)
         setupRecyclerView(rvVerification!!)
         setAdapter()
-        executeGetTechnical()
     }
 
     override fun onStart() {
@@ -204,7 +199,7 @@ class TabObservationFragment: TabBaseFragment() {
     @Throws(NullPointerException::class)
     private fun setDataControlLocal(){
         val fileTechnical = maintenanceModel!!.id + SUFIX_TECHNICAL
-        val fileClient = maintenanceModel!!.id + SUFIX_CLIENT
+        val fileClient = nameFileSignature
         async {
             if (setSignature(fileTechnical, spTechnical!!)){
                 pdfGuideModel.signatureTechnical = fileTechnical

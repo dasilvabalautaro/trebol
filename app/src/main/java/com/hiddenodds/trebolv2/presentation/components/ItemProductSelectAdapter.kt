@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.presentation.model.AssignedMaterialModel
@@ -47,6 +48,12 @@ class ItemProductSelectAdapter(private val listener:
             if (item.material != null){
                 tvCode!!.text = item.material!!.code
                 tvDetail!!.text = item.material!!.detail
+            }
+
+            if (item.change == 3){
+                ibDelete!!.visibility = View.INVISIBLE
+            }else{
+                ibDelete!!.visibility = View.VISIBLE
             }
 
             ibDelete!!.setOnClickListener {

@@ -183,6 +183,35 @@ abstract class CRUDRealm: IRepository {
 
     }
 
+    fun nameFileSignature(name: String,
+                      listener: ITaskCompleteListener): String{
+        val realm: Realm = Realm.getDefaultInstance()
+        var nameFile = ""
+        var signature: Signature? = null
+        try {
+            realm.executeTransaction({
+                val e = realm.where(Signature::class.java)
+                        .equalTo("name", name).findFirst()
+                if (e != null){
+                    nameFile = e.id
+                }else{
+                    signature = it.createObject(Signature::class.java,
+                            UUID.randomUUID().toString())
+                    signature!!.name = name
+                    nameFile = signature!!.id
+                }
+                listener.onSaveSucceeded()
+            })
+
+        }catch (e: Throwable){
+            listener.onSaveFailed(e.message!!)
+        }finally {
+            realm.close()
+        }
+
+        return nameFile
+    }
+
     fun updateToDownload(code: String, fieldName: String,
                          value: String,
                          listener: ITaskCompleteListener): Boolean{

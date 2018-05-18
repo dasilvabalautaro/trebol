@@ -72,7 +72,20 @@
                 android:background="@android:color/white"
                 android:contentDescription="@string/lbl_logo"/>
 
-            <ImageView
+            <com.hiddenodds.trebolv2.presentation.components.AspectRatioImageView
+                app:layout_marginLeftPercent="4%"
+                app:layout_marginRightPercent="4%"
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                android:layout_below="@+id/signatureClient"
+                app:ari_aspect="height"
+                app:ari_ratio="0.144"
+                app:srcCompat="@drawable/footer_trebol"
+                android:contentDescription="@string/lbl_logo"/>
+
+            <!--<ImageView
                 app:layout_marginLeftPercent="4%"
                 app:layout_marginRightPercent="4%"
                 android:layout_marginTop="5dp"
@@ -80,7 +93,7 @@
                 android:layout_height="100dp"
                 android:layout_below="@+id/signatureClient"
                 android:src = "@drawable/footer_trebol"
-                android:contentDescription="@string/lbl_logo"/>
+                android:contentDescription="@string/lbl_logo"/>-->
 
         </android.support.percent.PercentRelativeLayout>
     </ScrollView>

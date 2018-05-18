@@ -17,7 +17,9 @@ import com.hiddenodds.trebolv2.presentation.interfaces.ILoadDataView
 import com.hiddenodds.trebolv2.presentation.model.EmailModel
 import com.hiddenodds.trebolv2.presentation.model.NotificationModel
 import com.hiddenodds.trebolv2.presentation.model.TechnicalModel
+import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.runBlocking
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -34,7 +36,8 @@ class NotificationFinishFragment: NotificationFragment(), ILoadDataView {
     fun viewPdf(){
         if (ManageFile.isFileExist("$codeNotification$PRE_FIX.pdf")){
             val pdfViewFragment = PdfViewFragment
-                    .newInstance(codeNotification + PRE_FIX)
+                    .newInstance(codeNotification + PRE_FIX,
+                            codeTechnical)
             activity.supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.flContent, pdfViewFragment,
@@ -47,13 +50,18 @@ class NotificationFinishFragment: NotificationFragment(), ILoadDataView {
     }
 
     @OnClick(R.id.bt_pdf)
-    fun savePdf(){
-        pdfEndTask.manageImage = this.manageImage
+    fun savePdf() = runBlocking{
+        pdfEndTask.manageImage = manageImage
         val client = etClient!!.text.toString()
-        async {
+        val job = async {
             pdfEndTask.inflateView()
-            pdfEndTask.setData(notificationModel!!.code, client)
-            pdfEndTask.saveImage(notificationModel!!.code + PRE_FIX)
+            pdfEndTask.setData(nameFileSignature, client)
+            pdfEndTask.saveImage("$codeNotification$PRE_FIX")
+        }
+        job.join()
+
+        activity.runOnUiThread {
+            viewPdf()
         }
     }
 
@@ -62,7 +70,7 @@ class NotificationFinishFragment: NotificationFragment(), ILoadDataView {
         val signatureBitmap: Bitmap? = signatureClient!!.signatureBitmap
         if (signatureBitmap != null){
             manageImage.image = signatureBitmap
-            manageImage.code = notificationModel!!.code
+            manageImage.code = nameFileSignature
             manageImage.addFileToGallery(activity)
 
         }else{
@@ -73,7 +81,7 @@ class NotificationFinishFragment: NotificationFragment(), ILoadDataView {
     @OnClick(R.id.bt_clear)
     fun clearSignature(){
         signatureClient!!.clear()
-        manageImage.deleteSignatureStore(notificationModel!!.code)
+        manageImage.deleteSignatureStore(nameFileSignature)
 
     }
 
@@ -114,6 +122,7 @@ class NotificationFinishFragment: NotificationFragment(), ILoadDataView {
     private var technicalModel: TechnicalModel? = null
     private var notificationModel: NotificationModel? = null
     private val PRE_FIX = "end"
+    private var nameFileSignature = ""
 
     override fun onCreateView(inflater: LayoutInflater?,
                               container: ViewGroup?,
@@ -128,6 +137,7 @@ class NotificationFinishFragment: NotificationFragment(), ILoadDataView {
         super.onActivityCreated(savedInstanceState)
         technicalPresenter.view = this
         updateFieldNotificationPresenter.view = this
+        signaturePresenter.view = this
 
         async {
             technicalPresenter.executeGetTechnical(codeTechnical)
@@ -153,16 +163,30 @@ class NotificationFinishFragment: NotificationFragment(), ILoadDataView {
 
     override fun <T> executeTask(obj: T) {
         if (obj != null){
-            this.technicalModel = (obj as TechnicalModel)
-            val listNotification = ArrayList((obj as TechnicalModel).notifications)
-            async {
-                notificationModel = getNotification(codeNotification, listNotification)
-                activity.runOnUiThread({
-                    setControls(notificationModel)
-                })
-                setSignature(notificationModel!!.code)
+            if (obj is TechnicalModel){
+                this.technicalModel = obj
+                setTechnical()
+            }else if (obj is String && obj.isNotEmpty()){
+                this.nameFileSignature = obj
+                setSignature(obj)
             }
+        }
+    }
 
+    private fun setTechnical(){
+        val listNotification = ArrayList(this.technicalModel!!.notifications)
+        async(CommonPool) {
+            notificationModel = getNotification(codeNotification, listNotification)
+            activity.runOnUiThread({
+                setControls(notificationModel)
+
+            })
+            if (notificationModel!!.businessName.isNotEmpty()){
+
+                signaturePresenter.executeGetNameFile(notificationModel!!
+                        .businessName.trim())
+
+            }
         }
     }
 

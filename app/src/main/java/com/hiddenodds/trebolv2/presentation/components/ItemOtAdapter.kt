@@ -40,6 +40,7 @@ class ItemOtAdapter(private val listener:
             RecyclerView.ViewHolder(itemRowOtView){
         private val DEMO = "Demo"
         private val INSTALATION = "Instalacion"
+        private val CM = "C.M."
 
         fun bind(item: NotificationModel?, listener:
         (NotificationModel) -> Unit) = with(itemRowOtView)  {
@@ -63,6 +64,12 @@ class ItemOtAdapter(private val listener:
                     btnEmail!!.visibility = View.INVISIBLE
                 }else{
                     btnEmail!!.visibility = View.VISIBLE
+                }
+
+                if (item.type == CM){
+                    btnGuide!!.visibility = View.VISIBLE
+                }else{
+                    btnGuide!!.visibility = View.INVISIBLE
                 }
 
                 btnEmail!!.setOnClickListener {

@@ -17,16 +17,28 @@
             android:layout_height="wrap_content"
             android:background="@drawable/back_options">
 
+            <ImageView
+                android:id="@+id/iv_logo"
+                app:layout_marginLeftPercent="4%"
+                app:layout_marginRightPercent="2%"
+                android:layout_marginTop="10dp"
+                app:layout_widthPercent="50%"
+                android:src="@drawable/logo_claim"
+                android:scaleType="fitXY"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/lbl_logo"/>
+
             <TextView
                 android:id="@+id/tv_title"
                 app:layout_marginLeftPercent="4%"
                 app:layout_marginRightPercent="1%"
                 android:layout_marginTop="10dp"
-                app:layout_widthPercent="77%"
+                app:layout_widthPercent="65%"
+                android:layout_below="@+id/iv_logo"
                 android:layout_height="wrap_content"
                 android:text="@string/lbl_title_veridication"
                 android:textColor="@android:color/black"
-                android:textSize="20sp"
+                android:textSize="17sp"
                 android:textStyle="bold"
                 android:textAlignment="textStart"/>
 
@@ -34,7 +46,7 @@
                 android:id="@+id/img_right"
                 app:layout_marginRightPercent="4%"
                 android:layout_alignParentEnd="true"
-                android:layout_alignTop="@+id/tv_title"
+                android:layout_alignTop="@+id/iv_logo"
                 app:layout_widthPercent="20%"
                 android:src="@drawable/hitachi_pdf"
                 android:layout_height="wrap_content"
@@ -44,7 +56,7 @@
                 app:layout_marginLeftPercent="4%"
                 android:layout_marginTop="10dp"
                 app:layout_widthPercent="10%"
-                android:layout_below="@+id/img_right"
+                android:layout_below="@+id/tv_title"
                 android:layout_height="wrap_content"
                 android:text="@string/lbl_client"
                 android:textColor="@android:color/black"
@@ -57,7 +69,7 @@
                 android:layout_alignTop="@+id/tv_client"
                 android:layout_toEndOf="@+id/tv_client"
                 app:layout_widthPercent="35%"
-                android:layout_below="@+id/img_right"
+                android:layout_below="@+id/tv_title"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/txt_size"
@@ -69,7 +81,7 @@
                 android:layout_alignTop="@+id/tv_client"
                 android:layout_toEndOf="@+id/tv_name"
                 app:layout_widthPercent="10%"
-                android:layout_below="@+id/img_right"
+                android:layout_below="@+id/tv_title"
                 android:text="@string/lbl_part"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
@@ -82,7 +94,7 @@
                 android:layout_toEndOf="@+id/tv_part"
                 app:layout_widthPercent="35%"
                 app:layout_marginRightPercent="4%"
-                android:layout_below="@+id/img_right"
+                android:layout_below="@+id/tv_title"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/txt_size"
@@ -281,10 +293,9 @@
                 app:layout_marginLeftPercent="4%"
                 app:layout_marginRightPercent="2%"
                 android:layout_marginTop="10dp"
-                app:layout_widthPercent="50%"
+                app:layout_widthPercent="45%"
                 android:layout_below="@+id/tv_signature_technical"
-                android:scaleType="fitXY"
-                android:layout_height="wrap_content"
+                android:layout_height="200dp"
                 android:contentDescription="@string/lbl_logo"/>
             <ImageView
                 android:id="@+id/iv_signature_client"
@@ -292,33 +303,32 @@
                 android:layout_alignTop="@+id/iv_signature_technical"
                 android:layout_toEndOf="@+id/iv_signature_technical"
                 app:layout_widthPercent="50%"
-                android:scaleType="fitXY"
-                android:layout_height="wrap_content"
+                android:layout_height="200dp"
                 android:contentDescription="@string/lbl_logo"/>
 
-            <ImageView
+            <!--<ImageView
                 android:id="@+id/iv_logo"
                 app:layout_marginLeftPercent="4%"
                 app:layout_marginRightPercent="2%"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 app:layout_widthPercent="50%"
                 android:layout_below="@+id/iv_signature_technical"
                 android:src="@drawable/logo_claim"
                 android:scaleType="fitXY"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/lbl_logo"/>
+                android:contentDescription="@string/lbl_logo"/>-->
 
             <TextView
                 android:id="@+id/tv_reference"
-                app:layout_marginRightPercent="4%"
+                app:layout_marginLeftPercent="4%"
                 app:layout_widthPercent="50%"
                 android:text="@string/lbl_build_reference"
-                android:layout_alignTop="@+id/iv_logo"
-                android:layout_toEndOf="@+id/iv_logo"
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/iv_signature_technical"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
                 android:textSize="10sp"
-                android:textAlignment="textEnd"/>
+                android:textAlignment="textStart"/>
             <TextView
                 app:layout_marginLeftPercent="4%"
                 app:layout_marginRightPercent="4%"

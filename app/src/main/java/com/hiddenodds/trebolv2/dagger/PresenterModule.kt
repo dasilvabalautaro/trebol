@@ -54,6 +54,31 @@ class PresenterModule {
         return PdfEndTask()
     }
 
+    /////////////////////
+    @Provides
+    fun provideSignatureExecutor(): SignatureExecutor{
+        return SignatureExecutor()
+    }
+
+    @Provides
+    fun provideISignatureRepository(signatureExecutor: SignatureExecutor):
+            ISignatureRepository{
+        return signatureExecutor
+    }
+
+    @Provides
+    fun provideGetFileSignatureUseCase(uiThread: UIThread,
+                                       jobExecutor: JobExecutor,
+                                       signatureExecutor: SignatureExecutor):
+            GetFileSignatureUseCase{
+        return GetFileSignatureUseCase(jobExecutor, uiThread, signatureExecutor)
+    }
+
+    @Provides
+    fun provideSignaturePresenter(getFileSignatureUseCase:
+                                  GetFileSignatureUseCase): SignaturePresenter{
+        return SignaturePresenter(getFileSignatureUseCase)
+    }
 
     //////////////////////
 

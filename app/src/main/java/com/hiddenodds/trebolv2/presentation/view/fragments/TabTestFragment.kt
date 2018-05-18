@@ -37,6 +37,7 @@ class TabTestFragment: TabBaseFragment(){
         ButterKnife.bind(this, view!!)
         setupRecyclerView(rvVerification!!)
         setAdapter()
+        executeGetTechnical()
     }
 
     override fun onStart() {

@@ -54,13 +54,6 @@
         android:layout_alignParentEnd="true"
         android:background="@drawable/see_ots"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fa_test"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:src="@drawable/ic_test" />
+
 
 </android.support.percent.PercentRelativeLayout>

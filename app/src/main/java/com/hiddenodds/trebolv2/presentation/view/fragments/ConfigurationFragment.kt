@@ -11,6 +11,7 @@ import butterknife.ButterKnife
 import butterknife.OnClick
 import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.presentation.interfaces.ILoadDataView
+import com.hiddenodds.trebolv2.presentation.view.activities.MainActivity
 import com.hiddenodds.trebolv2.tools.ChangeFormat
 import com.hiddenodds.trebolv2.tools.Variables
 
@@ -64,6 +65,11 @@ class ConfigurationFragment: NotificationFragment(), ILoadDataView {
         pbConnect!!.visibility = View.INVISIBLE
         ChangeFormat.refreshVariablesconnect(context)
         context.toast(message)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as MainActivity).displayHome(false)
     }
 
     override fun <T> executeTask(obj: T) {

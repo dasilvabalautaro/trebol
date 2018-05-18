@@ -3,7 +3,6 @@ package com.hiddenodds.trebolv2.presentation.view.fragments
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -39,8 +38,7 @@ class MenuFragment: Fragment(), ILoadDataView {
     @JvmField var btGetDataGeneral: Button? = null
     @BindView(R.id.btn_ots)
     @JvmField var btShowOTS: Button? = null
-    @BindView(R.id.fa_test)
-    @JvmField var faTest: FloatingActionButton? = null
+
 
     @OnClick(R.id.btn_update_water)
     fun updateDataInWater(){
@@ -94,16 +92,7 @@ class MenuFragment: Fragment(), ILoadDataView {
                 .commit()
 
     }
-    @OnClick(R.id.fa_test)
-    fun changeVariablesConnect(){
-        val configurationFragment = ConfigurationFragment()
-        activity.supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.flContent, configurationFragment,
-                        configurationFragment.javaClass.simpleName)
-                .addToBackStack(null)
-                .commit()
-    }
+
 
     val Fragment.app: App
         get() = activity.application as App
@@ -296,7 +285,7 @@ class MenuFragment: Fragment(), ILoadDataView {
         btGetNotification!!.isEnabled = value
         btShowOTS!!.isEnabled = value
         btUpdateWater!!.isEnabled = value
-        faTest!!.isEnabled = value
+
     }
 
     private fun setViewForTransferData(){

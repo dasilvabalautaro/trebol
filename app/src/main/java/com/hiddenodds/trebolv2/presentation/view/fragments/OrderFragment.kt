@@ -21,6 +21,7 @@ import com.hiddenodds.trebolv2.tools.ChangeFormat
 import com.hiddenodds.trebolv2.tools.Variables
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.runBlocking
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -98,21 +99,27 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
     }
 
     @OnClick(R.id.btnPDF)
-    fun savePdf(){
-        pdfNotification.manageImage = this.manageImage
-        async {
+    fun savePdf() = runBlocking{
+        val job = async {
+            pdfNotification.manageImage = manageImage
             pdfNotification.inflateView()
-            pdfNotification.setData(notificationModel!!, technicalModel!!)
+            pdfNotification.setData(notificationModel!!,
+                    technicalModel!!, nameFileSignature)
             pdfNotification.saveImage()
         }
+        job.join()
+        activity.runOnUiThread {
+            viewPdf()
+        }
+
     }
 
     @OnClick(R.id.btnSaveSignature)
     fun saveSignature(){
         val signatureBitmap: Bitmap? = signatureClient!!.signatureBitmap
-        if (signatureBitmap != null){
+        if (signatureBitmap != null && nameFileSignature.isNotEmpty()){
             manageImage.image = signatureBitmap
-            manageImage.code = notificationModel!!.code
+            manageImage.code = nameFileSignature
             if (notificationModel!!.state != "1"){
                 async {
                     updateState("1")
@@ -133,7 +140,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
             }
         }
         signatureClient!!.clear()
-        manageImage.deleteSignatureStore(notificationModel!!.code)
+        manageImage.deleteSignatureStore(nameFileSignature)
 
     }
 
@@ -242,7 +249,6 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
 
         }
     }
-
 
     @OnTextChanged(R.id.edtVsoft1)
     fun changeVsoft1(){
@@ -397,6 +403,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
     private var listMaterialUse: ArrayList<AssignedMaterialModel> = ArrayList()
     private var listMaterialOut: ArrayList<AssignedMaterialModel> = ArrayList()
     private var flagSpinner = false
+    private var nameFileSignature = ""
 
     override fun onCreateView(inflater: LayoutInflater?,
                               container: ViewGroup?,
@@ -413,13 +420,12 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         updateFieldNotificationPresenter.view = this
         updateAssignedMaterialPresenter.view = this
         deleteAssignedMaterialPresenter.view = this
-
+        signaturePresenter.view = this
         initControls()
 
         async {
             technicalPresenter.executeGetTechnical(codeTechnical)
         }
-
     }
 
     private fun setSignature(codeNotification: String){
@@ -447,6 +453,12 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        async {
+            removeFragment()
+        }
+    }
     override fun onPause() {
         super.onPause()
         async(CommonPool) {
@@ -472,16 +484,30 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
 
     override fun <T> executeTask(obj: T) {
         if (obj != null){
-            this.technicalModel = (obj as TechnicalModel)
-            val listNotification = ArrayList((obj as TechnicalModel).notifications)
-            async {
-                notificationModel = getNotification(codeNotification, listNotification)
-                activity.runOnUiThread({
-                    setControls(notificationModel)
-                })
-                setSignature(notificationModel!!.code)
+            if (obj is TechnicalModel){
+                this.technicalModel = obj
+                setTechnical()
+            }else if (obj is String && obj.isNotEmpty()){
+                this.nameFileSignature = obj
+                setSignature(obj)
             }
+        }
+    }
 
+    private fun setTechnical(){
+        val listNotification = ArrayList(this.technicalModel!!.notifications)
+        async(CommonPool) {
+            notificationModel = getNotification(codeNotification, listNotification)
+            activity.runOnUiThread({
+                setControls(notificationModel)
+
+            })
+            if (notificationModel!!.businessName.isNotEmpty()){
+
+                signaturePresenter.executeGetNameFile(notificationModel!!
+                        .businessName.trim())
+
+            }
         }
     }
 
@@ -525,11 +551,13 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
             setSpinnerDiet(notify.diet)
             listMaterialUse = notify.materialUse
             listMaterialOut = notify.materialOut
+            updateIconAssignedMaterial()
             updateListMaterial()
             adapterMaterialUse!!.setObjectList(listMaterialUse)
             adapterMaterialOut!!.setObjectList(listMaterialOut)
             rvMatUse!!.scrollToPosition(0)
             rvMatOut!!.scrollToPosition(0)
+
         }
     }
 
@@ -645,10 +673,26 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         }
     }
 
+    private fun updateIconAssignedMaterial(){
+        if (!flagAddMaterial){
+            changeIconAssignedMaterial(listMaterialUse)
+            changeIconAssignedMaterial(listMaterialOut)
+        }
+    }
+
+    private fun changeIconAssignedMaterial(listMaterial:
+                                           ArrayList<AssignedMaterialModel>){
+        for (i in listMaterial.indices){
+            listMaterial[i].change = 0
+        }
+    }
+
     private fun addRowListMaterial(listMaterial: ArrayList<AssignedMaterialModel>){
+
         if (listMaterialSelect.isNotEmpty()){
 
             for (material: MaterialModel in listMaterialSelect){
+
                 val list = listMaterial.filter { it.material!!.code == material.code }
                 if (list.isEmpty()){
                     val materialSelect = AssignedMaterialModel()
@@ -656,6 +700,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
                     listMaterial.add(materialSelect)
                 }
             }
+
             listMaterialSelect.clear()
         }
 
@@ -729,5 +774,22 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         return emailModel
     }
 
+    private fun removeFragment(){
+        try {
+            val manager = activity.supportFragmentManager
 
+            for (i in 0 until manager.backStackEntryCount){
+                val fragment = manager.fragments[i]
+                if (fragment is EmailFragment){
+                    manager.beginTransaction().remove(fragment).commit()
+                    fragment.onDestroy()
+                    break
+                }
+
+            }
+
+        }catch(ex: Exception){
+            println(ex.message)
+        }
+    }
 }

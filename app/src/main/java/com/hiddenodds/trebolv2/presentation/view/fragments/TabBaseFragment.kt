@@ -16,6 +16,7 @@ import com.hiddenodds.trebolv2.presentation.components.ItemTabAdapter
 import com.hiddenodds.trebolv2.presentation.interfaces.ILoadDataView
 import com.hiddenodds.trebolv2.presentation.model.*
 import com.hiddenodds.trebolv2.presentation.presenter.GetMaintenancePresenter
+import com.hiddenodds.trebolv2.presentation.presenter.SignaturePresenter
 import com.hiddenodds.trebolv2.presentation.presenter.TechnicalPresenter
 import com.hiddenodds.trebolv2.presentation.presenter.UpdateFieldMaintenancePresenter
 import com.hiddenodds.trebolv2.tools.ChangeFormat
@@ -44,6 +45,7 @@ abstract class TabBaseFragment: Fragment(), ILoadDataView {
         val mapImage: LinkedHashMap<String, ProxyBitmap> = LinkedHashMap()
         val pdfGuideModel = PdfGuideModel()
         var notificationModel: NotificationModel? = null
+        var nameFileSignature = ""
     }
 
     val Fragment.app: App
@@ -60,6 +62,8 @@ abstract class TabBaseFragment: Fragment(), ILoadDataView {
     lateinit var manageImage: ManageImage
     @Inject
     lateinit var technicalPresenter: TechnicalPresenter
+    @Inject
+    lateinit var signaturePresenter: SignaturePresenter
 
     protected val YES = "YES"
     protected var disposable: CompositeDisposable = CompositeDisposable()
@@ -75,6 +79,7 @@ abstract class TabBaseFragment: Fragment(), ILoadDataView {
         getMaintenancePresenter.view = this
         updateFieldMaintenancePresenter.view = this
         technicalPresenter.view = this
+        signaturePresenter.view = this
     }
 
     override fun <T> executeTask(obj: T) {
@@ -88,6 +93,10 @@ abstract class TabBaseFragment: Fragment(), ILoadDataView {
             if (obj is TechnicalModel){
                 technicalModel = obj
                 notificationModel = getNotification(maintenanceModel!!.codeNotify)
+                executeGetFileSignature(notificationModel!!.businessName)
+            }
+            if (obj is String && obj.isNotEmpty()){
+                nameFileSignature = obj
             }
 
         }
@@ -161,6 +170,17 @@ abstract class TabBaseFragment: Fragment(), ILoadDataView {
             if (codeTech != null){
                 technicalPresenter.executeGetTechnical(codeTech!!)
             }
+
+        }
+
+    }
+
+    private fun executeGetFileSignature(nameClient: String){
+        if (nameClient.isNotEmpty()){
+            async {
+                signaturePresenter.executeGetNameFile(nameClient.trim())
+            }
+
 
         }
 

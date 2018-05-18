@@ -13,4 +13,5 @@ interface ModelsComponent {
     fun inject(downloadExecutor: DownloadExecutor)
     fun inject(assignedMaterialExecutor: AssignedMaterialExecutor)
     fun inject(maintenanceExecutor: MaintenanceExecutor)
+    fun inject(signatureExecutor: SignatureExecutor)
 }

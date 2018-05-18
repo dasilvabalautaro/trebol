@@ -12,6 +12,7 @@ import android.widget.FrameLayout
 import android.widget.ScrollView
 import com.hiddenodds.trebolv2.App
 import com.hiddenodds.trebolv2.R
+import com.hiddenodds.trebolv2.presentation.model.AssignedMaterialModel
 import com.hiddenodds.trebolv2.presentation.model.NotificationModel
 import com.hiddenodds.trebolv2.presentation.model.TechnicalModel
 import com.hiddenodds.trebolv2.tools.ChangeFormat
@@ -45,7 +46,8 @@ class PdfNotification @Inject constructor() {
         setupRecyclerViewMaterialUse()
     }
 
-    fun setData(notify: NotificationModel, technical: TechnicalModel){
+    fun setData(notify: NotificationModel,
+                technical: TechnicalModel, nameFile: String){
 
         this.codeNotification = notify.code
         val title = "OT Nº: " + notify.code
@@ -73,12 +75,21 @@ class PdfNotification @Inject constructor() {
         (view as PdfNotificationView).spnEntrada!!.text = notify.inside
         (view as PdfNotificationView).spnSalida!!.text = notify.outside
         (view as PdfNotificationView).spnDieta!!.text = notify.diet
-        setSignature(notify.code)
-        adapterMaterialUse!!.setObjectList(notify.materialUse)
-        adapterMaterialOut!!.setObjectList(notify.materialOut)
+        setSignature(nameFile)
+        adapterMaterialUse!!.setObjectList(changeIcon(notify.materialUse))
+        adapterMaterialOut!!.setObjectList(changeIcon(notify.materialOut))
         (view as PdfNotificationView).rvMatUse!!.scrollToPosition(0)
         (view as PdfNotificationView).rvMatOut!!.scrollToPosition(0)
 
+    }
+
+    private fun changeIcon(list: ArrayList<AssignedMaterialModel>):
+            ArrayList<AssignedMaterialModel>{
+        val materialChange: ArrayList<AssignedMaterialModel> = ArrayList(list)
+        for (i in materialChange.indices){
+            materialChange[i].change = 3
+        }
+        return materialChange
     }
 
     private fun setSignature(codeNotify: String){
