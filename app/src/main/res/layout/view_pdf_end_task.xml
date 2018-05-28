@@ -74,7 +74,7 @@
                 android:background="@android:color/white"
                 android:contentDescription="@string/lbl_logo"/>
 
-            <com.hiddenodds.trebolv2.presentation.components.AspectRatioImageView
+            <com.hiddenodds.trebol.presentation.components.AspectRatioImageView
                 app:layout_marginLeftPercent="4%"
                 app:layout_marginRightPercent="4%"
                 android:layout_marginTop="20dp"

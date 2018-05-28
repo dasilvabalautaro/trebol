@@ -6,7 +6,7 @@ apply plugin: 'kotlin-kapt'
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "com.hiddenodds.trebolv2"
+        applicationId "com.hiddenodds.trebol"
         minSdkVersion 19
         targetSdkVersion 26
         versionCode 9
