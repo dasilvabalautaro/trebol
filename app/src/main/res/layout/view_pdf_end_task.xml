@@ -19,20 +19,22 @@
             android:layout_height="wrap_content">
 
             <ImageView
+                android:id="@+id/img_left"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:contentDescription="@string/lbl_logo"
+                android:scaleType="fitStart"
+                android:src="@drawable/logo_claim"
                 app:layout_marginLeftPercent="4%"
                 app:layout_marginRightPercent="1%"
-                android:layout_marginTop="10dp"
-                app:layout_widthPercent="50%"
-                android:layout_height="wrap_content"
-                android:id="@+id/img_left"
-                android:src = "@drawable/logo_claim"
-                android:contentDescription="@string/lbl_logo"/>
+                app:layout_widthPercent="50%" />
             <ImageView
                 android:id="@+id/img_right"
                 app:layout_marginRightPercent="4%"
                 android:layout_alignParentEnd="true"
                 android:layout_alignTop="@+id/img_left"
                 app:layout_widthPercent="20%"
+                android:scaleType="fitEnd"
                 android:src="@drawable/hitachi_pdf"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/lbl_logo"/>
@@ -45,18 +47,18 @@
                 android:layout_below="@+id/img_left"
                 android:text="@string/lbl_end_instalation"
                 android:textColor="@color/colorLblTitle"
-                android:textSize="14sp"
+                android:textSize="18sp"
                 android:textStyle="bold"
-                android:layout_marginTop="10dp"/>
+                android:layout_marginTop="30dp"/>
 
             <TextView
                 android:id="@+id/lblContent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/lbl_title"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="30dp"
                 android:textAlignment="textStart"
                 android:textColor="@android:color/black"
-                android:textSize="@dimen/txt_size"
+                android:textSize="14sp"
                 app:layout_marginLeftPercent="5%"
                 app:layout_marginRightPercent="5%"
                 app:layout_widthPercent="100%" />
@@ -65,7 +67,7 @@
                 app:layout_marginLeftPercent="4%"
                 app:layout_marginRightPercent="4%"
                 android:id="@+id/signatureClient"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 app:layout_widthPercent="100%"
                 android:layout_height="200dp"
                 android:layout_below="@+id/lblContent"
@@ -75,25 +77,15 @@
             <com.hiddenodds.trebolv2.presentation.components.AspectRatioImageView
                 app:layout_marginLeftPercent="4%"
                 app:layout_marginRightPercent="4%"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scaleType="centerCrop"
                 android:layout_below="@+id/signatureClient"
                 app:ari_aspect="height"
                 app:ari_ratio="0.144"
                 app:srcCompat="@drawable/footer_trebol"
                 android:contentDescription="@string/lbl_logo"/>
 
-            <!--<ImageView
-                app:layout_marginLeftPercent="4%"
-                app:layout_marginRightPercent="4%"
-                android:layout_marginTop="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_below="@+id/signatureClient"
-                android:src = "@drawable/footer_trebol"
-                android:contentDescription="@string/lbl_logo"/>-->
 
         </android.support.percent.PercentRelativeLayout>
     </ScrollView>

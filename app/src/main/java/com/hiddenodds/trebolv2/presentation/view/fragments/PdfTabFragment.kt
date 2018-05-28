@@ -18,6 +18,7 @@ import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.dagger.PresenterModule
 import com.hiddenodds.trebolv2.presentation.model.EmailModel
 import com.hiddenodds.trebolv2.presentation.model.PdfGuideModel
+import com.hiddenodds.trebolv2.presentation.view.activities.MainActivity
 import com.hiddenodds.trebolv2.tools.ManageImage
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -104,6 +105,7 @@ class PdfTabFragment: Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        (activity as MainActivity).displayHome(true)
         val message = manageImage.observableMessage.map { m -> m }
         disposable.add(message.observeOn(AndroidSchedulers.mainThread())
                 .subscribe { s ->

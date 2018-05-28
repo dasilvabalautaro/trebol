@@ -248,6 +248,7 @@ abstract class TabBaseFragment: Fragment(), ILoadDataView {
                     if (notify.code == codeNotify){
                         pdfGuideModel.client = notify.businessName
                         pdfGuideModel.series = notify.series
+                        pdfGuideModel.part = notify.diet
                         println("Client: ${pdfGuideModel.client} " +
                                 "Series ${pdfGuideModel.series}")
                         return notify

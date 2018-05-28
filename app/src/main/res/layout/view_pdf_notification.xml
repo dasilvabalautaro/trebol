@@ -23,19 +23,22 @@
                 app:layout_marginRightPercent="1%"
                 android:layout_marginTop="10dp"
                 app:layout_widthPercent="50%"
+                android:scaleType="fitStart"
                 android:layout_height="wrap_content"
                 android:id="@+id/img_left"
                 android:src = "@drawable/logo_claim"
                 android:contentDescription="@string/lbl_logo"/>
+
             <ImageView
                 android:id="@+id/img_right"
-                app:layout_marginRightPercent="4%"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignTop="@+id/img_left"
-                app:layout_widthPercent="20%"
+                android:contentDescription="@string/lbl_logo"
+                android:scaleType="fitEnd"
                 android:src="@drawable/hitachi_pdf"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/lbl_logo"/>
+                app:layout_marginRightPercent="4%"
+                app:layout_widthPercent="20%" />
 
             <TextView
                 android:id="@+id/lbl_title"
@@ -634,14 +637,13 @@
                 android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scaleType="centerCrop"
                 android:layout_below="@+id/signatureClient"
                 app:ari_aspect="height"
                 app:ari_ratio="0.144"
                 app:srcCompat="@drawable/footer_trebol"
                 android:contentDescription="@string/lbl_logo"/>
 
-            <!--<ImageView
+           <!-- <ImageView
                 app:layout_marginLeftPercent="4%"
                 app:layout_marginRightPercent="4%"
                 android:layout_marginTop="5dp"

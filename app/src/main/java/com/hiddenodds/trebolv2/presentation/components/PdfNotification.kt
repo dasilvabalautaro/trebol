@@ -1,6 +1,7 @@
 package com.hiddenodds.trebolv2.presentation.components
 
 import android.app.Service
+import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.Build

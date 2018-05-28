@@ -24,7 +24,7 @@
                 android:layout_marginTop="10dp"
                 app:layout_widthPercent="50%"
                 android:src="@drawable/logo_claim"
-                android:scaleType="fitXY"
+                android:scaleType="fitStart"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/lbl_logo"/>
 
@@ -48,6 +48,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignTop="@+id/iv_logo"
                 app:layout_widthPercent="20%"
+                android:scaleType="fitEnd"
                 android:src="@drawable/hitachi_pdf"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/lbl_logo"/>
@@ -306,17 +307,6 @@
                 android:layout_height="200dp"
                 android:contentDescription="@string/lbl_logo"/>
 
-            <!--<ImageView
-                android:id="@+id/iv_logo"
-                app:layout_marginLeftPercent="4%"
-                app:layout_marginRightPercent="2%"
-                android:layout_marginTop="15dp"
-                app:layout_widthPercent="50%"
-                android:layout_below="@+id/iv_signature_technical"
-                android:src="@drawable/logo_claim"
-                android:scaleType="fitXY"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/lbl_logo"/>-->
 
             <TextView
                 android:id="@+id/tv_reference"

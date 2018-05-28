@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import butterknife.BindView
@@ -31,8 +32,10 @@ class NotificationFinishFragment: NotificationFragment(), ILoadDataView {
     @JvmField var etClient: EditText? = null
     @BindView(R.id.signatureClient)
     @JvmField var signatureClient: SignaturePad? = null
+    @BindView(R.id.bt_email)
+    @JvmField var btEmail: Button? = null
 
-    @OnClick(R.id.bt_view_pdf)
+    /*@OnClick(R.id.bt_view_pdf)
     fun viewPdf(){
         if (ManageFile.isFileExist("$codeNotification$PRE_FIX.pdf")){
             val pdfViewFragment = PdfViewFragment
@@ -48,14 +51,14 @@ class NotificationFinishFragment: NotificationFragment(), ILoadDataView {
             context.toast(context.getString(R.string.file_not_found))
         }
     }
-
+*/
     @OnClick(R.id.bt_pdf)
     fun savePdf() = runBlocking{
         pdfEndTask.manageImage = manageImage
         val client = etClient!!.text.toString()
         val job = async {
             pdfEndTask.inflateView()
-            pdfEndTask.setData(nameFileSignature, client)
+            pdfEndTask.setData(codeNotification, client, nameFileSignature)
             pdfEndTask.saveImage("$codeNotification$PRE_FIX")
         }
         job.join()
@@ -138,7 +141,7 @@ class NotificationFinishFragment: NotificationFragment(), ILoadDataView {
         technicalPresenter.view = this
         updateFieldNotificationPresenter.view = this
         signaturePresenter.view = this
-
+        btEmail!!.visibility = View.INVISIBLE
         async {
             technicalPresenter.executeGetTechnical(codeTechnical)
         }
@@ -187,6 +190,21 @@ class NotificationFinishFragment: NotificationFragment(), ILoadDataView {
                         .businessName.trim())
 
             }
+        }
+    }
+
+    private fun viewPdf(){
+        if (ManageFile.isFileExist("$codeNotification$PRE_FIX.pdf")){
+            val pdfViewFragment = PdfViewFragment
+                    .newInstance(codeNotification + PRE_FIX,
+                            codeTechnical, bluidEmailModel())
+            activity.supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.flContent, pdfViewFragment,
+                            pdfViewFragment.javaClass.simpleName)
+                    .commit()
+        }else{
+            context.toast(context.getString(R.string.file_not_found))
         }
     }
 

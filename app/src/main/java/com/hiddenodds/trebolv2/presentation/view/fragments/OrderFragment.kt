@@ -1,5 +1,6 @@
 package com.hiddenodds.trebolv2.presentation.view.fragments
 
+import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
@@ -80,8 +81,10 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
     @JvmField var btnPDF: ImageButton? = null
     @BindView(R.id.btnClearSignature)
     @JvmField var btnClearSignature: ImageButton? = null
+    @BindView(R.id.bt_email)
+    @JvmField var btEmail: Button? = null
 
-    @OnClick(R.id.btnViewPDF)
+    /*@OnClick(R.id.btnViewPDF)
     fun viewPdf(){
         if (ManageFile.isFileExist("$codeNotification.pdf")){
             val pdfViewFragment = PdfViewFragment
@@ -96,10 +99,11 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
             context.toast(context.getString(R.string.file_not_found))
         }
 
-    }
+    }*/
 
     @OnClick(R.id.btnPDF)
     fun savePdf() = runBlocking{
+
         val job = async {
             pdfNotification.manageImage = manageImage
             pdfNotification.inflateView()
@@ -494,6 +498,22 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         }
     }
 
+    private fun viewPdf(){
+        if (ManageFile.isFileExist("$codeNotification.pdf")){
+            val pdfViewFragment = PdfViewFragment
+                    .newInstance(codeNotification, codeTechnical, bluidEmailModel())
+            activity.supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.flContent, pdfViewFragment,
+                            pdfViewFragment.javaClass.simpleName)
+                    .addToBackStack(null)
+                    .commit()
+        }else{
+            context.toast(context.getString(R.string.file_not_found))
+        }
+
+    }
+
     private fun setTechnical(){
         val listNotification = ArrayList(this.technicalModel!!.notifications)
         async(CommonPool) {
@@ -562,6 +582,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
     }
 
     private fun initControls(){
+        btEmail!!.visibility = View.INVISIBLE
         val list: ArrayList<String> = ArrayList()
         list.add("NO")
         list.add("1/2")
@@ -766,7 +787,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         emailModel.subject = "Cliente: ${notificationModel!!.businessName} -- Orden de Trabajo: ${lbl_title!!.text.toString()}"
         emailModel.message = "Estimado cliente, adjunto le enviamos el " +
                 " parte de trabajo del aviso ${lbl_title!!.text}" +
-                " llevado a cabo en sus instalaciones el día $dateWork .\n" +
+                " llevado a cabo en sus instalaciones el día $dateWork.\n" +
                 "Reciba un Cordial Saludo.\n" +
                 "Trebol Group Providers S.L."
         emailModel.client = notificationModel!!.businessName

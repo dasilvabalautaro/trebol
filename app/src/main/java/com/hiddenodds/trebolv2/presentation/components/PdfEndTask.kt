@@ -31,10 +31,10 @@ class PdfEndTask @Inject constructor() {
                         false) as PdfEndTaskView
     }
 
-    fun setData(codeNotify: String, client: String){
+    fun setData(codeNotify: String, client: String, nameFile: String){
         (view as PdfEndTaskView).lblContent!!.text = buildContentText(codeNotify,
                 client)
-        setSignature(codeNotify)
+        setSignature(nameFile)
     }
 
     private fun buildContentText(codeInstalation: String, client: String): String {

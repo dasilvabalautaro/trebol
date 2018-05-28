@@ -21,6 +21,7 @@ import com.hiddenodds.trebolv2.presentation.model.GuideModel
 import com.hiddenodds.trebolv2.presentation.model.PdfGuideModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.coroutines.experimental.async
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -30,7 +31,6 @@ class TabObservationFragment: TabBaseFragment() {
     private val sufix = "_t3"
     private var adapter: ItemTabAdapter? = null
     private var flagChange = false
-    private var dateWork = ""
 
     @BindView(R.id.sv_tab)
     @JvmField var svTab: NestedScrollView? = null
@@ -301,7 +301,8 @@ class TabObservationFragment: TabBaseFragment() {
     }
 
     private fun buildEmailModel(): EmailModel {
-
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+        val dateWork = sdf.format(Date())
         var whoFor = ""
         if (notificationModel!!.customer != null){
             whoFor = notificationModel!!.customer!!.email

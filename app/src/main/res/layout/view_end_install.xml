@@ -166,8 +166,8 @@
             android:contentDescription="@string/lbl_logo"
             android:scaleType="fitXY"
             android:src="@mipmap/ic_save"
-            app:layout_constraintLeft_toLeftOf="@+id/left_one_guideline"
-            app:layout_constraintRight_toRightOf="@+id/left_two_guideline"
+            app:layout_constraintLeft_toLeftOf="@+id/left_three_guideline"
+            app:layout_constraintRight_toRightOf="@+id/left_four_guideline"
             app:layout_constraintTop_toBottomOf="@+id/et_client" />
 
         <ImageButton
@@ -180,8 +180,8 @@
             android:contentDescription="@string/lbl_logo"
             android:scaleType="fitXY"
             android:src="@mipmap/ic_clear"
-            app:layout_constraintLeft_toLeftOf="@+id/left_two_guideline"
-            app:layout_constraintRight_toRightOf="@+id/left_three_guideline"
+            app:layout_constraintLeft_toLeftOf="@+id/left_four_guideline"
+            app:layout_constraintRight_toRightOf="@+id/left_five_guideline"
             app:layout_constraintTop_toBottomOf="@+id/et_client" />
 
         <ImageButton
@@ -194,10 +194,10 @@
             android:contentDescription="@string/lbl_logo"
             android:scaleType="fitXY"
             android:src="@mipmap/ic_pdf"
-            app:layout_constraintLeft_toLeftOf="@+id/left_three_guideline"
-            app:layout_constraintRight_toRightOf="@+id/left_four_guideline"
+            app:layout_constraintLeft_toLeftOf="@+id/left_five_guideline"
+            app:layout_constraintRight_toRightOf="@+id/right_guideline"
             app:layout_constraintTop_toBottomOf="@+id/et_client" />
-        <ImageButton
+        <!--<ImageButton
             android:id="@+id/bt_view_pdf"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -209,7 +209,7 @@
             android:src="@mipmap/ic_pdf_view"
             app:layout_constraintLeft_toLeftOf="@+id/left_four_guideline"
             app:layout_constraintRight_toRightOf="@+id/left_five_guideline"
-            app:layout_constraintTop_toBottomOf="@+id/et_client" />
+            app:layout_constraintTop_toBottomOf="@+id/et_client" />-->
 
         <com.github.gcacace.signaturepad.views.SignaturePad
             xmlns:android="http://schemas.android.com/apk/res/android"

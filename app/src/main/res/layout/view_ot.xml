@@ -552,7 +552,7 @@
             <TextView
                 android:id="@+id/lblFirma"
                 app:layout_marginLeftPercent="4%"
-                app:layout_widthPercent="50%"
+                app:layout_widthPercent="62%"
                 android:layout_below="@+id/rv_mat_use"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -590,12 +590,12 @@
                 app:layout_widthPercent="8%"
                 app:layout_marginRightPercent="4%"
                 android:contentDescription="@string/lbl_logo"
-                android:layout_toEndOf="@+id/btnClearSignature"
+                android:layout_alignParentEnd="true"
                 android:layout_alignTop="@+id/btnSaveSignature"
                 android:scaleType="fitXY"
                 android:src="@mipmap/ic_pdf"
                 android:background="@null"/>
-            <ImageButton
+            <!--<ImageButton
                 android:id="@+id/btnViewPDF"
                 android:layout_height="30dp"
                 app:layout_widthPercent="8%"
@@ -605,7 +605,7 @@
                 android:layout_alignTop="@+id/btnSaveSignature"
                 android:scaleType="fitXY"
                 android:src="@mipmap/ic_pdf_view"
-                android:background="@null"/>
+                android:background="@null"/>-->
 
             <com.github.gcacace.signaturepad.views.SignaturePad
                 xmlns:android="http://schemas.android.com/apk/res/android"
@@ -631,16 +631,6 @@
         android:layout_alignParentBottom="true"
         android:gravity="bottom"
         android:orientation="horizontal" >
-
-        <!--<Button
-            android:id="@+id/btnList"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginEnd="5dp"
-            android:layout_marginStart="15dp"
-            android:background="@drawable/button_back_list"
-            tools:ignore="ButtonStyle" />-->
 
         <Button
             android:id="@+id/bt_email"
