@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp"
+    android:background="@drawable/back_options">
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/left_guideline"
+        app:layout_constraintGuide_percent=".05"
+        android:orientation="vertical"/>
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/left_one_guideline"
+        app:layout_constraintGuide_percent=".70"
+        android:orientation="vertical"/>
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/right_guideline"
+        app:layout_constraintGuide_percent=".95"
+        android:orientation="vertical"/>
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/top_guideline"
+        app:layout_constraintGuide_percent=".01"
+        android:orientation="horizontal"/>
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintGuide_percent="0.99"
+        android:orientation="horizontal"/>
+
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+        app:layout_constraintRight_toRightOf="@+id/left_one_guideline"
+        app:layout_constraintTop_toTopOf="@+id/top_guideline"
+        android:paddingEnd="10dp"
+        android:textSize="12sp"
+        android:textColor="@color/colorLblTitle"
+        android:textAlignment="textStart"
+        android:id="@+id/tv_description"
+        tools:ignore="RtlSymmetry" />
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="28dp"
+        app:layout_constraintLeft_toLeftOf="@+id/left_one_guideline"
+        app:layout_constraintRight_toRightOf="@+id/right_guideline"
+        app:layout_constraintTop_toTopOf="@+id/top_guideline"
+        android:inputType="text"
+        android:textSize="12sp"
+        android:textColor="@color/colorTxt"
+        android:textAlignment="center"
+        android:background="@drawable/rounded_pass"
+        android:id="@+id/et_value"
+        tools:ignore="LabelFor" />
+
+</android.support.constraint.ConstraintLayout>

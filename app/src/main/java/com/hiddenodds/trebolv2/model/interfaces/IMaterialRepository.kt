@@ -6,7 +6,7 @@ import io.reactivex.Observable
 import java.util.*
 
 
-interface IMaterialRepository: IMessagePersistent {
+interface IMaterialRepository{
     fun save(material: MapperMaterial): Observable<MaterialModel>
     fun saveList(list: ArrayList<MapperMaterial>): Observable<Boolean>
     fun getList(): Observable<List<MaterialModel>>

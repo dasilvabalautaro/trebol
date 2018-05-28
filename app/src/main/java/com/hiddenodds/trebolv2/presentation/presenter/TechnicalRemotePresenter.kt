@@ -1,5 +1,6 @@
 package com.hiddenodds.trebolv2.presentation.presenter
 
+import com.hiddenodds.trebolv2.App
 import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.domain.data.MapperTechnical
 import com.hiddenodds.trebolv2.domain.interactor.GetRemoteDataUseCase
@@ -30,13 +31,14 @@ class TechnicalRemotePresenter @Inject constructor(private val getRemoteDataUseC
             ArrayList<String>> = LinkedHashMap()
     private var flag = true
 
-    init {
-        this.iHearMessage = getRemoteDataUseCase
-    }
-
     fun executeQueryRemote(){
-        getRemoteDataUseCase.sql = StatementSQL.getTechnical()
-        getRemoteDataUseCase.execute(ListObserver())
+        if ((context as App).connectionNetwork.isOnline()){
+            getRemoteDataUseCase.sql = StatementSQL.getTechnical()
+            getRemoteDataUseCase.execute(ListObserver())
+
+        }else{
+            showError(context.resources.getString(R.string.network_not_found))
+        }
     }
 
     private fun buildDependentTechnicians(jsonArray: JSONArray){
@@ -104,7 +106,6 @@ class TechnicalRemotePresenter @Inject constructor(private val getRemoteDataUseC
 
     private fun saveListTechnicals(){
         if (listMapperTechnical.size != 0){
-            this.iHearMessage = saveListTechnicalUseCase
             saveListTechnicalUseCase
                     .listMapperTechnical = this.listMapperTechnical
             saveListTechnicalUseCase.execute(SaveTechniciansObserver())
@@ -121,10 +122,15 @@ class TechnicalRemotePresenter @Inject constructor(private val getRemoteDataUseC
             saveDependentTechnicalUseCase.execute(SaveTechniciansObserver())
         }
     }
+    private fun stopProgress(){
+        view!!.executeTask(1)
+    }
 
     override fun destroy() {
         super.destroy()
         this.getRemoteDataUseCase.dispose()
+        this.saveListTechnicalUseCase.dispose()
+        this.saveDependentTechnicalUseCase.dispose()
     }
 
     inner class ListObserver: DisposableObserver<JSONArray>(){
@@ -153,6 +159,7 @@ class TechnicalRemotePresenter @Inject constructor(private val getRemoteDataUseC
                         Constants.PREFERENCE_TREBOL)
                 prefs[Constants.TECHNICAL_DB] = true
                 showMessage(context.resources.getString(R.string.technicals_save))
+                stopProgress()
             }
 
         }

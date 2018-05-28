@@ -4,7 +4,11 @@ import com.hiddenodds.trebolv2.domain.UIThread
 import com.hiddenodds.trebolv2.domain.interactor.*
 import com.hiddenodds.trebolv2.model.executor.*
 import com.hiddenodds.trebolv2.model.interfaces.*
+import com.hiddenodds.trebolv2.presentation.components.PdfEndTask
+import com.hiddenodds.trebolv2.presentation.components.PdfNotification
 import com.hiddenodds.trebolv2.presentation.presenter.*
+import com.hiddenodds.trebolv2.tools.ManageImage
+import com.hiddenodds.trebolv2.tools.PermissionUtils
 import dagger.Module
 import dagger.Provides
 
@@ -30,7 +34,64 @@ class PresenterModule {
         return uiThread
     }
 
+    @Provides
+    fun providePermissionUtils(): PermissionUtils {
+        return PermissionUtils()
+    }
+
+    @Provides
+    fun provideManageImage(permissionUtils: PermissionUtils): ManageImage{
+        return ManageImage(permissionUtils)
+    }
+
+    @Provides
+    fun providePdfNotification(): PdfNotification{
+        return PdfNotification()
+    }
+
+    @Provides
+    fun providePdfEndTask(): PdfEndTask{
+        return PdfEndTask()
+    }
+
+    /////////////////////
+    @Provides
+    fun provideSignatureExecutor(): SignatureExecutor{
+        return SignatureExecutor()
+    }
+
+    @Provides
+    fun provideISignatureRepository(signatureExecutor: SignatureExecutor):
+            ISignatureRepository{
+        return signatureExecutor
+    }
+
+    @Provides
+    fun provideGetFileSignatureUseCase(uiThread: UIThread,
+                                       jobExecutor: JobExecutor,
+                                       signatureExecutor: SignatureExecutor):
+            GetFileSignatureUseCase{
+        return GetFileSignatureUseCase(jobExecutor, uiThread, signatureExecutor)
+    }
+
+    @Provides
+    fun provideSignaturePresenter(getFileSignatureUseCase:
+                                  GetFileSignatureUseCase): SignaturePresenter{
+        return SignaturePresenter(getFileSignatureUseCase)
+    }
+
     //////////////////////
+
+    @Provides
+    fun provideMaintenanceExecutor(): MaintenanceExecutor{
+        return MaintenanceExecutor()
+    }
+
+    @Provides
+    fun provideIMaintenanceRepository(maintenanceExecutor: MaintenanceExecutor):
+            IMaintenanceRepository{
+        return maintenanceExecutor
+    }
 
     @Provides
     fun provideCustomerExecutor(): CustomerExecutor{
@@ -44,19 +105,19 @@ class PresenterModule {
     }
 
     @Provides
-    fun provideSaveCustomerUseCase(uiThread: UIThread,
+    fun provideSaveListCustomerUseCase(uiThread: UIThread,
                                    jobExecutor: JobExecutor,
                                    customerExecutor: CustomerExecutor):
-            SaveCustomerUseCase {
-        return SaveCustomerUseCase(jobExecutor, uiThread, customerExecutor)
+            SaveListCustomerUseCase {
+        return SaveListCustomerUseCase(jobExecutor, uiThread, customerExecutor)
     }
 
     @Provides
-    fun provideSaveCustomerPresenter(saveCustomerUseCase: SaveCustomerUseCase):
-            SaveCustomerPresenter {
-        return SaveCustomerPresenter(saveCustomerUseCase)
+    fun provideDeleteCustomersUseCase(uiThread: UIThread,
+                                      jobExecutor: JobExecutor,
+                                      customerExecutor: CustomerExecutor): DeleteCustomersUseCase{
+        return DeleteCustomersUseCase(jobExecutor, uiThread, customerExecutor)
     }
-
     /////////////////
 
     @Provides
@@ -77,6 +138,14 @@ class PresenterModule {
             SaveListTechnicalUseCase{
         return SaveListTechnicalUseCase(jobExecutor, uiThread, technicalExecutor)
     }
+
+    @Provides
+    fun provideDeleteNotificationsOfTechnicalUseCase(uiThread: UIThread,
+                                                     jobExecutor: JobExecutor,
+                                                     technicalExecutor: TechnicalExecutor):
+            DeleteNotificationsOfTechnicalUseCase{
+        return DeleteNotificationsOfTechnicalUseCase(jobExecutor, uiThread, technicalExecutor)
+    }
     @Provides
     fun provideSaveDependentTechnicalUseCase(uiThread: UIThread,
                                              jobExecutor: JobExecutor,
@@ -91,6 +160,13 @@ class PresenterModule {
         return GetTechnicalMasterUseCase(jobExecutor, uiThread, technicalExecutor)
     }
 
+    @Provides
+    fun provideGetTechnicalUseCase(uiThread: UIThread,
+                                   jobExecutor: JobExecutor,
+                                   technicalExecutor: TechnicalExecutor): GetTechnicalUseCase{
+        return GetTechnicalUseCase(jobExecutor, uiThread, technicalExecutor)
+    }
+
     ///////////////////
 
     @Provides
@@ -98,6 +174,24 @@ class PresenterModule {
                                     jobExecutor: JobExecutor):
             GetRemoteDataUseCase{
         return GetRemoteDataUseCase(jobExecutor, uiThread)
+    }
+
+    @Provides
+    fun provideSetRemoteDataUseCase(uiThread: UIThread,
+                                    jobExecutor: JobExecutor): SetRemoteNotificationDataUseCase{
+        return SetRemoteNotificationDataUseCase(jobExecutor, uiThread)
+    }
+
+    @Provides
+    fun provideVerifyConnectServerUseCase(uiThread: UIThread,
+                                          jobExecutor: JobExecutor): VerifyConnectServerUseCase{
+        return VerifyConnectServerUseCase(jobExecutor, uiThread)
+    }
+
+    @Provides
+    fun provideVerifyConnectServerPresenter(verifyConnectServerUseCase:
+                                            VerifyConnectServerUseCase): VerifyConnectServerPresenter{
+        return VerifyConnectServerPresenter(verifyConnectServerUseCase)
     }
 
     @Provides
@@ -113,6 +207,12 @@ class PresenterModule {
                                         GetTechnicalMasterUseCase):
             TechnicalMasterPresenter{
         return TechnicalMasterPresenter(getTechnicalMasterUseCase)
+    }
+
+    @Provides
+    fun provideTechnicalPresenter(getTechnicalUseCase:
+                                  GetTechnicalUseCase): TechnicalPresenter{
+        return TechnicalPresenter(getTechnicalUseCase)
     }
 
     ///////////////////
@@ -137,6 +237,12 @@ class PresenterModule {
     }
 
     @Provides
+    fun provideDeleteListMaterialUseCase(uiThread: UIThread,
+                                         jobExecutor: JobExecutor,
+                                         materialExecutor: MaterialExecutor): DeleteListMaterialUseCase{
+        return DeleteListMaterialUseCase(jobExecutor, uiThread, materialExecutor)
+    }
+    @Provides
     fun provideGetListMaterialUseCase(uiThread: UIThread,
                                       jobExecutor: JobExecutor,
                                       materialExecutor: MaterialExecutor):
@@ -148,8 +254,18 @@ class PresenterModule {
     fun provideMaterialRemotePresenter(getRemoteDataUseCase:
                                        GetRemoteDataUseCase,
                                        saveListMaterialUseCase:
-                                       SaveListMaterialUseCase): MaterialRemotePresenter{
-        return MaterialRemotePresenter(getRemoteDataUseCase, saveListMaterialUseCase)
+                                       SaveListMaterialUseCase,
+                                       deleteListMaterialUseCase:
+                                       DeleteListMaterialUseCase):
+            MaterialRemotePresenter{
+        return MaterialRemotePresenter(getRemoteDataUseCase,
+                saveListMaterialUseCase, deleteListMaterialUseCase)
+    }
+
+    @Provides
+    fun provideMaterialPresenter(getListMaterialUseCase:
+                                 GetListMaterialUseCase): MaterialPresenter{
+        return MaterialPresenter(getListMaterialUseCase)
     }
 
     ////////////////
@@ -175,6 +291,14 @@ class PresenterModule {
     }
 
     @Provides
+    fun provideGetLisTypeNotificationUseCase(uiThread: UIThread,
+                                             jobExecutor: JobExecutor,
+                                             typeNotificationExecutor:
+                                             TypeNotificationExecutor): GetLisTypeNotificationUseCase{
+        return GetLisTypeNotificationUseCase(jobExecutor, uiThread, typeNotificationExecutor)
+    }
+
+    @Provides
     fun provideTypeNotificationRemotePresenter(getRemoteDataUseCase:
                                                GetRemoteDataUseCase,
                                                saveListTypeNotificationUseCase:
@@ -183,4 +307,345 @@ class PresenterModule {
         return TypeNotificationRemotePresenter(getRemoteDataUseCase,
                 saveListTypeNotificationUseCase)
     }
+
+    ////////////////////////
+
+    @Provides
+    fun provideAssignedMaterialExecutor(): AssignedMaterialExecutor{
+        return AssignedMaterialExecutor()
+    }
+
+    @Provides
+    fun provideIAssignedMaterialRepository(assignedMaterialExecutor:
+                                           AssignedMaterialExecutor): IAssignedMaterialRepository{
+        return assignedMaterialExecutor
+    }
+
+    @Provides
+    fun provideAddAssignedMaterialToNotificationUseCase(uiThread: UIThread,
+                                                        jobExecutor: JobExecutor,
+                                                        assignedMaterialExecutor:
+                                                        AssignedMaterialExecutor):
+            AddAssignedMaterialToNotificationUseCase{
+        return AddAssignedMaterialToNotificationUseCase(jobExecutor,
+                uiThread, assignedMaterialExecutor)
+    }
+
+    @Provides
+    fun provideUpdateAssignedMaterialUseCase(uiThread: UIThread,
+                                             jobExecutor: JobExecutor,
+                                             assignedMaterialExecutor:
+                                             AssignedMaterialExecutor): UpdateAssignedMaterialUseCase{
+        return UpdateAssignedMaterialUseCase(jobExecutor,
+                uiThread, assignedMaterialExecutor)
+    }
+
+    @Provides
+    fun provideDeleteAssignedMaterialUseCase(uiThread: UIThread,
+                                             jobExecutor: JobExecutor,
+                                             assignedMaterialExecutor:
+                                             AssignedMaterialExecutor): DeleteAssignedMaterialUseCase{
+        return DeleteAssignedMaterialUseCase(jobExecutor,
+                uiThread, assignedMaterialExecutor)
+    }
+    @Provides
+    fun provideUpdateAssignedMaterialPresenter(updateAssignedMaterialUseCase:
+                                               UpdateAssignedMaterialUseCase): UpdateAssignedMaterialPresenter{
+        return UpdateAssignedMaterialPresenter(updateAssignedMaterialUseCase)
+    }
+
+    @Provides
+    fun provideAddAssignedMaterialToNotificationPresenter(addAssignedMaterialToNotificationUseCase:
+                                                          AddAssignedMaterialToNotificationUseCase): AddAssignedMaterialToNotificationPresenter{
+        return AddAssignedMaterialToNotificationPresenter(addAssignedMaterialToNotificationUseCase)
+    }
+
+    @Provides
+    fun provideDeleteAssignedMaterialPresenter(deleteAssignedMaterialUseCase:
+                                               DeleteAssignedMaterialUseCase):
+            DeleteAssignedMaterialPresenter{
+        return DeleteAssignedMaterialPresenter(deleteAssignedMaterialUseCase)
+    }
+    /////////////////////
+
+    @Provides
+    fun provideNotificationExecutor(): NotificationExecutor{
+        return NotificationExecutor()
+    }
+
+    @Provides
+    fun provideINotificationRepository(notificationExecutor:
+                                       NotificationExecutor):
+            INotificationRepository{
+        return notificationExecutor
+    }
+
+    @Provides
+    fun provideSaveListNotificationUseCase(uiThread: UIThread,
+                                           jobExecutor: JobExecutor,
+                                           notificationExecutor:
+                                           NotificationExecutor):
+            SaveListNotificationUseCase{
+        return SaveListNotificationUseCase(jobExecutor, uiThread,
+                notificationExecutor)
+    }
+
+    @Provides
+    fun provideUpdateFieldNotificationUseCase(uiThread: UIThread,
+                                              jobExecutor: JobExecutor,
+                                              notificationExecutor:
+                                              NotificationExecutor):
+            UpdateFieldNotificationUseCase{
+        return UpdateFieldNotificationUseCase(jobExecutor, uiThread,
+                notificationExecutor)
+    }
+
+    @Provides
+    fun provideDeleteNotificationUseCase(uiThread: UIThread,
+                                         jobExecutor: JobExecutor,
+                                         notificationExecutor:
+                                         NotificationExecutor): DeleteNotificationUseCase{
+        return DeleteNotificationUseCase(jobExecutor, uiThread,
+                notificationExecutor)
+    }
+
+
+    @Provides
+    fun provideUpdateFieldNotificationPresenter(updateFieldNotificationUseCase:
+                                                UpdateFieldNotificationUseCase):
+            UpdateFieldNotificationPresenter{
+        return UpdateFieldNotificationPresenter(updateFieldNotificationUseCase)
+    }
+
+    @Provides
+    fun provideAddNotificationToTechnicalUseCase(uiThread: UIThread,
+                                                 jobExecutor: JobExecutor,
+                                                 notificationExecutor:
+                                                 NotificationExecutor): AddNotificationToTechnicalUseCase{
+        return AddNotificationToTechnicalUseCase(jobExecutor, uiThread,
+                notificationExecutor)
+    }
+
+    @Provides
+    fun provideAddCustomerToNotificationUseCase(uiThread: UIThread,
+                                                jobExecutor: JobExecutor,
+                                                notificationExecutor:
+                                                NotificationExecutor): AddCustomerToNotificationUseCase{
+        return AddCustomerToNotificationUseCase(jobExecutor, uiThread,
+                notificationExecutor)
+    }
+
+    @Provides
+    fun provideGetFinishedNotificationUseCase(uiThread: UIThread,
+                                              jobExecutor: JobExecutor,
+                                              notificationExecutor:
+                                              NotificationExecutor): GetFinishedNotificationUseCase{
+        return GetFinishedNotificationUseCase(jobExecutor, uiThread,
+                notificationExecutor)
+    }
+
+    @Provides
+    fun provideDeleteMaintenanceUseCase(uiThread: UIThread,
+                                        jobExecutor: JobExecutor,
+                                        maintenanceExecutor:
+                                        MaintenanceExecutor): DeleteMaintenanceUseCase{
+        return DeleteMaintenanceUseCase(jobExecutor, uiThread,
+                maintenanceExecutor)
+    }
+
+    @Provides
+    fun provideUpdateDataRemoteWaterPresenter(getFinishedNotificationUseCase:
+                                              GetFinishedNotificationUseCase,
+                                              setRemoteNotificationDataUseCase:
+                                              SetRemoteNotificationDataUseCase,
+                                              deleteNotificationUseCase:
+                                              DeleteNotificationUseCase,
+                                              deleteMaintenanceUseCase:
+                                              DeleteMaintenanceUseCase): UpdateDataRemoteWaterPresenter{
+        return UpdateDataRemoteWaterPresenter(getFinishedNotificationUseCase,
+                setRemoteNotificationDataUseCase, deleteNotificationUseCase,
+                deleteMaintenanceUseCase)
+    }
+
+    @Provides
+    fun provideAddNotificationToTechnicalPresenter(addNotificationToTechnicalUseCase:
+                                                   AddNotificationToTechnicalUseCase,
+                                                   addCustomerToNotificationUseCase:
+                                                   AddCustomerToNotificationUseCase):
+            AddNotificationToTechnicalPresenter{
+        return AddNotificationToTechnicalPresenter(addNotificationToTechnicalUseCase,
+                addCustomerToNotificationUseCase)
+    }
+
+    //////////////////
+
+    @Provides
+    fun provideDownloadExecutor(): DownloadExecutor{
+        return DownloadExecutor()
+    }
+
+    @Provides
+    fun provideIDownloadRepository(downloadExecutor: DownloadExecutor):
+            IDownloadRepository{
+        return downloadExecutor
+    }
+
+    @Provides
+    fun provideCreateDownloadsUseCase(uiThread: UIThread,
+                                      jobExecutor: JobExecutor,
+                                      downloadExecutor:
+                                      DownloadExecutor): CreateDownloadsUseCase{
+        return CreateDownloadsUseCase(jobExecutor, uiThread,
+                downloadExecutor)
+    }
+
+    @Provides
+    fun provideUpdateDownloadUseCase(uiThread: UIThread,
+                                     jobExecutor: JobExecutor,
+                                     downloadExecutor:
+                                     DownloadExecutor): UpdateDownloadUseCase{
+        return UpdateDownloadUseCase(jobExecutor, uiThread,
+                downloadExecutor)
+    }
+
+    @Provides
+    fun provideGetDownloadUseCase(uiThread: UIThread,
+                                  jobExecutor: JobExecutor,
+                                  downloadExecutor:
+                                  DownloadExecutor): GetDownloadUseCase{
+        return GetDownloadUseCase(jobExecutor, uiThread,
+                downloadExecutor)
+    }
+
+    @Provides
+    fun provideDeleteDownloadsUseCase(uiThread: UIThread,
+                                      jobExecutor: JobExecutor,
+                                      downloadExecutor:
+                                      DownloadExecutor): DeleteDownloadsUseCase{
+        return DeleteDownloadsUseCase(jobExecutor, uiThread,
+                downloadExecutor)
+    }
+
+    @Provides
+    fun provideDownloadNotificationUseCase(getRemoteDataUseCase:
+                                            GetRemoteDataUseCase,
+                                            createDownloadsUseCase:
+                                            CreateDownloadsUseCase,
+                                            updateDownloadUseCase:
+                                            UpdateDownloadUseCase,
+                                            deleteDownloadsUseCase:
+                                            DeleteDownloadsUseCase):
+            DownloadNotificationUseCase {
+        return DownloadNotificationUseCase(getRemoteDataUseCase,
+                createDownloadsUseCase,
+                updateDownloadUseCase, deleteDownloadsUseCase)
+    }
+
+    @Provides
+    fun provideNotificationDownloadPresenter(downloadNotificationUseCase:
+                                             DownloadNotificationUseCase):
+            NotificationDownloadPresenter{
+        return NotificationDownloadPresenter(downloadNotificationUseCase)
+    }
+
+    @Provides
+    fun provideDownloadCustomerUseCase(getRemoteDataUseCase:
+                                        GetRemoteDataUseCase,
+                                        updateDownloadUseCase:
+                                        UpdateDownloadUseCase):
+            DownloadCustomerUseCase {
+        return DownloadCustomerUseCase(getRemoteDataUseCase,
+                updateDownloadUseCase)
+    }
+
+    @Provides
+    fun provideCustomerDownloadPresenter(downloadCustomerUseCase:
+                                         DownloadCustomerUseCase): CustomerDownloadPresenter{
+        return CustomerDownloadPresenter(downloadCustomerUseCase)
+    }
+
+    @Provides
+    fun provideSaveNotificationPresenter(getDownloadUseCase:
+                                         GetDownloadUseCase,
+                                         saveListNotificationUseCase:
+                                         SaveListNotificationUseCase,
+                                         deleteNotificationsOfTechnicalUseCase:
+                                         DeleteNotificationsOfTechnicalUseCase,
+                                         getLisTypeNotificationUseCase:
+                                         GetLisTypeNotificationUseCase,
+                                         deleteMaintenanceUseCase:
+                                         DeleteMaintenanceUseCase):
+            SaveNotificationPresenter{
+        return SaveNotificationPresenter(getDownloadUseCase,
+                saveListNotificationUseCase,
+                deleteNotificationsOfTechnicalUseCase,
+                getLisTypeNotificationUseCase, deleteMaintenanceUseCase)
+    }
+
+    @Provides
+    fun provideSaveCustomerPresenter(getDownloadUseCase:
+                                     GetDownloadUseCase,
+                                     saveCustomerUseCase:
+                                     SaveListCustomerUseCase,
+                                     deleteCustomersUseCase:
+                                     DeleteCustomersUseCase):
+            SaveCustomerPresenter {
+        return SaveCustomerPresenter(getDownloadUseCase,
+                saveCustomerUseCase,
+                deleteCustomersUseCase)
+    }
+
+    @Provides
+    fun provideSendEmailPresenter(): SendEmailPresenter{
+        return SendEmailPresenter()
+    }
+
+    ////////////////
+
+
+
+    @Provides
+    fun provideGetMaintenanceUseCase(uiThread: UIThread,
+                                     jobExecutor: JobExecutor,
+                                     maintenanceExecutor:
+                                     MaintenanceExecutor): GetMaintenanceUseCase{
+        return GetMaintenanceUseCase(jobExecutor, uiThread,
+                maintenanceExecutor)
+    }
+
+    @Provides
+    fun provideSaveMaintenanceUseCase(uiThread: UIThread,
+                                      jobExecutor: JobExecutor,
+                                      maintenanceExecutor:
+                                      MaintenanceExecutor): SaveMaintenanceUseCase{
+        return SaveMaintenanceUseCase(jobExecutor, uiThread,
+                maintenanceExecutor)
+    }
+
+    @Provides
+    fun provideUpdateFieldMaintenanceUseCase(uiThread: UIThread,
+                                             jobExecutor: JobExecutor,
+                                             maintenanceExecutor:
+                                             MaintenanceExecutor): UpdateFieldMaintenanceUseCase{
+        return UpdateFieldMaintenanceUseCase(jobExecutor, uiThread,
+                maintenanceExecutor)
+    }
+
+
+
+    @Provides
+    fun provideGetMaintenancePresenter(getMaintenanceUseCase:
+                                       GetMaintenanceUseCase,
+                                       saveMaintenanceUseCase:
+                                       SaveMaintenanceUseCase): GetMaintenancePresenter{
+        return GetMaintenancePresenter(getMaintenanceUseCase, saveMaintenanceUseCase)
+    }
+
+    @Provides
+    fun provideUpdateFieldMaintenancePresenter(updateFieldMaintenanceUseCase:
+                                               UpdateFieldMaintenanceUseCase): UpdateFieldMaintenancePresenter{
+        return  UpdateFieldMaintenancePresenter(updateFieldMaintenanceUseCase)
+    }
+
+
 }

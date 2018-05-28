@@ -1,25 +1,16 @@
 package com.hiddenodds.trebolv2.tools
 
 object Constants {
-    val SQLSERVER = "213.37.130.240:36000"
-    val DATABASE = "TREBOLDATA"
-    val USER = "ALBERTO"
-    val PASSWORD = "Alb23erto23manza\$%AO451"
+    val SQLSERVER = "sqlServer" //  192.168.1.110:1433
+    val URL_SERVER = "213.37.130.240:36000"
+    val DATABASE = "database"
+    val USER = "user"
+    val PASSWORD = "password"
     val SUCCESS = "success"
-    val TBL_CUSTOMER = "DATEN01"
-    val TBL_MACHINE = "DATOFIMACHINE01"
-    val TBL_TECHNICAL = "DATOFITECH01"
-    val TBL_NOTIFICATION = "DATOFIWARNING01"
-    val TBL_CONTACTS = "DATCTTO01"
-    val TBL_AGENT = "DATVD01"
-    val TBL_CONTRACT = "DATOFIMACHCONTRACT01"
-    val TBL_ITEMS = "DATIN01"
-    val TBL_ADD_PIECES = "DATOFIPIECES01"
-    val TBL_DEL_PIECES = "DATAS01"
-    val TBL_TYPE_NOTIFICATION = "CONVERSIONAVISOS01"
-    val TBL_TEAM_TECHNICAL = "CONVERSIONTRD"
-    val PREFERENCE_TREBOL = "trebol"
+    val PREFERENCE_TREBOL = "com.hiddenodds.trebolv2.PREFERENCE_FILE_KEY"
     val TECHNICAL_DB = "db_tech"
-    val CACHE_TECHNICAL_MASTER = "tech_master"
+    val CACHE_LIST_TYPE_NOTIFICATION = "list_type_notification"
     val TECHNICAL_KEY = "key_master"
+    val TECHNICAL_PASSWORD = "key_password"
+
 }

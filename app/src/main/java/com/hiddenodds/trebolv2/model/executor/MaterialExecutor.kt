@@ -5,12 +5,14 @@ import com.hiddenodds.trebolv2.App
 import com.hiddenodds.trebolv2.dagger.ModelsModule
 import com.hiddenodds.trebolv2.domain.data.MapperMaterial
 import com.hiddenodds.trebolv2.model.data.Material
-import com.hiddenodds.trebolv2.model.exception.DatabaseOperationException
 import com.hiddenodds.trebolv2.model.interfaces.IMaterialRepository
 import com.hiddenodds.trebolv2.model.persistent.database.CRUDRealm
 import com.hiddenodds.trebolv2.presentation.mapper.MaterialModelDataMapper
 import com.hiddenodds.trebolv2.presentation.model.MaterialModel
 import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
+import io.realm.RealmResults
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -23,6 +25,8 @@ class MaterialExecutor @Inject constructor(): CRUDRealm(),
 
     private val component by lazy {(context as App)
             .getAppComponent().plus(ModelsModule(context))}
+    private var disposable: CompositeDisposable = CompositeDisposable()
+    private var msgError: String = ""
 
     @Inject
     lateinit var taskListenerExecutor: TaskListenerExecutor
@@ -31,16 +35,12 @@ class MaterialExecutor @Inject constructor(): CRUDRealm(),
 
     init {
         component.inject(this)
-    }
-
-    override fun userGetMessage(): Observable<String> {
-        return this.taskListenerExecutor
-                .observableMessage.map { s -> s }
-    }
-
-    override fun userGetError(): Observable<DatabaseOperationException> {
-        return this.taskListenerExecutor
-                .observableException.map { e -> e }
+        val hear = this.taskListenerExecutor
+                .observableException.map { s -> s }
+        disposable.add(hear.observeOn(Schedulers.newThread())
+                .subscribe { s ->
+                    this.msgError = s.message
+                })
     }
 
     override fun save(material: MapperMaterial): Observable<MaterialModel> {
@@ -59,7 +59,7 @@ class MaterialExecutor @Inject constructor(): CRUDRealm(),
                 subscriber.onNext(materialModel)
                 subscriber.onComplete()
             }else{
-                subscriber.onError(Throwable())
+                subscriber.onError(Throwable(this.msgError))
             }
 
         }
@@ -69,7 +69,9 @@ class MaterialExecutor @Inject constructor(): CRUDRealm(),
         var flag = true
         return Observable.create{subscriber ->
             val clazz: Class<Material> = Material::class.java
-            this.deleteAll(clazz, taskListenerExecutor)
+            //this.deleteAll(clazz, taskListenerExecutor)
+            var l = this.getAllData(clazz)
+            println("List size before: ${l!!.size}")
             for (i in list.indices){
                 val parcel: Parcel = list[i].getContent()
                 parcel.setDataPosition(0)
@@ -79,11 +81,13 @@ class MaterialExecutor @Inject constructor(): CRUDRealm(),
                     break
                 }
             }
+            l = this.getAllData(clazz)
+            println("List size after: ${l!!.size}")
             if (flag){
                 subscriber.onNext(true)
                 subscriber.onComplete()
             }else{
-                subscriber.onError(Throwable())
+                subscriber.onError(Throwable(this.msgError))
             }
         }
     }
@@ -91,25 +95,30 @@ class MaterialExecutor @Inject constructor(): CRUDRealm(),
     override fun getList(): Observable<List<MaterialModel>> {
         return Observable.create { subscriber ->
             val clazz: Class<Material> = Material::class.java
-            val listMaterial: List<Material>? = this.getAllData(clazz)
-            if (listMaterial != null){
+            val listMaterial: RealmResults<Material>? = this.getAllData(clazz)
+            println("Mostrar lista: ${listMaterial!!.size}")
+            if (listMaterial.isNotEmpty()){
                 val materialModelCollection: Collection<MaterialModel> = this
                         .materialModelDataMapper
                         .transform(listMaterial)
                 subscriber.onNext(materialModelCollection as List<MaterialModel>)
                 subscriber.onComplete()
             }else{
-                subscriber.onError(Throwable())
+                subscriber.onError(Throwable("List empty."))
             }
         }
     }
 
     override fun deleteList(): Observable<Boolean> {
         return Observable.create{subscriber ->
+            this.msgError = ""
             val clazz: Class<Material> = Material::class.java
-            this.deleteAll(clazz, taskListenerExecutor)
-            subscriber.onNext(true)
-            subscriber.onComplete()
+            if (this.deleteAll(clazz, taskListenerExecutor)){
+                subscriber.onNext(true)
+                subscriber.onComplete()
+            }else{
+                subscriber.onError(Throwable(this.msgError))
+            }
         }
     }
 

@@ -12,6 +12,7 @@ class InstanceRealm(private val context: Context): IPersistent {
     override fun create() {
         Realm.init(context)
         val configuration = RealmConfiguration.Builder()
+                .compactOnLaunch()
                 .name(context.resources.getString(R.string.database))
                 .schemaVersion(schemaVersion)
                 .deleteRealmIfMigrationNeeded()

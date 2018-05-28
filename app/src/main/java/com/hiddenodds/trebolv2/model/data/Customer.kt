@@ -14,12 +14,14 @@ open class Customer: RealmObject(), IDataContent {
     var name: String = ""
     var phone: String = ""
     var email: String = ""
+    var tech: String = ""
 
     override fun setContent(parcel: Parcel) {
         code = parcel.readString()
         name = parcel.readString()
         email = parcel.readString()
         phone = parcel.readString()
+        tech = parcel.readString()
     }
 
     override fun getContent(): Parcel {
@@ -29,6 +31,7 @@ open class Customer: RealmObject(), IDataContent {
         parcel.writeString(name)
         parcel.writeString(email)
         parcel.writeString(phone)
+        parcel.writeString(tech)
         return parcel
     }
 

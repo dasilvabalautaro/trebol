@@ -1,5 +1,6 @@
 package com.hiddenodds.trebolv2.presentation.presenter
 
+import com.hiddenodds.trebolv2.App
 import com.hiddenodds.trebolv2.R
 import com.hiddenodds.trebolv2.domain.data.MapperTypeNotification
 import com.hiddenodds.trebolv2.domain.interactor.GetRemoteDataUseCase
@@ -20,13 +21,14 @@ class TypeNotificationRemotePresenter @Inject constructor(private val getRemoteD
     private val listMapperTypeNotification:
             ArrayList<MapperTypeNotification> = ArrayList()
 
-    init {
-        this.iHearMessage = getRemoteDataUseCase
-    }
-
     fun executeQueryRemote(){
-        getRemoteDataUseCase.sql = StatementSQL.getTypeNotification()
-        getRemoteDataUseCase.execute(ListObserver())
+        if ((context as App).connectionNetwork.isOnline()){
+            getRemoteDataUseCase.sql = StatementSQL.getTypeNotification()
+            getRemoteDataUseCase.execute(ListObserver())
+
+        }else{
+            showError(context.resources.getString(R.string.network_not_found))
+        }
     }
 
     private fun buildListMapper(jsonArray: JSONArray){
@@ -36,8 +38,12 @@ class TypeNotificationRemotePresenter @Inject constructor(private val getRemoteD
                 val mapperTypeNotification = MapperTypeNotification()
 
                 if (jsonObject.has("TRB_TIPO")){
-                    mapperTypeNotification.code = jsonObject.getString("TRB_TIPO")?: ""
-                    mapperTypeNotification.code = mapperTypeNotification.code.trim()
+                    var dataField = jsonObject.getString("TRB_TIPO")?: ""
+                    dataField = dataField.trim()
+                    if (dataField.isNotEmpty()){
+                        dataField = dataField.toInt().toString()
+                    }
+                    mapperTypeNotification.code = dataField
                 }
                 if (jsonObject.has("DESCRIPCION")){
                     mapperTypeNotification.description = jsonObject.getString("DESCRIPCION")?: ""
@@ -52,7 +58,6 @@ class TypeNotificationRemotePresenter @Inject constructor(private val getRemoteD
 
     private fun saveListTypeNotification(){
         if (listMapperTypeNotification.size != 0){
-            this.iHearMessage = saveListTypeNotificationUseCase
             saveListTypeNotificationUseCase
                     .listMapperTypeNotification = this.listMapperTypeNotification
             saveListTypeNotificationUseCase.execute(SaveTypeNotificationObserver())
@@ -65,6 +70,16 @@ class TypeNotificationRemotePresenter @Inject constructor(private val getRemoteD
     private fun buildObjets(jsonArray: JSONArray){
         buildListMapper(jsonArray)
         saveListTypeNotification()
+    }
+
+    override fun destroy() {
+        super.destroy()
+        getRemoteDataUseCase.dispose()
+        saveListTypeNotificationUseCase.dispose()
+
+    }
+    private fun stopProgress(){
+        view!!.executeTask(2)
     }
 
     inner class ListObserver: DisposableObserver<JSONArray>(){
@@ -86,7 +101,7 @@ class TypeNotificationRemotePresenter @Inject constructor(private val getRemoteD
     inner class SaveTypeNotificationObserver: DisposableObserver<Boolean>(){
         override fun onNext(t: Boolean) {
             showMessage(context.resources.getString(R.string.type_notification_save))
-
+            stopProgress()
         }
 
         override fun onComplete() {

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="lbl_verification">
+        <item>Conformidad de la instalación con las especificaciones del equipo.</item>
+        <item>Comprobación de la toma de tierra:</item>
+        <item>Cabina de la impresora: (Tensión entre fase y neutro, y entre neutro y tierra).</item>
+        <item>Línea de producción/cabezal (Tensión entre cabezal y línea de producción).</item>
+        <item>Inspección visual de los cables y conexiones.</item>
+        <item>Distancia de impresión (mm).</item>
+        <item>Comprobación de manguera y cabezal:</item>
+        <item>Inspección de las conexiones.</item>
+        <item>Comprobación de vibraciones.</item>
+        <item>Comprobación del radio de la manguera.</item>
+        <item>Limpieza.</item>
+        <item>Comprobación de la tapa del cabezal.</item>
+        <item>Circuito de tinta:</item>
+        <item>Fugas o daños.</item>
+    </string-array>
+
+</resources>
+

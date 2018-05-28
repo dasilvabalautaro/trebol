@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="lbl_observations">
+        <item>Conocimientos sobre seguridad.</item>
+        <item>Disponibilidad de la documentación del equipo.</item>
+        <item>Conocimiento sobre operación con la impresora.</item>
+        <item>Horas estimadas para la próxima revisión.</item>
+    </string-array>
+</resources>

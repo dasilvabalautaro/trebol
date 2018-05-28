@@ -1,0 +1,648 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/back_options">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <android.support.percent.PercentRelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/lbl_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:text="@string/lbl_list_ots"
+                android:textColor="@color/colorLblTitle"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginTop="20dp"/>
+
+            <TextView
+                android:id="@+id/lblComercial"
+                app:layout_marginLeftPercent="4%"
+                android:layout_marginTop="20dp"
+                app:layout_widthPercent="50%"
+                android:layout_below="@+id/lbl_title"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_comercial"
+                android:textColor="@color/colorLblSubTitle"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"/>
+            <TextView
+                app:layout_marginRightPercent="4%"
+                app:layout_widthPercent="50%"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorLblSubTitle"
+                android:text="@string/lbl_mod"
+                android:layout_toEndOf="@+id/lblComercial"
+                android:layout_alignTop="@+id/lblComercial"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"/>
+
+            <TextView
+                android:id="@+id/txtComercial"
+                android:layout_alignStart="@+id/lblComercial"
+                app:layout_widthPercent="50%"
+                android:layout_marginTop="10dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/lblComercial"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"
+                android:textColor="@color/colorTxt" />
+            <TextView
+                android:id="@+id/txtMod"
+                app:layout_marginRightPercent="4%"
+                app:layout_widthPercent="50%"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/txtComercial"
+                android:layout_alignTop="@+id/txtComercial"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"
+                android:textColor="@color/colorTxt" />
+
+            <TextView
+                android:id="@+id/lblSerie"
+                app:layout_marginLeftPercent="4%"
+                android:layout_marginTop="10dp"
+                app:layout_widthPercent="50%"
+                android:layout_below="@+id/txtComercial"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_serie"
+                android:textColor="@color/colorLblSubTitle"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"/>
+            <TextView
+                app:layout_marginRightPercent="4%"
+                app:layout_widthPercent="50%"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorLblSubTitle"
+                android:text="@string/lbl_tinta"
+                android:layout_toEndOf="@+id/lblSerie"
+                android:layout_alignTop="@+id/lblSerie"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"/>
+
+            <TextView
+                android:id="@+id/txtSerie"
+                android:layout_alignStart="@+id/lblSerie"
+                app:layout_widthPercent="50%"
+                android:layout_marginTop="10dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/lblSerie"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"
+                android:textColor="@color/colorTxt" />
+            <TextView
+                android:id="@+id/txtTinta"
+                app:layout_marginRightPercent="4%"
+                app:layout_widthPercent="50%"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/txtSerie"
+                android:layout_alignTop="@+id/txtSerie"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"
+                android:textColor="@color/colorTxt"/>
+
+            <TextView
+                android:id="@+id/lblHrsTrabajo"
+                app:layout_marginLeftPercent="4%"
+                android:layout_marginTop="10dp"
+                app:layout_widthPercent="50%"
+                android:layout_below="@+id/txtSerie"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_hrs_trabajo"
+                android:textColor="@color/colorLblSubTitle"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"/>
+
+            <TextView
+                app:layout_widthPercent="50%"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorLblSubTitle"
+                android:text="@string/lbl_peaje"
+                android:layout_toEndOf="@+id/lblHrsTrabajo"
+                android:layout_alignTop="@+id/lblHrsTrabajo"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"/>
+
+            <TextView
+                android:id="@+id/txtHrsTrabajo"
+                android:layout_alignStart="@+id/lblHrsTrabajo"
+                app:layout_widthPercent="50%"
+                android:layout_marginTop="10dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/lblHrsTrabajo"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"
+                android:textColor="@color/colorTxt" />
+
+            <TextView
+                android:id="@+id/txtPeaje"
+                app:layout_marginRightPercent="4%"
+                app:layout_widthPercent="50%"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/txtHrsTrabajo"
+                android:layout_alignTop="@+id/txtHrsTrabajo"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"
+                android:textColor="@color/colorTxt"/>
+
+            <TextView
+                android:id="@+id/lblSat"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtHrsTrabajo"
+                android:layout_marginTop="10dp"
+                android:text="@string/lbl_satd"
+                android:textAlignment="textStart"
+                android:textColor="@color/colorLblSubTitle"
+                android:textSize="@dimen/txt_size"
+                app:layout_marginLeftPercent="4%"
+                app:layout_widthPercent="50%" />
+            <TextView
+                app:layout_widthPercent="50%"
+                app:layout_marginRightPercent="4%"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorLblSubTitle"
+                android:text="@string/lbl_satdk"
+                android:layout_toEndOf="@+id/lblSat"
+                android:layout_alignTop="@+id/lblSat"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"/>
+
+            <TextView
+                android:id="@+id/txtSat"
+                android:layout_alignStart="@+id/lblSat"
+                app:layout_widthPercent="50%"
+                android:layout_marginTop="10dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/lblSat"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"
+                android:textColor="@color/colorTxt" />
+            <TextView
+                android:id="@+id/txtSatdk"
+                app:layout_widthPercent="50%"
+                app:layout_marginRightPercent="4%"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/txtSat"
+                android:layout_alignTop="@+id/txtSat"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"
+                android:textColor="@color/colorTxt" />
+
+            <TextView
+                android:id="@+id/lblEntrada"
+                app:layout_marginLeftPercent="4%"
+                android:layout_marginTop="10dp"
+                app:layout_widthPercent="50%"
+                android:layout_below="@+id/txtSat"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_entrada"
+                android:textColor="@color/colorLblSubTitle"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"/>
+
+            <TextView
+                android:id="@+id/lblSalida"
+                app:layout_widthPercent="50%"
+                app:layout_marginRightPercent="4%"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorLblSubTitle"
+                android:text="@string/lbl_salida"
+                android:layout_toEndOf="@+id/lblEntrada"
+                android:layout_alignTop="@+id/lblEntrada"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"/>
+
+            <EditText
+                android:id="@+id/spnEntrada"
+                android:layout_alignStart="@+id/lblEntrada"
+                app:layout_widthPercent="40%"
+                android:layout_marginTop="10dp"
+                android:layout_height="28dp"
+                android:layout_below="@+id/lblEntrada"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="center"
+                android:textColor="@color/colorTxt"
+                android:background="@drawable/rounded_pass"
+                tools:ignore="LabelFor,TextFields" />
+            <EditText
+                android:id="@+id/spnSalida"
+                android:layout_alignStart="@+id/lblSalida"
+                app:layout_widthPercent="50%"
+                app:layout_marginRightPercent="4%"
+                android:layout_alignTop="@+id/spnEntrada"
+                android:layout_height="28dp"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="center"
+                android:textColor="@color/colorTxt"
+                android:background="@drawable/rounded_pass"
+                tools:ignore="LabelFor,TextFields" />
+
+            <TextView
+                android:id="@+id/lblDieta"
+                app:layout_marginLeftPercent="4%"
+                android:layout_marginTop="10dp"
+                app:layout_widthPercent="50%"
+                android:layout_below="@+id/spnEntrada"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_dieta"
+                android:textColor="@color/colorLblSubTitle"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"/>
+
+            <TextView
+                android:id="@+id/lblVSoft"
+                app:layout_widthPercent="50%"
+                app:layout_marginRightPercent="4%"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorLblSubTitle"
+                android:text="@string/lbl_vsoft"
+                android:layout_toEndOf="@+id/lblDieta"
+                android:layout_alignTop="@+id/lblDieta"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"/>
+
+            <Spinner
+                android:layout_height="28dp"
+                app:layout_widthPercent="40%"
+                android:layout_alignStart="@+id/lblDieta"
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/lblDieta"
+                android:popupBackground="@android:color/white"
+                android:background="@drawable/bk_spinner"
+                android:id="@+id/spnDieta">
+            </Spinner>
+
+            <EditText
+                android:id="@+id/edtVsoft1"
+                app:layout_widthPercent="13%"
+                app:layout_marginRightPercent="1%"
+                android:layout_height="28dp"
+                android:inputType="number"
+                android:layout_toEndOf="@+id/spnDieta"
+                android:layout_alignTop="@+id/spnDieta"
+                android:layout_alignStart="@+id/lblVSoft"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="center"
+                android:textColor="@color/colorTxt"
+                android:background="@drawable/rounded_pass"
+                tools:ignore="LabelFor" />
+            <EditText
+                android:id="@+id/edtVsoft2"
+                app:layout_widthPercent="13%"
+                app:layout_marginRightPercent="1%"
+                android:layout_height="28dp"
+                android:inputType="number"
+                android:layout_toEndOf="@+id/edtVsoft1"
+                android:layout_alignTop="@+id/edtVsoft1"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="center"
+                android:textColor="@color/colorTxt"
+                android:background="@drawable/rounded_pass"
+                tools:ignore="LabelFor" />
+            <EditText
+                android:id="@+id/edtVsoft3"
+                app:layout_widthPercent="15%"
+                app:layout_marginRightPercent="4%"
+                android:layout_height="28dp"
+                android:inputType="number"
+                android:layout_toEndOf="@+id/edtVsoft2"
+                android:layout_alignTop="@+id/edtVsoft2"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="center"
+                android:textColor="@color/colorTxt"
+                android:background="@drawable/rounded_pass"
+                tools:ignore="LabelFor" />
+
+            <TextView
+                android:id="@+id/lblHrs"
+                app:layout_marginLeftPercent="4%"
+                android:layout_marginTop="10dp"
+                app:layout_widthPercent="50%"
+                android:layout_below="@+id/spnDieta"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_hrs"
+                android:textColor="@color/colorLblSubTitle"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"/>
+            <TextView
+                android:id="@+id/lblTotEquipo"
+                app:layout_widthPercent="50%"
+                app:layout_marginRightPercent="4%"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorLblSubTitle"
+                android:text="@string/lbl_equipo_totales"
+                android:layout_toEndOf="@+id/lblHrs"
+                android:layout_alignTop="@+id/lblHrs"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"/>
+
+            <EditText
+                android:id="@+id/edtHrs"
+                android:layout_alignStart="@+id/lblHrs"
+                app:layout_widthPercent="40%"
+                android:layout_marginTop="10dp"
+                android:layout_height="28dp"
+                android:inputType="number"
+                android:paddingLeft="10dp"
+                android:layout_below="@+id/lblHrs"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"
+                android:textColor="@color/colorTxt"
+                android:background="@drawable/rounded_pass"
+                tools:ignore="LabelFor,RtlHardcoded,RtlSymmetry" />
+
+            <EditText
+                android:id="@+id/edtTotalesEquipo"
+                app:layout_widthPercent="50%"
+                app:layout_marginRightPercent="4%"
+                android:layout_height="28dp"
+                android:inputType="number"
+                android:layout_toEndOf="@+id/edtHrs"
+                android:layout_alignTop="@+id/edtHrs"
+                android:paddingLeft="10dp"
+                android:layout_alignStart="@+id/lblTotEquipo"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"
+                android:textColor="@color/colorTxt"
+                android:background="@drawable/rounded_pass"
+                tools:ignore="LabelFor,RtlHardcoded,RtlSymmetry" />
+
+            <TextView
+                android:id="@+id/lblUltimoMnto"
+                app:layout_marginLeftPercent="4%"
+                android:layout_marginTop="10dp"
+                app:layout_widthPercent="50%"
+                android:layout_below="@+id/edtHrs"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_ult_mnto"
+                android:textColor="@color/colorLblSubTitle"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"/>
+
+            <EditText
+                android:id="@+id/edtUltimoMnto"
+                android:layout_alignStart="@+id/lblUltimoMnto"
+                app:layout_widthPercent="40%"
+                android:layout_marginTop="10dp"
+                android:layout_height="28dp"
+                android:inputType="number"
+                android:layout_below="@+id/lblUltimoMnto"
+                android:paddingLeft="10dp"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"
+                android:textColor="@color/colorTxt"
+                android:background="@drawable/rounded_pass"
+                tools:ignore="LabelFor,RtlHardcoded,RtlSymmetry" />
+
+            <TextView
+                android:id="@+id/lblSintomas"
+                app:layout_marginLeftPercent="4%"
+                android:layout_marginTop="10dp"
+                app:layout_widthPercent="50%"
+                android:layout_below="@+id/edtUltimoMnto"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_sintomas"
+                android:textColor="@color/colorLblSubTitle"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"/>
+            <TextView
+                android:id="@+id/txtSintomas"
+                android:layout_alignStart="@+id/lblSintomas"
+                app:layout_widthPercent="100%"
+                android:layout_marginTop="10dp"
+                app:layout_marginRightPercent="4%"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/lblSintomas"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"
+                android:textColor="@color/colorTxt" />
+
+            <TextView
+                android:id="@+id/lblInformeTecnico"
+                app:layout_marginLeftPercent="4%"
+                android:layout_marginTop="10dp"
+                app:layout_marginRightPercent="4%"
+                app:layout_widthPercent="100%"
+                android:layout_below="@+id/txtSintomas"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_informe_tec"
+                android:textColor="@color/colorLblSubTitle"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"/>
+
+            <EditText
+                android:id="@+id/edtInformeTecnico"
+                android:layout_alignStart="@+id/lblInformeTecnico"
+                app:layout_widthPercent="100%"
+                app:layout_marginRightPercent="4%"
+                android:layout_marginTop="10dp"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:inputType="textMultiLine"
+                android:layout_below="@+id/lblInformeTecnico"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"
+                android:textColor="@color/colorTxt"
+                android:background="@drawable/rounded_pass"
+                android:scrollbars="vertical"
+                tools:ignore="LabelFor" />
+
+            <EditText
+                android:id="@+id/edtObservaciones"
+                android:layout_alignStart="@+id/lblInformeTecnico"
+                app:layout_widthPercent="100%"
+                app:layout_marginRightPercent="4%"
+                android:layout_marginTop="2dp"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:inputType="textMultiLine"
+                android:layout_below="@+id/edtInformeTecnico"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"
+                android:textColor="@color/colorTxt"
+                android:background="@drawable/rounded_pass"
+                android:scrollbars="vertical"
+                tools:ignore="LabelFor" />
+
+            <TextView
+                android:id="@+id/lblMaterialRetirado"
+                app:layout_marginLeftPercent="4%"
+                android:layout_marginTop="15dp"
+                app:layout_widthPercent="60%"
+                android:layout_below="@+id/edtObservaciones"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_material_retirado"
+                android:textColor="@color/colorLblSubTitle"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"/>
+
+            <ImageButton
+                android:id="@+id/btnMatOut"
+                android:layout_height="30dp"
+                app:layout_widthPercent="8%"
+                app:layout_marginRightPercent="4%"
+                android:contentDescription="@string/lbl_logo"
+                android:layout_marginTop="10dp"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/edtObservaciones"
+                android:src="@drawable/mas"
+                android:background="@null"/>
+
+            <!--+++-->
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_mat_out"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/lblMaterialRetirado"
+                app:layout_marginRightPercent="4%"
+                android:layout_below="@+id/btnMatOut"
+                android:layout_marginTop="20dp"
+                android:padding="2dp"
+                android:scrollbars="vertical"/>
+
+            <TextView
+                android:id="@+id/lblMaterialEmpleado"
+                app:layout_marginLeftPercent="4%"
+                app:layout_widthPercent="70%"
+                android:layout_below="@+id/rv_mat_out"
+                android:layout_marginTop="13dp"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_material_empleado"
+                android:textColor="@color/colorLblSubTitle"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"/>
+
+            <ImageButton
+                android:id="@+id/btnMatUse"
+                android:layout_height="30dp"
+                app:layout_widthPercent="8%"
+                app:layout_marginRightPercent="4%"
+                android:contentDescription="@string/lbl_logo"
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@+id/lblMaterialEmpleado"
+                android:src="@drawable/mas"
+                android:background="@null"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_mat_use"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/lblMaterialEmpleado"
+                app:layout_marginRightPercent="4%"
+                android:layout_below="@+id/btnMatUse"
+                android:layout_marginTop="20dp"
+                android:padding="2dp"
+                android:scrollbars="vertical"/>
+
+            <TextView
+                android:id="@+id/lblFirma"
+                app:layout_marginLeftPercent="4%"
+                app:layout_widthPercent="62%"
+                android:layout_below="@+id/rv_mat_use"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/lbl_firma"
+                app:layout_marginRightPercent="2%"
+                android:textColor="@color/colorLblSubTitle"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"/>
+            <ImageButton
+                android:id="@+id/btnSaveSignature"
+                android:layout_height="30dp"
+                app:layout_widthPercent="8%"
+                app:layout_marginRightPercent="2%"
+                android:contentDescription="@string/lbl_logo"
+                android:layout_toEndOf="@+id/lblFirma"
+                android:layout_alignTop="@+id/lblFirma"
+                android:scaleType="fitXY"
+                android:src="@mipmap/ic_save"
+                android:background="@null"/>
+
+            <ImageButton
+                android:id="@+id/btnClearSignature"
+                android:layout_height="30dp"
+                app:layout_widthPercent="8%"
+                android:contentDescription="@string/lbl_logo"
+                app:layout_marginRightPercent="2%"
+                android:layout_toEndOf="@+id/btnSaveSignature"
+                android:layout_alignTop="@+id/btnSaveSignature"
+                android:scaleType="fitXY"
+                android:src="@mipmap/ic_clear"
+                android:background="@null"/>
+            <ImageButton
+                android:id="@+id/btnPDF"
+                android:layout_height="30dp"
+                app:layout_widthPercent="8%"
+                app:layout_marginRightPercent="4%"
+                android:contentDescription="@string/lbl_logo"
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@+id/btnSaveSignature"
+                android:scaleType="fitXY"
+                android:src="@mipmap/ic_pdf"
+                android:background="@null"/>
+            <!--<ImageButton
+                android:id="@+id/btnViewPDF"
+                android:layout_height="30dp"
+                app:layout_widthPercent="8%"
+                app:layout_marginRightPercent="4%"
+                android:contentDescription="@string/lbl_logo"
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@+id/btnSaveSignature"
+                android:scaleType="fitXY"
+                android:src="@mipmap/ic_pdf_view"
+                android:background="@null"/>-->
+
+            <com.github.gcacace.signaturepad.views.SignaturePad
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/signatureClient"
+                app:layout_widthPercent="100%"
+                android:layout_below="@+id/btnSaveSignature"
+                app:layout_marginRightPercent="4%"
+                app:layout_marginLeftPercent="4%"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="70dp"
+                android:background="@android:color/white"
+                android:layout_height="200dp"
+                app:penColor="@android:color/black" />
+
+
+        </android.support.percent.PercentRelativeLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="bottom"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/bt_email"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
+            android:background="@drawable/email_update_thing"
+            tools:ignore="ButtonStyle" />
+    </LinearLayout>
+</RelativeLayout>
+
+
+

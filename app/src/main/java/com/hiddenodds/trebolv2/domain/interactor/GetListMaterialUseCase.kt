@@ -17,5 +17,4 @@ class GetListMaterialUseCase @Inject constructor(threadExecutor: IThreadExecutor
         return iMaterialRepository.getList()
     }
 
-
 }

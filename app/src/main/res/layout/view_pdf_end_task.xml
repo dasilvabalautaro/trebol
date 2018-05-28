@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/back_options">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/sv_pdf_end_task"
+        android:fillViewport="true"
+        tools:ignore="UselessParent">
+
+        <android.support.percent.PercentRelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/img_left"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:contentDescription="@string/lbl_logo"
+                android:scaleType="fitStart"
+                android:src="@drawable/logo_claim"
+                app:layout_marginLeftPercent="4%"
+                app:layout_marginRightPercent="1%"
+                app:layout_widthPercent="50%" />
+            <ImageView
+                android:id="@+id/img_right"
+                app:layout_marginRightPercent="4%"
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@+id/img_left"
+                app:layout_widthPercent="20%"
+                android:scaleType="fitEnd"
+                android:src="@drawable/hitachi_pdf"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/lbl_logo"/>
+
+            <TextView
+                android:id="@+id/lbl_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:layout_below="@+id/img_left"
+                android:text="@string/lbl_end_instalation"
+                android:textColor="@color/colorLblTitle"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginTop="30dp"/>
+
+            <TextView
+                android:id="@+id/lblContent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/lbl_title"
+                android:layout_marginTop="30dp"
+                android:textAlignment="textStart"
+                android:textColor="@android:color/black"
+                android:textSize="14sp"
+                app:layout_marginLeftPercent="5%"
+                app:layout_marginRightPercent="5%"
+                app:layout_widthPercent="100%" />
+
+            <ImageView
+                app:layout_marginLeftPercent="4%"
+                app:layout_marginRightPercent="4%"
+                android:id="@+id/signatureClient"
+                android:layout_marginTop="20dp"
+                app:layout_widthPercent="100%"
+                android:layout_height="200dp"
+                android:layout_below="@+id/lblContent"
+                android:background="@android:color/white"
+                android:contentDescription="@string/lbl_logo"/>
+
+            <com.hiddenodds.trebolv2.presentation.components.AspectRatioImageView
+                app:layout_marginLeftPercent="4%"
+                app:layout_marginRightPercent="4%"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/signatureClient"
+                app:ari_aspect="height"
+                app:ari_ratio="0.144"
+                app:srcCompat="@drawable/footer_trebol"
+                android:contentDescription="@string/lbl_logo"/>
+
+
+        </android.support.percent.PercentRelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>
+
+
+
