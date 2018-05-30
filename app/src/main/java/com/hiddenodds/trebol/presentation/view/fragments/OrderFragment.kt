@@ -436,6 +436,9 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         manageImage.code = codeNotification
         val bitmap = manageImage.getFileOfGallery(activity)
         if (bitmap != null){
+            async {
+                updateState("1")
+            }
             activity.runOnUiThread({
                 signatureClient!!.signatureBitmap = bitmap
             })
@@ -756,7 +759,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
                 updateFieldNotificationPresenter
                         .updateNotification(notificationModel!!.id,
                                 "dateEnd", "")
-
+                notificationModel!!.dateEnd = ""
             }
             "1" -> {
                 val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
@@ -767,6 +770,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
                 updateFieldNotificationPresenter
                         .updateNotification(notificationModel!!.id,
                                 "dateEnd", dateEnd)
+                notificationModel!!.dateEnd = dateEnd
             }
         }
 

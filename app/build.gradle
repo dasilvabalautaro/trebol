@@ -9,8 +9,8 @@ android {
         applicationId "com.hiddenodds.trebol"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 9
-        versionName "9.0"
+        versionCode 3
+        versionName "3.0"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

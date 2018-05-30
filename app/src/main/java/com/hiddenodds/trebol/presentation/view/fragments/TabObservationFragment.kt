@@ -28,7 +28,7 @@ import java.util.*
 
 class TabObservationFragment: TabBaseFragment() {
     val SUFIX_TECHNICAL = "_t"
-    val SUFIX_CLIENT = "_c"
+    val SUFIX_PDF = "GDM"
     private val sufix = "_t3"
     private var adapter: ItemTabAdapter? = null
     private var flagChange = false
@@ -122,7 +122,7 @@ class TabObservationFragment: TabBaseFragment() {
         Thread.sleep(1000)
         if (mapImage.size == 4){
             pdfGuideModel.mapImage = mapImage
-            pdfGuideModel.id = maintenanceModel!!.id
+            pdfGuideModel.id = SUFIX_PDF + maintenanceModel!!.codeNotify
             executePdfForm(pdfGuideModel)
 
         }else{
