@@ -71,6 +71,8 @@ class PdfNotificationView: FrameLayout {
     @JvmField var rvMatUse: RecyclerView? = null
     @BindView(R.id.signatureClient)
     @JvmField var signatureClient: ImageView? = null
+    @BindView(R.id.tv_client)
+    @JvmField var tvClient: TextView? = null
 
     init {
 

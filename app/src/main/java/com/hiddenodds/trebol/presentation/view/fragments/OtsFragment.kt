@@ -230,6 +230,8 @@ class OtsFragment: Fragment(), ILoadDataView {
 
                 }catch (ne: NullPointerException){
                     println(ne.message)
+                }catch (ie: IndexOutOfBoundsException){
+                    println(ie.message)
                 }
             }else if ((listNotificationView.size == 0) &&
                     (listNotification.size == 0)){

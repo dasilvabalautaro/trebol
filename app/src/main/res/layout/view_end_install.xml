@@ -64,7 +64,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/top_guideline"
-            app:layout_constraintGuide_percent=".05"
+            app:layout_constraintGuide_percent=".02"
             android:orientation="horizontal"/>
 
         <android.support.constraint.Guideline
@@ -119,6 +119,19 @@
             app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
             app:layout_constraintRight_toRightOf="@+id/right_guideline"
             app:layout_constraintTop_toBottomOf="@+id/tv_serie"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/calibri"
+            android:textSize="12sp"
+            android:textColor="@color/colorTxt"
+            android:textAlignment="textStart"
+            android:id="@+id/tv_subtitle"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+            app:layout_constraintRight_toRightOf="@+id/right_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/tv_subtitle"
             android:layout_marginTop="15dp"
             android:fontFamily="@font/calibri"
             android:text="@string/lbl_name_client"
@@ -221,7 +234,7 @@
             app:layout_constraintTop_toBottomOf="@+id/bt_pdf"
             android:layout_marginTop="10dp"
             android:background="@android:color/white"
-            android:layout_height="200dp"
+            android:layout_height="170dp"
             app:penColor="@android:color/black" />
 
         <Button

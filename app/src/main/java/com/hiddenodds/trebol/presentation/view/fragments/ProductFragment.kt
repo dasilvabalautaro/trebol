@@ -97,6 +97,7 @@ class ProductFragment: NotificationFragment(), ILoadDataView {
         super.onResume()
 
         ChangeFormat.deleteCacheTechnical(codeTechnical)
+        Thread.sleep(1000)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

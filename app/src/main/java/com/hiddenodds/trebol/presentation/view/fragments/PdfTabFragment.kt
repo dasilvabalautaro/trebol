@@ -52,6 +52,10 @@ class PdfTabFragment: Fragment() {
     @JvmField var ivSignatureTechnical: ImageView? = null
     @BindView(R.id.iv_signature_client)
     @JvmField var ivSignatureClient: ImageView? = null
+    @BindView(R.id.tv_name_technical)
+    @JvmField var tvNameTechnical: TextView? = null
+    @BindView(R.id.tv_name_client)
+    @JvmField var tvNameClient: TextView? = null
 
     val Fragment.app: App
         get() = activity.application as App
@@ -140,6 +144,8 @@ class PdfTabFragment: Fragment() {
         tvNumberSerie!!.text = pdfGuideModel.series
         tvValueDate!!.text = dateWork
         tvObservations!!.text = pdfGuideModel.observations
+        tvNameClient!!.text = pdfGuideModel.clientSignature
+        tvNameTechnical!!.text = pdfGuideModel.nameTechnical
         setImage()
     }
 

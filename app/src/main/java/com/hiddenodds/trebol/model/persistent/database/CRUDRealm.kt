@@ -110,6 +110,7 @@ abstract class CRUDRealm: IRepository {
                 assignedMaterial!!.quantity = assignedMaterialModel.quantity
                 assignedMaterial!!.material = material
                 id = assignedMaterial!!.id
+                realm.insertOrUpdate(assignedMaterial!!)
                 println("Id Assigned: " + assignedMaterial!!.id)
                 listener.onSaveSucceeded()
             })

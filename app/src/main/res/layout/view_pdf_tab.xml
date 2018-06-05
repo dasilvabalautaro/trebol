@@ -31,16 +31,16 @@
             <TextView
                 android:id="@+id/tv_title"
                 app:layout_marginLeftPercent="4%"
-                app:layout_marginRightPercent="1%"
+                app:layout_marginRightPercent="4%"
                 android:layout_marginTop="10dp"
-                app:layout_widthPercent="65%"
+                app:layout_widthPercent="92%"
                 android:layout_below="@+id/iv_logo"
                 android:layout_height="wrap_content"
                 android:text="@string/lbl_title_veridication"
                 android:textColor="@android:color/black"
                 android:textSize="17sp"
                 android:textStyle="bold"
-                android:textAlignment="textStart"/>
+                android:textAlignment="center"/>
 
             <ImageView
                 android:id="@+id/img_right"
@@ -81,7 +81,7 @@
                 app:layout_marginLeftPercent="1%"
                 android:layout_alignTop="@+id/tv_client"
                 android:layout_toEndOf="@+id/tv_name"
-                app:layout_widthPercent="10%"
+                app:layout_widthPercent="13%"
                 android:layout_below="@+id/tv_title"
                 android:text="@string/lbl_part"
                 android:layout_height="wrap_content"
@@ -93,7 +93,7 @@
                 app:layout_marginLeftPercent="1%"
                 android:layout_alignTop="@+id/tv_client"
                 android:layout_toEndOf="@+id/tv_part"
-                app:layout_widthPercent="35%"
+                app:layout_widthPercent="32%"
                 app:layout_marginRightPercent="4%"
                 android:layout_below="@+id/tv_title"
                 android:layout_height="wrap_content"
@@ -129,7 +129,7 @@
                 app:layout_marginLeftPercent="1%"
                 android:layout_alignTop="@+id/tv_serie"
                 android:layout_toEndOf="@+id/tv_number_serie"
-                app:layout_widthPercent="10%"
+                app:layout_widthPercent="13%"
                 android:text="@string/lbl_fecha"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
@@ -141,7 +141,7 @@
                 android:layout_alignTop="@+id/tv_serie"
                 android:layout_toEndOf="@+id/tv_date"
                 app:layout_marginRightPercent="4%"
-                app:layout_widthPercent="35%"
+                app:layout_widthPercent="32%"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/txt_size"
@@ -174,6 +174,7 @@
             <TextView
                 app:layout_marginRightPercent="4%"
                 app:layout_widthPercent="50%"
+                android:id="@+id/tv_test"
                 android:text="@string/lbl_test_visual"
                 android:layout_alignTop="@+id/tv_tab_verification"
                 android:layout_toEndOf="@+id/tv_tab_verification"
@@ -187,7 +188,7 @@
                 app:layout_marginRightPercent="2%"
                 android:layout_marginTop="10dp"
                 app:layout_widthPercent="50%"
-                android:layout_below="@+id/tv_tab_verification"
+                android:layout_below="@+id/tv_test"
                 android:scaleType="fitXY"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/lbl_logo"/>
@@ -289,13 +290,36 @@
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"/>
+
+            <TextView
+                android:id="@+id/tv_name_technical"
+                app:layout_marginLeftPercent="4%"
+                app:layout_marginRightPercent="2%"
+                app:layout_widthPercent="50%"
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/tv_signature_technical"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"/>
+            <TextView
+                android:id="@+id/tv_name_client"
+                app:layout_marginRightPercent="4%"
+                app:layout_widthPercent="50%"
+                android:layout_alignTop="@+id/tv_name_technical"
+                android:layout_toEndOf="@+id/tv_name_technical"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"/>
+
             <ImageView
                 android:id="@+id/iv_signature_technical"
                 app:layout_marginLeftPercent="4%"
                 app:layout_marginRightPercent="2%"
                 android:layout_marginTop="10dp"
                 app:layout_widthPercent="45%"
-                android:layout_below="@+id/tv_signature_technical"
+                android:layout_below="@+id/tv_name_technical"
                 android:layout_height="200dp"
                 android:contentDescription="@string/lbl_logo"/>
             <ImageView

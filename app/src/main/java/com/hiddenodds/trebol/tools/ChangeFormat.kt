@@ -48,7 +48,13 @@ object ChangeFormat {
             val dif = minEnd - minInit
             val minWork = (dif % 60)
             val hrsWork = (dif / 60)
-            difHrs = hrsWork.toString() + "." + minWork.toString()
+            var minModify = 0
+            when(minWork){
+                in 0..15 -> minModify = 15
+                in 16..30 -> minModify = 30
+                in 31..59 -> minModify = 45
+            }
+            difHrs = hrsWork.toString() + "." + minModify.toString()
         }
 
         return difHrs
@@ -170,8 +176,9 @@ object ChangeFormat {
 
         if (Variables.changeTechnical.isNotEmpty()){
 
-            val code = Variables.changeTechnical.last()
-            if (code == codeTech){
+            val code = Variables.changeTechnical.first { it == codeTech }
+//            val code = Variables.changeTechnical.last()
+            if (code.isNotEmpty() && code == codeTech){
                 Variables.changeTechnical.remove(code)
                 CachingLruRepository
                         .instance

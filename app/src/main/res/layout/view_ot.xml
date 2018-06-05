@@ -595,17 +595,6 @@
                 android:scaleType="fitXY"
                 android:src="@mipmap/ic_pdf"
                 android:background="@null"/>
-            <!--<ImageButton
-                android:id="@+id/btnViewPDF"
-                android:layout_height="30dp"
-                app:layout_widthPercent="8%"
-                app:layout_marginRightPercent="4%"
-                android:contentDescription="@string/lbl_logo"
-                android:layout_alignParentEnd="true"
-                android:layout_alignTop="@+id/btnSaveSignature"
-                android:scaleType="fitXY"
-                android:src="@mipmap/ic_pdf_view"
-                android:background="@null"/>-->
 
             <com.github.gcacace.signaturepad.views.SignaturePad
                 xmlns:android="http://schemas.android.com/apk/res/android"
@@ -616,16 +605,33 @@
                 app:layout_marginRightPercent="4%"
                 app:layout_marginLeftPercent="4%"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="70dp"
                 android:background="@android:color/white"
                 android:layout_height="200dp"
                 app:penColor="@android:color/black" />
 
+            <EditText
+                android:id="@+id/et_client"
+                android:layout_alignStart="@+id/signatureClient"
+                app:layout_widthPercent="100%"
+                app:layout_marginRightPercent="4%"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="50dp"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:inputType="textPersonName"
+                android:layout_below="@+id/signatureClient"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"
+                android:textColor="@color/colorTxt"
+                android:background="@drawable/rounded_pass"
+                android:scrollbars="vertical"
+                tools:ignore="LabelFor" />
 
         </android.support.percent.PercentRelativeLayout>
     </ScrollView>
 
-    <LinearLayout
+   <!-- <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -641,7 +647,7 @@
             android:layout_marginEnd="25dp"
             android:background="@drawable/email_update_thing"
             tools:ignore="ButtonStyle" />
-    </LinearLayout>
+    </LinearLayout>-->
 </RelativeLayout>
 
 

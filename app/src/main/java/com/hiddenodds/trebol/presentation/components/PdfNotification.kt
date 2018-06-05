@@ -48,7 +48,8 @@ class PdfNotification @Inject constructor() {
     }
 
     fun setData(notify: NotificationModel,
-                technical: TechnicalModel, nameFile: String){
+                technical: TechnicalModel,
+                nameFile: String, personSignature: String){
 
         this.codeNotification = notify.code
         val title = "OT Nº: " + notify.code
@@ -76,6 +77,7 @@ class PdfNotification @Inject constructor() {
         (view as PdfNotificationView).spnEntrada!!.text = notify.inside
         (view as PdfNotificationView).spnSalida!!.text = notify.outside
         (view as PdfNotificationView).spnDieta!!.text = notify.diet
+        (view as PdfNotificationView).tvClient!!.text = personSignature
         setSignature(nameFile)
         adapterMaterialUse!!.setObjectList(changeIcon(notify.materialUse))
         adapterMaterialOut!!.setObjectList(changeIcon(notify.materialOut))

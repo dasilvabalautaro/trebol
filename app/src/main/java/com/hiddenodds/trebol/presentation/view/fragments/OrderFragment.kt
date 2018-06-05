@@ -81,8 +81,8 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
     @JvmField var btnPDF: ImageButton? = null
     @BindView(R.id.btnClearSignature)
     @JvmField var btnClearSignature: ImageButton? = null
-    @BindView(R.id.bt_email)
-    @JvmField var btEmail: Button? = null
+    @BindView(R.id.et_client)
+    @JvmField var etClient: EditText? = null
 
     /*@OnClick(R.id.btnViewPDF)
     fun viewPdf(){
@@ -108,7 +108,8 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
             pdfNotification.manageImage = manageImage
             pdfNotification.inflateView()
             pdfNotification.setData(notificationModel!!,
-                    technicalModel!!, nameFileSignature)
+                    technicalModel!!, nameFileSignature,
+                    etClient!!.text.toString())
             pdfNotification.saveImage()
         }
         job.join()
@@ -379,10 +380,10 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         callProductsFragment()
     }
 
-    @OnClick(R.id.bt_email)
+   /* @OnClick(R.id.bt_email)
     fun callEmail(){
-        executeEmail(bluidEmailModel())
-    }
+        executeEmail(buildEmailModel())
+    }*/
 
     companion object Factory {
         private const val inputNotification = "notify_"
@@ -451,7 +452,11 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
             val listSave = list.filter { it.id.trim().isEmpty() } as ArrayList
             if (listSave.isNotEmpty()){
 
-                Variables.changeTechnical.add(codeTechnical)
+                val code = Variables.changeTechnical.first { it == codeTechnical }
+                if (code.isEmpty()){
+                    Variables.changeTechnical.add(codeTechnical)
+                }
+
                 async {
                     addAssignedMaterialToNotificationPresenter.addAsignedMaterial(listSave,
                             notificationModel!!.id, flagUse)
@@ -504,7 +509,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
     private fun viewPdf(){
         if (ManageFile.isFileExist("$codeNotification.pdf")){
             val pdfViewFragment = PdfViewFragment
-                    .newInstance(codeNotification, codeTechnical, bluidEmailModel())
+                    .newInstance(codeNotification, codeTechnical, buildEmailModel())
             activity.supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.flContent, pdfViewFragment,
@@ -571,6 +576,9 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
             txtHrsTrabajo!!.text = notify.workHours
             spnEntrada!!.setText(notify.inside)
             spnSalida!!.setText(notify.outside)
+            if (notify.customer != null){
+                etClient!!.setText(notify.customer!!.name)
+            }
             setSpinnerDiet(notify.diet)
             listMaterialUse = notify.materialUse
             listMaterialOut = notify.materialOut
@@ -578,14 +586,13 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
             updateListMaterial()
             adapterMaterialUse!!.setObjectList(listMaterialUse)
             adapterMaterialOut!!.setObjectList(listMaterialOut)
-            rvMatUse!!.scrollToPosition(0)
-            rvMatOut!!.scrollToPosition(0)
+            rvMatUse!!.scrollToPosition(rvMatUse!!.adapter.itemCount)
+            rvMatOut!!.scrollToPosition(rvMatOut!!.adapter.itemCount)
 
         }
     }
 
     private fun initControls(){
-        btEmail!!.visibility = View.INVISIBLE
         val list: ArrayList<String> = ArrayList()
         list.add("NO")
         list.add("1/2")
@@ -740,6 +747,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
     }
 
     private fun callProductsFragment(){
+
         val productFragment = ProductFragment.newInstance(codeNotification,
                 codeTechnical)
         activity.supportFragmentManager
@@ -776,7 +784,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
 
     }
 
-    private fun bluidEmailModel(): EmailModel{
+    private fun buildEmailModel(): EmailModel{
         val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
         val dateWork = sdf.format(Date())
         var whoFor = ""
@@ -788,13 +796,13 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         emailModel.whoOf = "servicio.tecnico@trebolgroup.com"
         emailModel.whoFor = whoFor
         emailModel.whoCopy = "servicio.tecnico@trebolgroup.com; ${technicalModel!!.email}"
-        emailModel.subject = "Cliente: ${notificationModel!!.businessName} -- Orden de Trabajo: ${lbl_title!!.text.toString()}"
+        emailModel.subject = "Cliente: ${notificationModel!!.businessName} -- Orden de Trabajo: ${lbl_title!!.text}"
         emailModel.message = "Estimado cliente, adjunto le enviamos el " +
                 " parte de trabajo del aviso ${lbl_title!!.text}" +
                 " llevado a cabo en sus instalaciones el día $dateWork.\n" +
                 "Reciba un Cordial Saludo.\n" +
                 "Trebol Group Providers S.L."
-        emailModel.client = notificationModel!!.businessName
+        emailModel.client = etClient!!.text.toString()
         emailModel.clip = notificationModel!!.code + ".pdf"
         return emailModel
     }

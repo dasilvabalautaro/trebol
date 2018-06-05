@@ -610,15 +610,27 @@
             <TextView
                 android:id="@+id/lblFirma"
                 app:layout_marginLeftPercent="4%"
-                app:layout_widthPercent="70%"
+                android:layout_width="wrap_content"
                 android:layout_below="@+id/rv_mat_out"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@string/lbl_firma"
-                app:layout_marginRightPercent="2%"
+                app:layout_marginRightPercent="1%"
                 android:textColor="@color/colorLblSubTitle"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"/>
+
+            <TextView
+                android:id="@+id/tv_client"
+                app:layout_marginLeftPercent="1%"
+                app:layout_marginRightPercent="4%"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/txt_size"
+                android:textAlignment="textStart"
+                android:textColor="@color/colorTxt"
+                android:layout_alignTop="@+id/lblFirma"
+                android:layout_toEndOf="@+id/lblFirma" />
 
             <ImageView
                 app:layout_marginLeftPercent="4%"
@@ -627,7 +639,7 @@
                 android:layout_marginTop="10dp"
                 app:layout_widthPercent="100%"
                 android:layout_height="200dp"
-                android:layout_below="@+id/lblFirma"
+                android:layout_below="@+id/tv_client"
                 android:background="@android:color/white"
                 android:contentDescription="@string/lbl_logo"/>
 
@@ -643,15 +655,7 @@
                 app:srcCompat="@drawable/footer_trebol"
                 android:contentDescription="@string/lbl_logo"/>
 
-           <!-- <ImageView
-                app:layout_marginLeftPercent="4%"
-                app:layout_marginRightPercent="4%"
-                android:layout_marginTop="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_below="@+id/signatureClient"
-                android:src = "@drawable/footer_trebol"
-                android:contentDescription="@string/lbl_logo"/>-->
+
 
         </android.support.percent.PercentRelativeLayout>
     </ScrollView>

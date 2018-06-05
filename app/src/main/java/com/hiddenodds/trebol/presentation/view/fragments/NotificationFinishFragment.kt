@@ -34,24 +34,9 @@ class NotificationFinishFragment: NotificationFragment(), ILoadDataView {
     @JvmField var signatureClient: SignaturePad? = null
     @BindView(R.id.bt_email)
     @JvmField var btEmail: Button? = null
+    @BindView(R.id.tv_subtitle)
+    @JvmField var tvSubtitle: TextView? = null
 
-    /*@OnClick(R.id.bt_view_pdf)
-    fun viewPdf(){
-        if (ManageFile.isFileExist("$codeNotification$PRE_FIX.pdf")){
-            val pdfViewFragment = PdfViewFragment
-                    .newInstance(codeNotification + PRE_FIX,
-                            codeTechnical)
-            activity.supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.flContent, pdfViewFragment,
-                            pdfViewFragment.javaClass.simpleName)
-                    .addToBackStack(null)
-                    .commit()
-        }else{
-            context.toast(context.getString(R.string.file_not_found))
-        }
-    }
-*/
     @OnClick(R.id.bt_pdf)
     fun savePdf() = runBlocking{
         pdfEndTask.manageImage = manageImage
@@ -273,6 +258,16 @@ class NotificationFinishFragment: NotificationFragment(), ILoadDataView {
         if (notify != null){
             tvSerie!!.text = notify.series
         }
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+        val dateWork = sdf.format(Date())
+        tvSubtitle!!.text = String.format("Habiendo procedido la empresa TREBOL GROUP PROVIDERS S.L. a la instalación de la " +
+                "impresora/máquina cuyo número de instalación es %s, en fecha %s, afirmo y acredito:\n" +
+                "Que la misma ha sido debida, total y adecuadamente instalada.\n" +
+                "Así mismo, certifico mediante la presente, que tras la instalación de la misma, se ha procedido a " +
+                "la comprobación de su correcto funcionamiento ante mi persona, habiendo podido comprobar su " +
+                "eficaz y correcto funcionamiento.\n" +
+                "Y, en prueba de lo antedicho, firmo la presente certificación.\n\n" +
+                "Fdo: ", codeNotification, dateWork)
     }
     override fun <T> executeTask(objList: List<T>) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

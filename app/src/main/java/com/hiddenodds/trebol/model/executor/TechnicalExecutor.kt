@@ -117,6 +117,8 @@ class TechnicalExecutor @Inject constructor(): CRUDRealm(),
         }
     }
 
+
+
     override fun getTechnical(code: String): Observable<TechnicalModel> {
         //deleteCacheTechnical()
         return Observable.create { subscriber ->

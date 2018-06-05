@@ -43,8 +43,10 @@ class TabObservationFragment: TabBaseFragment() {
     @JvmField var spTechnical: SignaturePad? = null
     @BindView(R.id.sp_client)
     @JvmField var spClient: SignaturePad? = null
-    @BindView(R.id.bt_email)
-    @JvmField var btEmail: Button? = null
+    @BindView(R.id.et_client)
+    @JvmField var etClient: EditText? = null
+    @BindView(R.id.et_technical)
+    @JvmField var etTechnical: EditText? = null
 
     @OnTextChanged(R.id.et_report)
     fun changeReportTechical(){
@@ -106,15 +108,6 @@ class TabObservationFragment: TabBaseFragment() {
         manageImage.deleteSignatureStore(file)
         pdfGuideModel.signatureClient = ""
     }
-    @OnClick(R.id.bt_email)
-    fun callEmail(){
-        if (notificationModel != null){
-            executeEmail(buildEmailModel())
-        }else{
-            println("notificationModel not exist")
-        }
-
-    }
 
     @OnClick(R.id.bt_pdf)
     fun savePdf(){
@@ -131,22 +124,6 @@ class TabObservationFragment: TabBaseFragment() {
 
     }
 
-  /*  @OnClick(R.id.bt_view_pdf)
-    fun viewPdf(){
-        if (ManageFile.isFileExist("${maintenanceModel!!.id}.pdf")){
-            val pdfViewFragment = PdfViewFragment
-                    .newInstance(maintenanceModel!!.id, "tech")
-            activity.supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.flContent, pdfViewFragment,
-                            pdfViewFragment.javaClass.simpleName)
-                    .addToBackStack(null)
-                    .commit()
-        }else{
-            context.toast(context.getString(R.string.file_not_found))
-        }
-    }*/
-
     override fun onCreateView(inflater: LayoutInflater?,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -160,7 +137,7 @@ class TabObservationFragment: TabBaseFragment() {
         ButterKnife.bind(this, view!!)
         setupRecyclerView(rvVerification!!)
         setAdapter()
-        btEmail!!.visibility = View.INVISIBLE
+
     }
 
     override fun onStart() {
@@ -220,6 +197,11 @@ class TabObservationFragment: TabBaseFragment() {
         etReport!!.setText(maintenanceModel!!.reportTechnical)
         if (etReport!!.text.toString().isNotEmpty()){
             pdfGuideModel.observations = etReport!!.text.toString()
+        }
+
+        etTechnical!!.setText(technicalModel!!.name)
+        if (notificationModel!!.customer != null){
+            etClient!!.setText(notificationModel!!.customer!!.name)
         }
 
     }
@@ -341,6 +323,8 @@ class TabObservationFragment: TabBaseFragment() {
     }
 
     private fun executePdfForm(pdfGuideModel: PdfGuideModel){
+        pdfGuideModel.clientSignature = etClient!!.text.toString()
+        pdfGuideModel.nameTechnical = etTechnical!!.text.toString()
         val pdfTabFragment = PdfTabFragment
                 .newInstance(pdfGuideModel, buildEmailModel())
         activity.supportFragmentManager

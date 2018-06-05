@@ -28,6 +28,8 @@ import com.hiddenodds.trebol.tools.PreferenceHelper
 import com.hiddenodds.trebol.tools.PreferenceHelper.get
 import com.hiddenodds.trebol.tools.Variables
 import kotlinx.coroutines.experimental.launch
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 class SignInFragment: Fragment(), ILoadDataView {
@@ -181,9 +183,21 @@ class SignInFragment: Fragment(), ILoadDataView {
     private fun Context.toast(message: CharSequence) =
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 
+    private fun license(): Boolean{
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+        val init = sdf.parse("2018-06-06")
+        val limit = (init.time + (86400000 * 10))
+        val dateWork = Date().time
+
+        return (dateWork > limit)
+
+    }
+
     private fun validateInput(): Boolean{
+
         return (!edt_user!!.text.isNullOrEmpty() &&
-                !edt_password!!.text.isNullOrEmpty())
+                !edt_password!!.text.isNullOrEmpty() &&
+                !license())
     }
 
     private fun callMenu(){

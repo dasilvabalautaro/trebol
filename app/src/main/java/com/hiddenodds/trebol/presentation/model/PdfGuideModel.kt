@@ -16,5 +16,7 @@ class PdfGuideModel: Serializable {
     var signatureTechnical = ""
     var signatureClient = ""
     var id = ""
+    var clientSignature = ""
+    var nameTechnical = ""
     var mapImage: LinkedHashMap<String, ProxyBitmap> = LinkedHashMap()
 }
