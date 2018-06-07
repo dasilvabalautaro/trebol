@@ -196,8 +196,7 @@ class SignInFragment: Fragment(), ILoadDataView {
     private fun validateInput(): Boolean{
 
         return (!edt_user!!.text.isNullOrEmpty() &&
-                !edt_password!!.text.isNullOrEmpty() &&
-                !license())
+                !edt_password!!.text.isNullOrEmpty())
     }
 
     private fun callMenu(){

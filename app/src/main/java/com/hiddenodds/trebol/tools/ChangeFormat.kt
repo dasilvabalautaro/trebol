@@ -47,12 +47,13 @@ object ChangeFormat {
             val minEnd = (hrsEnd[0].toInt() * 60) + hrsEnd[1].toInt()
             val dif = minEnd - minInit
             val minWork = (dif % 60)
-            val hrsWork = (dif / 60)
+            var hrsWork = (dif / 60)
             var minModify = 0
             when(minWork){
-                in 0..15 -> minModify = 15
-                in 16..30 -> minModify = 30
-                in 31..59 -> minModify = 45
+                in 1..15 -> minModify = 25
+                in 16..30 -> minModify = 50
+                in 31..45 -> minModify = 75
+                in 46..59 -> hrsWork + 1
             }
             difHrs = hrsWork.toString() + "." + minModify.toString()
         }
@@ -177,7 +178,6 @@ object ChangeFormat {
         if (Variables.changeTechnical.isNotEmpty()){
 
             val code = Variables.changeTechnical.first { it == codeTech }
-//            val code = Variables.changeTechnical.last()
             if (code.isNotEmpty() && code == codeTech){
                 Variables.changeTechnical.remove(code)
                 CachingLruRepository
@@ -185,7 +185,7 @@ object ChangeFormat {
                         .getLru()
                         .remove(codeTech)
             }
-            //Thread.sleep(1000)
+
         }
     }
 
