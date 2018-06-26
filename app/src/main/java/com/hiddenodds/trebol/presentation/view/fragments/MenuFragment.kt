@@ -116,6 +116,8 @@ class MenuFragment: Fragment(), ILoadDataView {
     @Inject
     lateinit var updateDataRemoteWaterPresenter: UpdateDataRemoteWaterPresenter
 
+    private var optionExecute = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         component.inject(this)
@@ -182,60 +184,65 @@ class MenuFragment: Fragment(), ILoadDataView {
     private fun processDownloadNotification(option: Int){
         var message = ""
 
-        when(option){
-            1 -> {
-                Thread.sleep(3000)
-                message = context.resources.getString(R.string.notification_download)
-                customerDownloadPresenter.executeDownloadCustomer()
+        if (this.optionExecute != option){
+            this.optionExecute = option
+            when(option){
+                1 -> {
+                    Thread.sleep(3000)
+                    message = context.resources.getString(R.string.notification_download)
+                    customerDownloadPresenter.executeDownloadCustomer()
 
+                }
+                2 -> {
+                    message = context.resources.getString(R.string.customer_download)
+                    saveNotificationPresenter.executeSaveNotification()
+
+
+                }
+                3 -> {
+                    message = context.resources.getString(R.string.notification_save)
+                    saveCustomerPresenter.executeGetCustomer()
+
+
+                }
+
+                4 -> {
+                    message = context.resources.getString(R.string.customer_save)
+                    addNotificationToTechnicalPresenter.executeAddNotification()
+
+                }
+
+                5 -> {
+                    message = context.resources.getString(R.string.add_notifications) + "\n" +
+                            context.getString(R.string.lbl_finish_process)
+
+                    //clearPresenter()
+                    enableView()
+                }
+
+                6 -> {
+                    //clearPresenter()
+                    enableView()
+                    message = context.resources.getString(R.string.error_download)
+
+                }
+                7 -> {
+                    message = context.resources.getString(R.string.add_notifications) + "\n" +
+                            context.getString(R.string.lbl_finish_process)
+
+                    enableView()
+                }
+                8 -> {
+                    message = context.getString(R.string.download_complete)
+                    enableView()
+                }
             }
-            2 -> {
-                message = context.resources.getString(R.string.customer_download)
-                saveNotificationPresenter.executeSaveNotification()
-
-
-            }
-            3 -> {
-                message = context.resources.getString(R.string.notification_save)
-                saveCustomerPresenter.executeGetCustomer()
-
-
+            activity.runOnUiThread {
+                context.toast(message)
             }
 
-            4 -> {
-                message = context.resources.getString(R.string.customer_save)
-                addNotificationToTechnicalPresenter.executeAddNotification()
-
-            }
-
-            5 -> {
-                message = context.resources.getString(R.string.add_notifications) + "\n" +
-                        context.getString(R.string.lbl_finish_process)
-
-                //clearPresenter()
-                enableView()
-            }
-
-            6 -> {
-                //clearPresenter()
-                enableView()
-                message = context.resources.getString(R.string.error_download)
-
-            }
-            7 -> {
-                message = context.resources.getString(R.string.add_notifications) + "\n" +
-                        context.getString(R.string.lbl_finish_process)
-
-                enableView()
-            }
-            8 -> {
-                message = context.getString(R.string.download_complete)
-                enableView()
-            }
         }
-        activity.runOnUiThread({
-            context.toast(message)
-        })
+
     }
 
     private fun clearPresenter(){
@@ -250,9 +257,9 @@ class MenuFragment: Fragment(), ILoadDataView {
         updateDataRemoteWaterPresenter.destroy()
     }
 
-    private fun clearMaterialPresenter(){
+  /*  private fun clearMaterialPresenter(){
         //materialRemotePresenter.destroy()
-    }
+    }*/
 
     override fun <T> executeTask(obj: T) {
         if (obj != null){
@@ -268,7 +275,7 @@ class MenuFragment: Fragment(), ILoadDataView {
         super.onDestroy()
         if (Variables.endApp){
             clearWaterPresenter()
-            clearMaterialPresenter()
+//            clearMaterialPresenter()
             clearPresenter()
             (activity as MainActivity).handleBackPressInThisActivity()
         }else{
@@ -289,18 +296,19 @@ class MenuFragment: Fragment(), ILoadDataView {
     }
 
     private fun setViewForTransferData(){
+        this.optionExecute = 0
         enabledButton(false)
         context.toast(context.resources.getString(R.string.wait_task))
-        activity.runOnUiThread({
+        activity.runOnUiThread {
             pbDownload!!.visibility = View.VISIBLE
-        })
+        }
     }
 
     private fun enableView(){
-        activity.runOnUiThread({
+        activity.runOnUiThread {
             pbDownload!!.visibility = View.INVISIBLE
             enabledButton(true)
-        })
+        }
 
     }
 

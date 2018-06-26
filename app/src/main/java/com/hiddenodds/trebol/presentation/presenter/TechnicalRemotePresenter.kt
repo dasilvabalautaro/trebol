@@ -91,6 +91,7 @@ class TechnicalRemotePresenter @Inject constructor(private val getRemoteDataUseC
                     mapperTechnical.email = jsonObject.getString("EMAIL")?: ""
                     mapperTechnical.email = mapperTechnical.email.trim()
                 }
+//                println(mapperTechnical.code + " " + mapperTechnical.password)
                 listMapperTechnical.add(mapperTechnical)
             }
 

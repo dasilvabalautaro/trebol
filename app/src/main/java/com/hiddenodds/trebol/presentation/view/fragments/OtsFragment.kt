@@ -310,7 +310,7 @@ class OtsFragment: Fragment(), ILoadDataView {
     }
 
     private fun actionOnItemSelectedListenerObservable(): Observable<Int> {
-        return Observable.create({
+        return Observable.create {
             e: ObservableEmitter<Int>? ->
             spTech!!.onItemSelectedListener = object:
                     AdapterView.OnItemSelectedListener{
@@ -328,7 +328,7 @@ class OtsFragment: Fragment(), ILoadDataView {
                 }
             }
 
-        })
+        }
     }
 
 

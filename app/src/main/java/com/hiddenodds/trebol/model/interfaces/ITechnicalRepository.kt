@@ -7,7 +7,7 @@ import java.util.*
 
 interface ITechnicalRepository{
     fun save(technical: MapperTechnical): Observable<TechnicalModel>
-    fun saveList(list: ArrayList<MapperTechnical>): Observable<Boolean>
+    fun saveList(listTech: ArrayList<MapperTechnical>): Observable<Boolean>
     fun saveListDependentTechnicians(dependentTechnical:
                                      LinkedHashMap<String,
                                              ArrayList<String>>): Observable<Boolean>

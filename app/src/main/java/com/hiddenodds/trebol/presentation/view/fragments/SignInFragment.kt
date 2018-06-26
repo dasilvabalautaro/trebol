@@ -127,6 +127,10 @@ class SignInFragment: Fragment(), ILoadDataView {
                     typeNotificationRemotePresenter.executeQueryRemote()
                 }
 
+            }else{
+                launch{
+                    technicalRemotePresenter.executeQueryRemote()
+                }
             }
 
         }catch (ie: IllegalStateException){
@@ -141,8 +145,8 @@ class SignInFragment: Fragment(), ILoadDataView {
     }
 
     override fun showError(message: String) {
-        technicalRemotePresenter.destroy()
-        typeNotificationRemotePresenter.destroy()
+        /*technicalRemotePresenter.destroy()
+        typeNotificationRemotePresenter.destroy()*/
         context.toast(message)
     }
 

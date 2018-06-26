@@ -48,7 +48,7 @@ class SaveNotificationPresenter @Inject constructor(private val getDownloadUseCa
     }
 
     private fun buildListMapper(jsonArray: JSONArray){
-        //println("Tamaño Array: " + jsonArray.length().toString())
+//        println("Save Notification: " + jsonArray.toString())
         if (jsonArray.length() != 0){
             (0 until jsonArray.length()).forEach { i ->
 
@@ -157,7 +157,7 @@ class SaveNotificationPresenter @Inject constructor(private val getDownloadUseCa
                     deleteMaintenanceUseCase.codeNotify = mapperNotification.code
                     deleteMaintenanceUseCase.execute(DeleteMaintenanceObserver())
                 }
-
+//                println(mapperNotification.code)
                 listMapperNotification.add(mapperNotification)
 
             }

@@ -57,6 +57,10 @@ class DownloadCustomerUseCase @Inject constructor(private val getRemoteDataUseCa
             val code = this.listTechnicals.last()
             this.listTechnicals.remove(code)
             executeGetRemote(code)
+        }else if (!finishDownload){
+            finishDownload = true
+            observableFinishDownload.onNext(finishDownload)
+            println("Finish download notification: " + finishDownload.toString())
         }
     }
 
@@ -91,6 +95,7 @@ class DownloadCustomerUseCase @Inject constructor(private val getRemoteDataUseCa
 
         override fun onComplete() {
             if (listTechnicals.isEmpty()){
+                println("Finish Download")
                 finishDownload = true
                 observableFinishDownload.onNext(finishDownload)
             }

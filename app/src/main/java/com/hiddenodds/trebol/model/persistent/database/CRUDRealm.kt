@@ -26,7 +26,7 @@ abstract class CRUDRealm: IRepository {
 
         var e: E? = null
         try {
-            realm.executeTransaction({
+            realm.executeTransaction {
                 e = it.createObject(clazz, UUID.randomUUID().toString())
                 if (e is IDataContent){
                     (e as IDataContent).setContent(parcel)
@@ -34,7 +34,7 @@ abstract class CRUDRealm: IRepository {
 
                 listener.onSaveSucceeded()
 
-            })
+            }
         }catch (e: Throwable){
             listener.onSaveFailed(e.message!!)
         }
@@ -48,7 +48,7 @@ abstract class CRUDRealm: IRepository {
         var id: String? = null
         var e: E?
         try {
-            realm.executeTransaction({
+            realm.executeTransaction {
                 e = it.createObject(clazz, UUID.randomUUID().toString())
                 if (e != null && e is Maintenance){
                     id = (e as Maintenance).id
@@ -56,7 +56,7 @@ abstract class CRUDRealm: IRepository {
 
                 listener.onSaveSucceeded()
 
-            })
+            }
         }catch (e: Throwable){
             listener.onSaveFailed(e.message!!)
         }finally {
@@ -71,7 +71,7 @@ abstract class CRUDRealm: IRepository {
         val realm: Realm = Realm.getDefaultInstance()
         var assignedMaterial: AssignedMaterial? = null
         try {
-            realm.executeTransaction({
+            realm.executeTransaction {
                 val material = realm.where(Material::class.java)
                         .equalTo("id", assignedMaterialModel.material!!.id)
                         .findFirst()
@@ -82,7 +82,7 @@ abstract class CRUDRealm: IRepository {
                 assignedMaterial!!.material = material
 
                 listener.onSaveSucceeded()
-            })
+            }
 
 
         }catch (e: Throwable){
@@ -100,7 +100,7 @@ abstract class CRUDRealm: IRepository {
         var id: String? = null
         var assignedMaterial: AssignedMaterial?
         try {
-            realm.executeTransaction({
+            realm.executeTransaction {
                 val material = realm.where(Material::class.java)
                         .equalTo("id", assignedMaterialModel.material!!.id)
                         .findFirst()
@@ -113,7 +113,7 @@ abstract class CRUDRealm: IRepository {
                 realm.insertOrUpdate(assignedMaterial!!)
                 println("Id Assigned: " + assignedMaterial!!.id)
                 listener.onSaveSucceeded()
-            })
+            }
 
 
         }catch (e: Throwable){
@@ -143,12 +143,12 @@ abstract class CRUDRealm: IRepository {
                                                  listener: ITaskCompleteListener): Boolean {
         val realm: Realm = Realm.getDefaultInstance()
         return try {
-            realm.executeTransaction({
+            realm.executeTransaction {
                 it.where(clazz)
                         .equalTo(fieldName, value)
                         .findAll()?.deleteAllFromRealm()
                 listener.onSaveSucceeded()
-            })
+            }
             true
         }catch (e: Throwable){
             listener.onSaveFailed(e.message!!)
@@ -162,17 +162,17 @@ abstract class CRUDRealm: IRepository {
 
         val realm: Realm = Realm.getDefaultInstance()
         return try {
-            realm.executeTransaction({
+            realm.executeTransaction {
                 val list: RealmResults<E> = it.where(clazz).findAll()
                 if (list.isValid){
                     list.deleteAllFromRealm()
                 }
-/*
-                it.where(clazz)
-                        .findAll()?.deleteAllFromRealm()
-*/
+    /*
+                    it.where(clazz)
+                            .findAll()?.deleteAllFromRealm()
+    */
                 listener.onSaveSucceeded()
-            })
+            }
 
             true
         }catch (e: Throwable){
@@ -190,7 +190,7 @@ abstract class CRUDRealm: IRepository {
         var nameFile = ""
         var signature: Signature? = null
         try {
-            realm.executeTransaction({
+            realm.executeTransaction {
                 val e = realm.where(Signature::class.java)
                         .equalTo("name", name).findFirst()
                 if (e != null){
@@ -202,7 +202,7 @@ abstract class CRUDRealm: IRepository {
                     nameFile = signature!!.id
                 }
                 listener.onSaveSucceeded()
-            })
+            }
 
         }catch (e: Throwable){
             listener.onSaveFailed(e.message!!)
@@ -568,6 +568,7 @@ abstract class CRUDRealm: IRepository {
                 val technical = realm.where(Technical::class.java).equalTo(
                         "code", code).findFirst()
                 if (technical != null){
+                    technical.trd.clear()
                     for (i in list.indices){
                         technical.trd.add(list[i])
                     }

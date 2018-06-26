@@ -20,7 +20,7 @@ import io.reactivex.schedulers.Schedulers
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
-
+import kotlin.collections.ArrayList
 
 
 @Singleton
@@ -72,10 +72,11 @@ class TechnicalExecutor @Inject constructor(): CRUDRealm(),
         }
     }
 
-    override fun saveList(list: ArrayList<MapperTechnical>): Observable<Boolean> {
+    override fun saveList(listTech: ArrayList<MapperTechnical>): Observable<Boolean> {
         var flag = true
         return Observable.create{subscriber ->
 
+            val list = getListForSave(listTech)
             for (i in list.indices){
                 val parcel: Parcel = list[i].getContent()
                 parcel.setDataPosition(0)
@@ -87,6 +88,7 @@ class TechnicalExecutor @Inject constructor(): CRUDRealm(),
                     break
                 }
             }
+            deleteTechnical(listTech)
             if (flag){
                 subscriber.onNext(true)
                 subscriber.onComplete()
@@ -108,6 +110,7 @@ class TechnicalExecutor @Inject constructor(): CRUDRealm(),
                     flag = false
                 }
             }
+
             if (flag){
                 subscriber.onNext(true)
                 subscriber.onComplete()
@@ -117,7 +120,61 @@ class TechnicalExecutor @Inject constructor(): CRUDRealm(),
         }
     }
 
+    private fun getAllTechnical(): List<TechnicalModel>?{
+        val clazz: Class<Technical> = Technical::class.java
+        val listTechnical: List<Technical>? = this.getAllData(clazz)
+        return if (listTechnical!!.isNotEmpty()){
+            technicalModelDataMapper
+                    .transform(listTechnical) as List<TechnicalModel>
+        }else{
+            null
+        }
+    }
 
+    private fun getListForSave(listNew: ArrayList<MapperTechnical>):
+            ArrayList<MapperTechnical>{
+        val listMapperTechnical: ArrayList<MapperTechnical> = ArrayList()
+        val listDB = getAllTechnical()
+        if (listDB == null){
+            return listNew
+        }else{
+            for (i in listNew.indices){
+                val tech = listDB.filter { it.code.trim() == listNew[i].code.trim()}
+                if (tech.isEmpty()){
+                    listMapperTechnical.add(listNew[i])
+                }
+            }
+        }
+        return listMapperTechnical
+    }
+
+    private fun getListForDelete(listNew: ArrayList<MapperTechnical>):
+            List<String>{
+        val listDelete: ArrayList<String> = ArrayList()
+        val listDB = getAllTechnical()
+        if (listDB == null){
+            return listDelete
+        }else{
+            for (i in listDB.indices){
+                val tech = listNew.filter { it.code.trim() == listDB[i].code.trim()}
+                if (tech.isEmpty()){
+                    listDelete.add(listDB[i].code)
+                }
+            }
+        }
+        return listDelete
+    }
+
+    private fun deleteTechnical(listNew: ArrayList<MapperTechnical>){
+        val list = getListForDelete(listNew)
+        if (list.isNotEmpty()){
+            val clazz: Class<Technical> = Technical::class.java
+            for (i in list.indices){
+                this.deleteByField(clazz, "code",
+                        list[i], taskListenerExecutor)
+            }
+        }
+    }
 
     override fun getTechnical(code: String): Observable<TechnicalModel> {
         //deleteCacheTechnical()

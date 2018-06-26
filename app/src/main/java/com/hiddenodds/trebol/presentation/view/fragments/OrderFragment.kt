@@ -84,22 +84,6 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
     @BindView(R.id.et_client)
     @JvmField var etClient: EditText? = null
 
-    /*@OnClick(R.id.btnViewPDF)
-    fun viewPdf(){
-        if (ManageFile.isFileExist("$codeNotification.pdf")){
-            val pdfViewFragment = PdfViewFragment
-                    .newInstance(codeNotification, codeTechnical)
-            activity.supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.flContent, pdfViewFragment,
-                            pdfViewFragment.javaClass.simpleName)
-                    .addToBackStack(null)
-                    .commit()
-        }else{
-            context.toast(context.getString(R.string.file_not_found))
-        }
-
-    }*/
 
     @OnClick(R.id.btnPDF)
     fun savePdf() = runBlocking{
@@ -440,9 +424,9 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
             async {
                 updateState("1")
             }
-            activity.runOnUiThread({
+            activity.runOnUiThread {
                 signatureClient!!.signatureBitmap = bitmap
-            })
+            }
         }
     }
 
@@ -473,10 +457,13 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
     }
     override fun onPause() {
         super.onPause()
-        async(CommonPool) {
-            addAssignedMaterialRepository(listMaterialUse, true)
-            addAssignedMaterialRepository(listMaterialOut, false)
+        runBlocking{
+            val job = async(CommonPool) {
+                addAssignedMaterialRepository(listMaterialUse, true)
+                addAssignedMaterialRepository(listMaterialOut, false)
 
+            }
+            job.join()
         }
     }
 
@@ -526,10 +513,10 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         val listNotification = ArrayList(this.technicalModel!!.notifications)
         async(CommonPool) {
             notificationModel = getNotification(codeNotification, listNotification)
-            activity.runOnUiThread({
+            activity.runOnUiThread {
                 setControls(notificationModel)
 
-            })
+            }
             if (notificationModel!!.businessName.isNotEmpty()){
 
                 signaturePresenter.executeGetNameFile(notificationModel!!

@@ -73,6 +73,7 @@ class DownloadNotificationUseCase @Inject constructor(private val getRemoteDataU
             updateDownloadUseCase.code = this.codeTechnical
             updateDownloadUseCase.fieldName = "notification"
             updateDownloadUseCase.execute(UpdateDownloadObserver())
+//            println(" Notification download Tech: " + updateDownloadUseCase.code + " Data: " + updateDownloadUseCase.value)
 
         }else{
             getNotificationsNextTechnical()
@@ -84,6 +85,10 @@ class DownloadNotificationUseCase @Inject constructor(private val getRemoteDataU
             val code = listTechnicals.last()
             listTechnicals.remove(code)
             executeGetRemote(code)
+        }else if (!finishDownload){
+            finishDownload = true
+            observableFinishDownload.onNext(finishDownload)
+            println("Finish download notification: " + finishDownload.toString())
         }
     }
 
@@ -155,6 +160,7 @@ class DownloadNotificationUseCase @Inject constructor(private val getRemoteDataU
         override fun onComplete() {
 
             if (listTechnicals.isEmpty()){
+                println("Finish Download")
                 finishDownload = true
                 observableFinishDownload.onNext(finishDownload)
             }
