@@ -279,9 +279,9 @@ class TabObservationFragment: TabBaseFragment() {
         manageImage.code = codeNotification
         val bitmap = manageImage.getFileOfGallery(activity)
         if (bitmap != null){
-            activity.runOnUiThread({
+            activity.runOnUiThread {
                 signature.signatureBitmap = bitmap
-            })
+            }
             result = true
         }
         return result

@@ -8,6 +8,8 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import android.view.View
+import android.widget.ProgressBar
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.hiddenodds.trebol.App
@@ -35,6 +37,7 @@ class MainActivity : AppCompatActivity() {
         ButterKnife.bind(this)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
         supportActionBar!!.setDisplayHomeAsUpEnabled(false)
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             supportActionBar!!.setBackgroundDrawable(getDrawable(R.drawable.head_back))
         }else{
@@ -54,7 +57,6 @@ class MainActivity : AppCompatActivity() {
     fun displayHome(flag: Boolean){
         supportActionBar!!.setDisplayHomeAsUpEnabled(flag)
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         val id = item!!.itemId

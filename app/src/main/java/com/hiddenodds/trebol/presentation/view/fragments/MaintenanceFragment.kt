@@ -116,10 +116,7 @@ class MaintenanceFragment: TabBaseFragment() {
         if (outState != null){
             codeNotify = outState!!.getString("codeNotify")
             codeTech = outState!!.getString("codeTech")
-            /*maintenanceModel = outState!!
-                    .getSerializable("maintenanceModel") as MaintenanceModel
-            positionUpdate = outState!!.getInt("position")
-            beforePosition = outState!!.getInt("positionBefore")*/
+
         }
 
         tlOptions!!.getTabAt(0)!!.text = context.getString(R.string.lbl_tab_verify)
@@ -164,9 +161,7 @@ class MaintenanceFragment: TabBaseFragment() {
         outState = Bundle()
         outState!!.putString("codeNotify", codeNotification)
         outState!!.putString("codeTech", codeTechnical)
-        /*outState!!.putSerializable("maintenanceModel", maintenanceModel)
-        outState!!.putInt("position", positionUpdate)
-        outState!!.putInt("positionBefore", beforePosition)*/
+
     }
 
     override fun onDestroy() {

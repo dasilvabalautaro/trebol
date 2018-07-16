@@ -73,10 +73,10 @@ class PdfViewFragment: Fragment(){
         super.onResume()
         async {
             uri = ManageFile.getFile("$codeNotification.pdf")
-            activity.runOnUiThread({
+            activity.runOnUiThread {
                 pdfView!!.fromUri(uri).load()
                 emailModel.clip = "$codeNotification.pdf"
-            })
+            }
         }
 
     }

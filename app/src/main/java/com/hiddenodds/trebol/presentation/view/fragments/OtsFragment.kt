@@ -13,10 +13,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.Toast
+import android.widget.*
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.hiddenodds.trebol.App
@@ -30,6 +27,7 @@ import com.hiddenodds.trebol.presentation.model.NotificationModel
 import com.hiddenodds.trebol.presentation.model.TechnicalModel
 import com.hiddenodds.trebol.presentation.presenter.TechnicalMasterPresenter
 import com.hiddenodds.trebol.presentation.presenter.TechnicalPresenter
+import com.hiddenodds.trebol.presentation.view.activities.MainActivity
 import com.hiddenodds.trebol.tools.ChangeFormat
 import com.hiddenodds.trebol.tools.Constants
 import com.hiddenodds.trebol.tools.PreferenceHelper
@@ -65,6 +63,8 @@ class OtsFragment: Fragment(), ILoadDataView {
     @JvmField var spTech: Spinner? = null
     @BindView(R.id.rv_ots)
     @JvmField var rvOts: RecyclerView? = null
+    @BindView(R.id.pb_load)
+    @JvmField var pbLoad: ProgressBar? = null
 
     val Fragment.app: App
         get() = activity.application as App
@@ -97,12 +97,12 @@ class OtsFragment: Fragment(), ILoadDataView {
         if (outState != null){
             positionSpinner = outState!!.getInt("position")
             this.listTech = outState!!.getStringArrayList("listSpin")
-            //setDataSpinner(false)
-            //spTech!!.setSelection(positionSpinner)
+
         }else{
             this.listTech = ArrayList(Variables.listTechnicals)
             this.listTech.add(Variables.codeTechMaster)
         }
+
         setDataSpinner()
         rvOts!!.addOnScrollListener(object: EndlessRecyclerOnScrollListener(){
             override fun onLoadMore() {
@@ -122,6 +122,7 @@ class OtsFragment: Fragment(), ILoadDataView {
 
     }
 
+
     override fun onStart() {
         super.onStart()
         disposable.add( actionOnItemSelectedListenerObservable()
@@ -131,6 +132,9 @@ class OtsFragment: Fragment(), ILoadDataView {
 
                         positionSpinner = position
                         this.codeTech = spTech!!.getItemAtPosition(position) as String
+                        activity.runOnUiThread {
+                            pbLoad!!.visibility = View.VISIBLE
+                        }
 
                         async {
                             technicalPresenter.executeGetTechnical(codeTech)
@@ -187,6 +191,7 @@ class OtsFragment: Fragment(), ILoadDataView {
     }
 
     override fun showError(message: String) {
+        pbLoad!!.visibility = View.INVISIBLE
         context.toast(message)
     }
 
@@ -195,6 +200,7 @@ class OtsFragment: Fragment(), ILoadDataView {
             this.technicalModel = (obj as TechnicalModel)
             //val code = (obj as TechnicalModel).code
             setListRecycler()
+
             /*if (code == this.techMasterCode && spTech!!.adapter == null){
                 this.listTech = ArrayList((obj as TechnicalModel).trd)
                 setDataSpinner()
@@ -239,6 +245,7 @@ class OtsFragment: Fragment(), ILoadDataView {
                         }
                         rvOts!!.refreshDrawableState()
                         rvOts!!.scrollToPosition(firstVisibleItem)
+                        pbLoad!!.visibility = View.INVISIBLE
                     }
 
                 }catch (ne: NullPointerException){
@@ -249,6 +256,10 @@ class OtsFragment: Fragment(), ILoadDataView {
             }else if ((listNotificationView.size == 0) &&
                     (listNotification.size == 0)){
                 adapter!!.setObjectList(listNotificationView)
+                activity.runOnUiThread {
+                    pbLoad!!.visibility = View.INVISIBLE
+                }
+
             }
 
 
@@ -259,22 +270,11 @@ class OtsFragment: Fragment(), ILoadDataView {
     private fun setListRecycler(){
 
         listNotification = ArrayList(technicalModel!!.notifications)
-        //listNotificationView.removeAll(listNotificationView)
         listNotificationView = ArrayList()
 
         addDataToList()
 
     }
-
-    private fun verifyInstance(){
-        if (positionSpinner == -1){
-            //setListRecycler()
-            spTech!!.setSelection(spTech!!.adapter.count - 1)
-        }else{
-            spTech!!.setSelection(positionSpinner)
-        }
-    }
-
 
     override fun <T> executeTask(objList: List<T>) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -295,9 +295,6 @@ class OtsFragment: Fragment(), ILoadDataView {
     }
 
     private fun setDataSpinner(){
-        /*if (master){
-            this.listTech.add(this.techMasterCode!!)
-        }*/
 
         val spinnerAdapter: ArrayAdapter<String> = ArrayAdapter(context,
                 android.R.layout.simple_list_item_1, this.listTech)
