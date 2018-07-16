@@ -14,6 +14,7 @@ import android.widget.*
 import butterknife.*
 import com.github.gcacace.signaturepad.views.SignaturePad
 import com.hiddenodds.trebol.R
+import com.hiddenodds.trebol.model.persistent.caching.CachingLruRepository
 import com.hiddenodds.trebol.model.persistent.file.ManageFile
 import com.hiddenodds.trebol.presentation.components.ItemProductSelectAdapter
 import com.hiddenodds.trebol.presentation.interfaces.ILoadDataView
@@ -364,11 +365,6 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         callProductsFragment()
     }
 
-   /* @OnClick(R.id.bt_email)
-    fun callEmail(){
-        executeEmail(buildEmailModel())
-    }*/
-
     companion object Factory {
         private const val inputNotification = "notify_"
         private const val inputTechnical = "technical_"
@@ -436,8 +432,13 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
             val listSave = list.filter { it.id.trim().isEmpty() } as ArrayList
             if (listSave.isNotEmpty()){
 
-                val code = Variables.changeTechnical.first { it == codeTechnical }
-                if (code.isEmpty()){
+                if (Variables.changeTechnical.isNotEmpty()){
+                    val code: String? = Variables.changeTechnical.first { it == codeTechnical }
+                    if (code.isNullOrEmpty()){
+                        Variables.changeTechnical.add(codeTechnical)
+                    }
+
+                }else{
                     Variables.changeTechnical.add(codeTechnical)
                 }
 
@@ -447,6 +448,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
                 }
             }
         }
+
     }
 
     override fun onResume() {
@@ -457,14 +459,13 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
     }
     override fun onPause() {
         super.onPause()
-        runBlocking{
-            val job = async(CommonPool) {
-                addAssignedMaterialRepository(listMaterialUse, true)
-                addAssignedMaterialRepository(listMaterialOut, false)
 
-            }
-            job.join()
+        async(CommonPool) {
+            addAssignedMaterialRepository(listMaterialUse, true)
+            addAssignedMaterialRepository(listMaterialOut, false)
+
         }
+
     }
 
     override fun showMessage(message: String) {

@@ -1,7 +1,6 @@
 package com.hiddenodds.trebol.presentation.view.activities
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
@@ -9,7 +8,6 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
-import android.widget.Toast
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.hiddenodds.trebol.App
@@ -22,7 +20,7 @@ import com.hiddenodds.trebol.tools.Constants
 import com.hiddenodds.trebol.tools.PreferenceHelper
 import com.hiddenodds.trebol.tools.PreferenceHelper.set
 import com.hiddenodds.trebol.tools.Variables
-import io.realm.Realm
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -81,9 +79,8 @@ class MainActivity : AppCompatActivity() {
         prefs[Constants.TECHNICAL_KEY] = ""
         prefs[Constants.TECHNICAL_PASSWORD] = ""
         CachingLruRepository.instance.getLru().evictAll()
-        Realm.getDefaultInstance().close()
         finish()
-        android.os.Process.killProcess(android.os.Process.myPid())
+        //android.os.Process.killProcess(android.os.Process.myPid())
     }
 
     @SuppressLint("PrivateResource")
@@ -96,8 +93,9 @@ class MainActivity : AppCompatActivity() {
                 .commit()
     }
 
-    private fun Activity.toast(message: CharSequence) =
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-
+    override fun onDestroy() {
+        super.onDestroy()
+        (App.appComponent.context() as App).onTerminate()
+    }
 }
 

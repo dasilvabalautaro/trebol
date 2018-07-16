@@ -8,12 +8,13 @@ import com.hiddenodds.trebol.model.data.Notification
 import com.hiddenodds.trebol.model.interfaces.INotificationRepository
 import com.hiddenodds.trebol.model.persistent.caching.CachingLruRepository
 import com.hiddenodds.trebol.model.persistent.database.CRUDRealm
+import com.hiddenodds.trebol.presentation.interfaces.IModel
 import com.hiddenodds.trebol.presentation.mapper.NotificationModelDataMapper
+import com.hiddenodds.trebol.presentation.model.MaterialModel
 import com.hiddenodds.trebol.presentation.model.NotificationModel
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import io.realm.RealmResults
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -56,7 +57,7 @@ class NotificationExecutor @Inject constructor(): CRUDRealm(),
             val newNotification = this.save(clazz, parcel, taskListenerExecutor)
             if (newNotification != null){
                 val notificationModel = this.notificationModelDataMapper
-                        .transform(newNotification)
+                        .transform(newNotification) as NotificationModel
 
                 subscriber.onNext(notificationModel)
                 subscriber.onComplete()
@@ -153,16 +154,17 @@ class NotificationExecutor @Inject constructor(): CRUDRealm(),
     override fun getFinishedNotification(): Observable<List<NotificationModel>> {
         return Observable.create { subscriber ->
             val clazz: Class<Notification> = Notification::class.java
-            val listNotification: RealmResults<Notification>? = this.getDataByField(clazz,
-                    "state", "1")
+            val listNotification: List<IModel>? = this.getDataByField(clazz,
+                    "state", "1", this
+                    .notificationModelDataMapper, taskListenerExecutor)
             if (listNotification != null){
-                val notificationModelCollection: Collection<NotificationModel> = this
-                        .notificationModelDataMapper
-                        .transform(listNotification)
-                subscriber.onNext(notificationModelCollection as List<NotificationModel>)
+                val notificationModelCollection = listNotification
+                        .filterIsInstance<NotificationModel>()
+
+                subscriber.onNext(notificationModelCollection)
                 subscriber.onComplete()
             }else{
-                subscriber.onError(Throwable("List empty."))
+                subscriber.onError(Throwable(this.msgError))
             }
         }
     }

@@ -7,6 +7,7 @@ import com.hiddenodds.trebol.domain.data.MapperDownload
 import com.hiddenodds.trebol.model.data.Download
 import com.hiddenodds.trebol.model.interfaces.IDownloadRepository
 import com.hiddenodds.trebol.model.persistent.database.CRUDRealm
+import com.hiddenodds.trebol.presentation.interfaces.IModel
 import com.hiddenodds.trebol.presentation.mapper.DownloadModelDataMapper
 import com.hiddenodds.trebol.presentation.model.DownloadModel
 import io.reactivex.Observable
@@ -106,15 +107,16 @@ class DownloadExecutor @Inject constructor(): CRUDRealm(),
     override fun getDownload(code: String): Observable<DownloadModel> {
         return Observable.create { subscriber ->
             val clazz: Class<Download> = Download::class.java
-            val newDownload: List<Download>? = this.getDataByField(clazz,
-                    "code", code)
+            val newDownload: List<IModel>? = this.getDataByField(clazz,
+                    "code", code, this.downloadModelDataMapper,
+                    taskListenerExecutor)
             if (newDownload!!.isNotEmpty()){
-                val downloadModel = this.downloadModelDataMapper
-                        .transform(newDownload[0])
+                val downloadModel = newDownload[0] as DownloadModel
+
                 subscriber.onNext(downloadModel)
                 subscriber.onComplete()
             }else{
-                subscriber.onError(Throwable("Download not exist."))
+                subscriber.onError(Throwable(this.msgError))
             }
         }
     }

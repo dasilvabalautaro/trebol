@@ -9,6 +9,9 @@ import com.hiddenodds.trebol.model.interfaces.IPersistent
 import com.hiddenodds.trebol.model.persistent.network.ServiceRemote
 import com.hiddenodds.trebol.tools.ConnectionNetwork
 import com.hiddenodds.trebol.tools.LocaleUtils
+import io.realm.CompactOnLaunchCallback
+import io.realm.Realm
+import io.realm.RealmConfiguration
 import java.util.*
 import javax.inject.Inject
 
@@ -25,9 +28,7 @@ class App: Application() {
 
     companion object{
         lateinit var appComponent: AppComponent
-
     }
-
 
     private val component: AppComponent by lazy {
         DaggerAppComponent
@@ -46,6 +47,25 @@ class App: Application() {
 
     }
 
+    override fun onTerminate() {
+        super.onTerminate()
+
+        Realm.getDefaultInstance().close()
+        val config: RealmConfiguration = Realm.getDefaultConfiguration()!!
+        println(config.path + " " + Realm.getGlobalInstanceCount(config).toString())
+
+        /*Realm.getGlobalInstanceCount(config)
+        for(r:Realm in Realm.getGlobalInstanceCount(config).){
+
+        }
+        if(Realm.compactRealm(config)){
+            println("Compresion realizada")
+        }else{
+
+            println(config.path + " " + Realm.getGlobalInstanceCount(config).toString())
+        }*/
+    }
+
     override fun onConfigurationChanged(newConfig: Configuration?) {
         super.onConfigurationChanged(newConfig)
         localeUtils.updateConfiguration(this, newConfig!!)
@@ -55,6 +75,5 @@ class App: Application() {
         appComponent = component
         return appComponent
     }
-
 
 }

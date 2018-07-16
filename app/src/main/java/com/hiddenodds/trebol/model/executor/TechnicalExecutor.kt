@@ -8,6 +8,7 @@ import com.hiddenodds.trebol.model.data.Technical
 import com.hiddenodds.trebol.model.interfaces.ITechnicalRepository
 import com.hiddenodds.trebol.model.persistent.caching.CachingLruRepository
 import com.hiddenodds.trebol.model.persistent.database.CRUDRealm
+import com.hiddenodds.trebol.presentation.interfaces.IModel
 import com.hiddenodds.trebol.presentation.mapper.TechnicalModelDataMapper
 import com.hiddenodds.trebol.presentation.model.TechnicalModel
 import com.hiddenodds.trebol.tools.Constants
@@ -63,7 +64,7 @@ class TechnicalExecutor @Inject constructor(): CRUDRealm(),
                 val technicalModel = this.technicalModelDataMapper
                         .transform(newTechnical)
 
-                subscriber.onNext(technicalModel)
+                subscriber.onNext(technicalModel as TechnicalModel)
                 subscriber.onComplete()
             }else{
                 subscriber.onError(Throwable(this.msgError))
@@ -122,10 +123,11 @@ class TechnicalExecutor @Inject constructor(): CRUDRealm(),
 
     private fun getAllTechnical(): List<TechnicalModel>?{
         val clazz: Class<Technical> = Technical::class.java
-        val listTechnical: List<Technical>? = this.getAllData(clazz)
+        val listTechnical: List<IModel>? = this.getAllData(clazz,
+                technicalModelDataMapper, taskListenerExecutor)
         return if (listTechnical!!.isNotEmpty()){
-            technicalModelDataMapper
-                    .transform(listTechnical) as List<TechnicalModel>
+            listTechnical.filterIsInstance<TechnicalModel>()
+
         }else{
             null
         }
@@ -186,17 +188,18 @@ class TechnicalExecutor @Inject constructor(): CRUDRealm(),
                 subscriber.onComplete()
             }else{
                 val clazz: Class<Technical> = Technical::class.java
-                val newTechnical: List<Technical>? = this.getDataByField(clazz,
-                        "code", code)
+                val newTechnical: List<IModel>? = this.getDataByField(clazz,
+                        "code", code, this.technicalModelDataMapper,
+                        taskListenerExecutor)
                 if (newTechnical!!.isNotEmpty()){
-                    technicalModel = this.technicalModelDataMapper
-                            .transform(newTechnical[0])
+                    technicalModel = newTechnical[0] as TechnicalModel
+
                     CachingLruRepository.instance.getLru()
                             .put(code, technicalModel)
                     subscriber.onNext(technicalModel)
                     subscriber.onComplete()
                 }else{
-                    subscriber.onError(Throwable("Technical not exist."))
+                    subscriber.onError(Throwable(this.msgError))
                 }
             }
 
@@ -206,7 +209,7 @@ class TechnicalExecutor @Inject constructor(): CRUDRealm(),
 
     override fun getMasterTechnical(code: String,
                                     password: String): Observable<TechnicalModel>{
-        //deleteCacheTechnical()
+
         return Observable.create { subscriber ->
             var technicalModel: TechnicalModel?
             technicalModel = getTechMasterOfCache()
@@ -214,11 +217,10 @@ class TechnicalExecutor @Inject constructor(): CRUDRealm(),
                 subscriber.onNext(technicalModel)
                 subscriber.onComplete()
             }else{
-                val newTechnical: List<Technical>? = this.getTechnicalMaster(code,
-                        password)
-                if (newTechnical!!.isNotEmpty()){
-                    technicalModel = this.technicalModelDataMapper
-                            .transform(newTechnical[0])
+                val newTechnical: TechnicalModel? = this.getTechnicalMaster(code,
+                        password, this.technicalModelDataMapper)
+                if (newTechnical != null){
+                    technicalModel = newTechnical
                     CachingLruRepository.instance.getLru()
                             .put(technicalModel.code, technicalModel)
                     val prefs = PreferenceHelper.customPrefs(context,
@@ -241,8 +243,7 @@ class TechnicalExecutor @Inject constructor(): CRUDRealm(),
         return Observable.create{subscriber ->
             if (this.deleteNotificationsOfTechnical(code,
                             taskListenerExecutor)){
-                /*val l = this.getDataByField(Notification::class.java,
-                        "idTech", code)*/
+
                 CachingLruRepository
                         .instance
                         .getLru()

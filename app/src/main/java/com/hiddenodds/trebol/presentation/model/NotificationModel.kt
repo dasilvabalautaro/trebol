@@ -1,6 +1,8 @@
 package com.hiddenodds.trebol.presentation.model
 
-class NotificationModel {
+import com.hiddenodds.trebol.presentation.interfaces.IModel
+
+class NotificationModel: IModel {
     var id: String = ""
     var code: String = ""
     var machine: String = ""

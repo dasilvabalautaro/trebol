@@ -1,20 +1,19 @@
 package com.hiddenodds.trebol.model.persistent.database
 
 import android.os.Parcel
+import com.hiddenodds.trebol.domain.data.MapperMaterial
 import com.hiddenodds.trebol.model.data.*
 import com.hiddenodds.trebol.model.interfaces.IDataContent
 import com.hiddenodds.trebol.model.interfaces.IRepository
 import com.hiddenodds.trebol.model.interfaces.ITaskCompleteListener
+import com.hiddenodds.trebol.presentation.interfaces.IModel
+import com.hiddenodds.trebol.presentation.interfaces.IModelDataMapper
 import com.hiddenodds.trebol.presentation.model.AssignedMaterialModel
-import io.realm.Realm
-import io.realm.RealmList
-import io.realm.RealmObject
-import io.realm.RealmResults
+import com.hiddenodds.trebol.presentation.model.MaterialModel
+import com.hiddenodds.trebol.presentation.model.TechnicalModel
+import io.realm.*
 import java.util.*
-
-
-
-
+import kotlin.collections.ArrayList
 
 
 abstract class CRUDRealm: IRepository {
@@ -31,15 +30,40 @@ abstract class CRUDRealm: IRepository {
                 if (e is IDataContent){
                     (e as IDataContent).setContent(parcel)
                 }
-
+                realm.insertOrUpdate(e!!)
                 listener.onSaveSucceeded()
 
             }
         }catch (e: Throwable){
             listener.onSaveFailed(e.message!!)
+        }finally {
+            realm.close()
         }
         return e
 
+    }
+
+    fun saveMaterial(list: ArrayList<MapperMaterial>){
+        Thread {
+            val realm: Realm = Realm.getDefaultInstance()
+            realm.use { realm ->
+                for (i in list.indices){
+                    val parcel: Parcel = list[i].getContent()
+                    parcel.setDataPosition(0)
+                    realm.executeTransaction {
+                        val e = it.createObject(Material::class.java,
+                                UUID.randomUUID().toString())
+                        if (e is IDataContent){
+                            (e as IDataContent).setContent(parcel)
+                        }
+                        realm.insertOrUpdate(e)
+
+                    }
+                }
+            }
+
+            println("running from lambda: ${Thread.currentThread()}")
+        }.start()
     }
 
     override fun <E : RealmObject> save(clazz: Class<E>,
@@ -53,7 +77,7 @@ abstract class CRUDRealm: IRepository {
                 if (e != null && e is Maintenance){
                     id = (e as Maintenance).id
                 }
-
+                realm.insertOrUpdate(e!!)
                 listener.onSaveSucceeded()
 
             }
@@ -80,7 +104,7 @@ abstract class CRUDRealm: IRepository {
                         UUID.randomUUID().toString())
                 assignedMaterial!!.quantity = assignedMaterialModel.quantity
                 assignedMaterial!!.material = material
-
+                realm.insertOrUpdate(assignedMaterial!!)
                 listener.onSaveSucceeded()
             }
 
@@ -88,7 +112,7 @@ abstract class CRUDRealm: IRepository {
         }catch (e: Throwable){
             listener.onSaveFailed(e.message!!)
         }finally {
-
+            realm.close()
         }
         return assignedMaterial
     }
@@ -124,17 +148,57 @@ abstract class CRUDRealm: IRepository {
         return id
     }
 
-    override fun <E : RealmObject> getAllData(clazz: Class<E>): RealmResults<E>? {
+    override fun <E : RealmObject> getAllData(clazz: Class<E>,
+                                              modelDataMapper: IModelDataMapper,
+                                              listener: ITaskCompleteListener):
+            List<IModel>? {
         val realm: Realm = Realm.getDefaultInstance()
-        return realm.where(clazz).findAll()
+        var list: List<IModel>? = null
+
+        try {
+            realm.executeTransaction{
+                val l = realm.where(clazz).findAll()
+                list =  modelDataMapper.transform(l.toList()) as List<IModel>
+
+                listener.onSaveSucceeded()
+            }
+        }catch (e: Throwable){
+            listener.onSaveFailed(e.message!!)
+        }
+        finally {
+            realm.close()
+        }
+
+        return list
+
     }
 
     override fun <E : RealmObject> getDataByField(clazz: Class<E>,
                                                   fieldName: String,
-                                                  value: String): RealmResults<E>? {
+                                                  value: String,
+                                                  modelDataMapper:
+                                                  IModelDataMapper,
+                                                  listener: ITaskCompleteListener): List<IModel>? {
         val realm: Realm = Realm.getDefaultInstance()
+        var list: List<IModel>? = null
+        try {
+            realm.executeTransaction{
+                val l = realm.where(clazz)
+                        .equalTo(fieldName, value).findAll()
+                list =  modelDataMapper.transform(l.toList()) as List<IModel>
 
-        return realm.where(clazz).equalTo(fieldName, value).findAll()
+                listener.onSaveSucceeded()
+            }
+        }catch (e: Throwable){
+            listener.onSaveFailed(e.message!!)
+        }
+        finally {
+            realm.close()
+        }
+
+        return list
+
+
     }
 
     override fun <E : RealmObject> deleteByField(clazz: Class<E>,
@@ -167,10 +231,6 @@ abstract class CRUDRealm: IRepository {
                 if (list.isValid){
                     list.deleteAllFromRealm()
                 }
-    /*
-                    it.where(clazz)
-                            .findAll()?.deleteAllFromRealm()
-    */
                 listener.onSaveSucceeded()
             }
 
@@ -180,6 +240,8 @@ abstract class CRUDRealm: IRepository {
             false
         }finally {
             realm.close()
+
+
         }
 
     }
@@ -552,12 +614,31 @@ abstract class CRUDRealm: IRepository {
 
     }
 
-    fun getTechnicalMaster(code: String, password: String): RealmResults<Technical>?{
+    fun getTechnicalMaster(code: String,
+                           password: String,
+                           modelDataMapper: IModelDataMapper):
+            TechnicalModel?{
         val realm: Realm = Realm.getDefaultInstance()
-        return realm.where(Technical::class.java)
-                .equalTo("code", code)
-                .equalTo("password", password)
-                .findAll()
+        var tech: TechnicalModel? = null
+        try {
+            realm.executeTransaction{
+                val t = realm.where(Technical::class.java)
+                        .equalTo("code", code)
+                        .equalTo("password", password)
+                        .findFirst()
+                tech =  modelDataMapper.transform(t) as TechnicalModel
+
+            }
+        }catch (e: Throwable){
+            println(e.message!!)
+
+        }
+        finally {
+            realm.close()
+        }
+
+        return tech
+        
     }
 
     fun saveListTRD(code:String, list: ArrayList<String>,

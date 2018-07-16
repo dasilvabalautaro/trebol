@@ -129,6 +129,7 @@ class MaterialRemotePresenter @Inject constructor(private val getRemoteDataUseCa
     inner class SaveMaterialObserver: DisposableObserver<Boolean>(){
         override fun onNext(t: Boolean) {
             println(context.resources.getString(R.string.material_save))
+
             //showMessage(context.resources.getString(R.string.material_save))
 
         }

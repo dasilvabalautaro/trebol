@@ -121,7 +121,7 @@ abstract class NotificationFragment: Fragment() {
                 .beginTransaction()
                 .replace(R.id.flContent, emailFragment,
                         emailFragment.javaClass.simpleName)
-                .addToBackStack(null)
+                    .addToBackStack(null)
                 .commit()
     }
 

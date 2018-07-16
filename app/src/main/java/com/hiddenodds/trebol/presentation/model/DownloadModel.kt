@@ -1,6 +1,8 @@
 package com.hiddenodds.trebol.presentation.model
 
-class DownloadModel {
+import com.hiddenodds.trebol.presentation.interfaces.IModel
+
+class DownloadModel: IModel {
     var id: String = ""
     var code: String = ""
     var notification: String = ""

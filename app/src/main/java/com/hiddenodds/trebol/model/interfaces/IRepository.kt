@@ -1,6 +1,8 @@
 package com.hiddenodds.trebol.model.interfaces
 
 import android.os.Parcel
+import com.hiddenodds.trebol.presentation.interfaces.IModel
+import com.hiddenodds.trebol.presentation.interfaces.IModelDataMapper
 import io.realm.RealmObject
 import io.realm.RealmResults
 
@@ -11,9 +13,13 @@ interface IRepository {
 
     fun <E : RealmObject> getDataByField(clazz: Class<E>,
                                          fieldName: String,
-                                         value: String): RealmResults<E>?
+                                         value: String,
+                                         modelDataMapper: IModelDataMapper,
+                                         listener: ITaskCompleteListener): List<IModel>?
 
-    fun <E : RealmObject> getAllData(clazz: Class<E>): RealmResults<E>?
+    fun <E : RealmObject> getAllData(clazz: Class<E>,
+                                     modelDataMapper: IModelDataMapper,
+                                     listener: ITaskCompleteListener): List<IModel>?
     fun <E : RealmObject> deleteByField(clazz: Class<E>, fieldName: String,
                                         value: String,
                                         listener: ITaskCompleteListener): Boolean

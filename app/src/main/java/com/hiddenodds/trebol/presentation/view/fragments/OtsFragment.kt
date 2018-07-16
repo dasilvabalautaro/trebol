@@ -34,6 +34,7 @@ import com.hiddenodds.trebol.tools.ChangeFormat
 import com.hiddenodds.trebol.tools.Constants
 import com.hiddenodds.trebol.tools.PreferenceHelper
 import com.hiddenodds.trebol.tools.PreferenceHelper.get
+import com.hiddenodds.trebol.tools.Variables
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -58,6 +59,7 @@ class OtsFragment: Fragment(), ILoadDataView {
     var outState: Bundle? = null
     private var listNotification: ArrayList<NotificationModel> = ArrayList()
     private var listNotificationView: ArrayList<NotificationModel> = ArrayList()
+    private var listTech: ArrayList<String> = ArrayList()
 
     @BindView(R.id.sp_tech)
     @JvmField var spTech: Spinner? = null
@@ -70,8 +72,8 @@ class OtsFragment: Fragment(), ILoadDataView {
     private val component by lazy { app.
             getAppComponent().plus(PresenterModule())}
 
-    @Inject
-    lateinit var technicalMasterPresenter: TechnicalMasterPresenter
+    /*@Inject
+    lateinit var technicalMasterPresenter: TechnicalMasterPresenter*/
     @Inject
     lateinit var technicalPresenter: TechnicalPresenter
 
@@ -94,8 +96,14 @@ class OtsFragment: Fragment(), ILoadDataView {
         super.onViewCreated(view, savedInstanceState)
         if (outState != null){
             positionSpinner = outState!!.getInt("position")
+            this.listTech = outState!!.getStringArrayList("listSpin")
+            //setDataSpinner(false)
+            //spTech!!.setSelection(positionSpinner)
+        }else{
+            this.listTech = ArrayList(Variables.listTechnicals)
+            this.listTech.add(Variables.codeTechMaster)
         }
-
+        setDataSpinner()
         rvOts!!.addOnScrollListener(object: EndlessRecyclerOnScrollListener(){
             override fun onLoadMore() {
                 addDataToList()
@@ -107,11 +115,11 @@ class OtsFragment: Fragment(), ILoadDataView {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        technicalMasterPresenter.view = this
+        //technicalMasterPresenter.view = this
         technicalPresenter.view = this
         setupRecyclerView()
-        getTechnicalMaster()
-//        setupSwipeRefresh()
+
+
     }
 
     override fun onStart() {
@@ -120,6 +128,7 @@ class OtsFragment: Fragment(), ILoadDataView {
                 .observeOn(AndroidSchedulers.mainThread())
                 .map { position ->
                     run{
+
                         positionSpinner = position
                         this.codeTech = spTech!!.getItemAtPosition(position) as String
 
@@ -136,6 +145,7 @@ class OtsFragment: Fragment(), ILoadDataView {
     override fun onResume() {
         super.onResume()
         async {
+
             removeFragment()
         }
     }
@@ -143,8 +153,10 @@ class OtsFragment: Fragment(), ILoadDataView {
     override fun onPause() {
         super.onPause()
         ChangeFormat.deleteCacheTechnical(this.codeTech)
+        Thread.sleep(1000)
         outState = Bundle()
         outState!!.putInt("position", positionSpinner)
+        outState!!.putStringArrayList("listSpin", this.listTech)
     }
 
     override fun onDestroy() {
@@ -181,14 +193,15 @@ class OtsFragment: Fragment(), ILoadDataView {
     override fun <T> executeTask(obj: T) {
         if (obj != null){
             this.technicalModel = (obj as TechnicalModel)
-            val code = (obj as TechnicalModel).code
-            if (code == this.techMasterCode && spTech!!.adapter == null){
-                val listTech = ArrayList((obj as TechnicalModel).trd)
-                setDataSpinner(listTech)
-                verifyInstance()
+            //val code = (obj as TechnicalModel).code
+            setListRecycler()
+            /*if (code == this.techMasterCode && spTech!!.adapter == null){
+                this.listTech = ArrayList((obj as TechnicalModel).trd)
+                setDataSpinner()
+                //verifyInstance()
             }else{
                 setListRecycler()
-            }
+            }*/
 
         }
 
@@ -267,15 +280,6 @@ class OtsFragment: Fragment(), ILoadDataView {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-   /* private fun setupSwipeRefresh() = srData!!.setOnRefreshListener(
-            this::refreshData)
-
-    private fun refreshData(){
-        technicalPresenter.executeGetTechnical(this.codeTech)
-        srData!!.isRefreshing = false
-    }*/
-
-
     private fun setupRecyclerView(){
         rvOts!!.setHasFixedSize(true)
         rvOts!!.layoutManager = LinearLayoutManager(activity,
@@ -290,10 +294,13 @@ class OtsFragment: Fragment(), ILoadDataView {
         rvOts!!.adapter = adapter
     }
 
-    private fun setDataSpinner(list: ArrayList<String>){
-        list.add(this.techMasterCode!!)
+    private fun setDataSpinner(){
+        /*if (master){
+            this.listTech.add(this.techMasterCode!!)
+        }*/
+
         val spinnerAdapter: ArrayAdapter<String> = ArrayAdapter(context,
-                android.R.layout.simple_list_item_1, list)
+                android.R.layout.simple_list_item_1, this.listTech)
         spTech!!.adapter = spinnerAdapter
 
     }
@@ -332,7 +339,7 @@ class OtsFragment: Fragment(), ILoadDataView {
     }
 
 
-    private fun getTechnicalMaster(){
+   /* private fun getTechnicalMaster(){
         val prefs = PreferenceHelper.customPrefs(context,
                 Constants.PREFERENCE_TREBOL)
         this.techMasterCode = prefs[Constants.TECHNICAL_KEY, ""]
@@ -345,7 +352,7 @@ class OtsFragment: Fragment(), ILoadDataView {
             context.toast(context.resources
                     .getString(R.string.input_error))
         }
-    }
+    }*/
 
     private fun launchOptions(){
         activity.alert(R.string.lbl_end_instalation) {

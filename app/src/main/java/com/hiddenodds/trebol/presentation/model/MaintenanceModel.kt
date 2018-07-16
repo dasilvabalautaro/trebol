@@ -1,9 +1,10 @@
 package com.hiddenodds.trebol.presentation.model
 
+import com.hiddenodds.trebol.presentation.interfaces.IModel
 import java.io.Serializable
 
 
-class MaintenanceModel: Serializable {
+class MaintenanceModel: Serializable , IModel{
     var id: String = ""
     var codeNotify = ""
     var verification1 = "V"

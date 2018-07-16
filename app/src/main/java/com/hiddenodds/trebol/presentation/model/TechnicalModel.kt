@@ -1,6 +1,8 @@
 package com.hiddenodds.trebol.presentation.model
 
-class TechnicalModel{
+import com.hiddenodds.trebol.presentation.interfaces.IModel
+
+class TechnicalModel: IModel {
     var id: String = ""
     var code: String = ""
     var name: String = ""

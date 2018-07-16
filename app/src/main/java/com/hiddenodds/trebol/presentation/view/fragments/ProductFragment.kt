@@ -125,11 +125,11 @@ class ProductFragment: NotificationFragment(), ILoadDataView {
                         if (queryList.isNotEmpty()){
                             adapter!!.setObjectList(queryList)
                             adapter!!.notifyDataSetChanged()
-                            activity.runOnUiThread({
+                            activity.runOnUiThread {
                                 rvProducts!!.refreshDrawableState()
                                 rvProducts!!.scrollToPosition(0)
 
-                            })
+                            }
                         }
                     }
                     true
@@ -186,9 +186,9 @@ class ProductFragment: NotificationFragment(), ILoadDataView {
             async {
                 listMaterial = ArrayList(objList.filterIsInstance<MaterialModel>() as ArrayList)
                 adapter!!.setObjectList(listMaterial!!)
-                activity.runOnUiThread({
+                activity.runOnUiThread {
                     rvProducts!!.scrollToPosition(0)
-                })
+                }
 
             }
 

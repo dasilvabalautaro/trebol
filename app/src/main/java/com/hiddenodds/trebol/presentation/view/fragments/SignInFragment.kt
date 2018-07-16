@@ -27,6 +27,8 @@ import com.hiddenodds.trebol.tools.Constants
 import com.hiddenodds.trebol.tools.PreferenceHelper
 import com.hiddenodds.trebol.tools.PreferenceHelper.get
 import com.hiddenodds.trebol.tools.Variables
+import io.realm.Realm
+import io.realm.RealmConfiguration
 import kotlinx.coroutines.experimental.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -141,6 +143,9 @@ class SignInFragment: Fragment(), ILoadDataView {
     }
 
     override fun showMessage(message: String) {
+        val config: RealmConfiguration = Realm.getDefaultConfiguration()!!
+        println(config.path + " " + Realm.getGlobalInstanceCount(config).toString())
+
         context.toast(message)
     }
 

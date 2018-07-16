@@ -7,12 +7,13 @@ import com.hiddenodds.trebol.domain.data.MapperMaterial
 import com.hiddenodds.trebol.model.data.Material
 import com.hiddenodds.trebol.model.interfaces.IMaterialRepository
 import com.hiddenodds.trebol.model.persistent.database.CRUDRealm
+import com.hiddenodds.trebol.presentation.interfaces.IModel
 import com.hiddenodds.trebol.presentation.mapper.MaterialModelDataMapper
 import com.hiddenodds.trebol.presentation.model.MaterialModel
+import com.hiddenodds.trebol.presentation.model.TypeNotificationModel
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import io.realm.RealmResults
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -56,7 +57,7 @@ class MaterialExecutor @Inject constructor(): CRUDRealm(),
                 val materialModel = this.materialModelDataMapper
                         .transform(newMaterial)
 
-                subscriber.onNext(materialModel)
+                subscriber.onNext(materialModel as MaterialModel)
                 subscriber.onComplete()
             }else{
                 subscriber.onError(Throwable(this.msgError))
@@ -68,9 +69,12 @@ class MaterialExecutor @Inject constructor(): CRUDRealm(),
     override fun saveList(list: ArrayList<MapperMaterial>): Observable<Boolean> {
         var flag = true
         return Observable.create{subscriber ->
-            val clazz: Class<Material> = Material::class.java
+
+            this.saveMaterial(list)
+            flag = true
+            /*val clazz: Class<Material> = Material::class.java
             //this.deleteAll(clazz, taskListenerExecutor)
-            var l = this.getAllData(clazz)
+            val l = this.getAllData(clazz)
             println("List size before: ${l!!.size}")
             for (i in list.indices){
                 val parcel: Parcel = list[i].getContent()
@@ -80,9 +84,9 @@ class MaterialExecutor @Inject constructor(): CRUDRealm(),
                     flag = false
                     break
                 }
-            }
-            l = this.getAllData(clazz)
-            println("List size after: ${l!!.size}")
+            }*/
+            /*l = this.getAllData(clazz)
+            println("List size after: ${l!!.size}")*/
             if (flag){
                 subscriber.onNext(true)
                 subscriber.onComplete()
@@ -95,13 +99,13 @@ class MaterialExecutor @Inject constructor(): CRUDRealm(),
     override fun getList(): Observable<List<MaterialModel>> {
         return Observable.create { subscriber ->
             val clazz: Class<Material> = Material::class.java
-            val listMaterial: RealmResults<Material>? = this.getAllData(clazz)
+            val listMaterial: List<IModel>? = this.getAllData(clazz,
+                    materialModelDataMapper, taskListenerExecutor)
             println("Mostrar lista: ${listMaterial!!.size}")
             if (listMaterial.isNotEmpty()){
-                val materialModelCollection: Collection<MaterialModel> = this
-                        .materialModelDataMapper
-                        .transform(listMaterial)
-                subscriber.onNext(materialModelCollection as List<MaterialModel>)
+                val materialModelCollection = listMaterial
+                        .filterIsInstance<MaterialModel>()
+                subscriber.onNext(materialModelCollection)
                 subscriber.onComplete()
             }else{
                 subscriber.onError(Throwable("List empty."))

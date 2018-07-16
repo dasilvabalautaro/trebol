@@ -8,6 +8,7 @@ import com.hiddenodds.trebol.model.data.TypeNotification
 import com.hiddenodds.trebol.model.interfaces.ITypeNotificationRepository
 import com.hiddenodds.trebol.model.persistent.caching.CachingLruRepository
 import com.hiddenodds.trebol.model.persistent.database.CRUDRealm
+import com.hiddenodds.trebol.presentation.interfaces.IModel
 import com.hiddenodds.trebol.presentation.mapper.TypeNotificationModelDataMapper
 import com.hiddenodds.trebol.presentation.model.TypeNotificationModel
 import com.hiddenodds.trebol.tools.Constants
@@ -59,7 +60,7 @@ class TypeNotificationExecutor @Inject constructor(): CRUDRealm(),
                 val typeNotificationModel = this.typeNotificationModelDataMapper
                         .transform(newTypeNotification)
 
-                subscriber.onNext(typeNotificationModel)
+                subscriber.onNext(typeNotificationModel as TypeNotificationModel)
                 subscriber.onComplete()
             }else{
                 subscriber.onError(Throwable(this.msgError))
@@ -97,7 +98,7 @@ class TypeNotificationExecutor @Inject constructor(): CRUDRealm(),
 
     override fun getList(): Observable<List<TypeNotificationModel>> {
         return Observable.create { subscriber ->
-            var listTypeNotificationModel: List<TypeNotificationModel>?
+            var listTypeNotificationModel: List<TypeNotificationModel>? = null
             val list = getListTypeNotificationOfCache()
             if (list != null && list.isNotEmpty()){
                 listTypeNotificationModel = list.filterIsInstance<TypeNotificationModel>()
@@ -105,14 +106,18 @@ class TypeNotificationExecutor @Inject constructor(): CRUDRealm(),
                 subscriber.onComplete()
             }else{
                 val clazz: Class<TypeNotification> = TypeNotification::class.java
-                val listTypeNotification: List<TypeNotification>? = this.getAllData(clazz)
+                val listTypeNotification: List<IModel>? = this.getAllData(clazz,
+                        typeNotificationModelDataMapper, taskListenerExecutor)
                 if (listTypeNotification != null){
-                    val typeNotificationModelCollection: Collection<TypeNotificationModel> = this
+                    /*val typeNotificationModelCollection: Collection<TypeNotificationModel> = this
                             .typeNotificationModelDataMapper
-                            .transform(listTypeNotification)
+                            .transform(listTypeNotification)*/
+                    val typeNotificationModelCollection =
+                            listTypeNotification
+                                    .filterIsInstance<TypeNotificationModel>()
                     CachingLruRepository.instance.getLru()
                             .put(Constants.CACHE_LIST_TYPE_NOTIFICATION,
-                                    typeNotificationModelCollection as List<TypeNotificationModel>)
+                                    typeNotificationModelCollection)
 
                     subscriber.onNext(typeNotificationModelCollection)
                     subscriber.onComplete()

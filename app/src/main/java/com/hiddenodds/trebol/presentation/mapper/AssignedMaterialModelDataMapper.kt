@@ -4,6 +4,7 @@ import android.content.Context
 import com.hiddenodds.trebol.R
 import com.hiddenodds.trebol.model.data.AssignedMaterial
 import com.hiddenodds.trebol.presentation.model.AssignedMaterialModel
+import com.hiddenodds.trebol.presentation.model.MaterialModel
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,7 +20,7 @@ class AssignedMaterialModelDataMapper @Inject
         assignedMaterialModel.id = assignedMaterial.id
         assignedMaterialModel.quantity = assignedMaterial.quantity
         assignedMaterialModel.material = materialModelDataMapper
-                .transform(assignedMaterial.material)
+                .transform(assignedMaterial.material) as MaterialModel
 
         return assignedMaterialModel
     }

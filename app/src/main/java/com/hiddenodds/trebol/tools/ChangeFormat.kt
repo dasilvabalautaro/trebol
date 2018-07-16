@@ -16,6 +16,7 @@ import com.hiddenodds.trebol.tools.PreferenceHelper.get
 import com.hiddenodds.trebol.tools.PreferenceHelper.set
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.NoSuchElementException
 
 object ChangeFormat {
 
@@ -174,18 +175,22 @@ object ChangeFormat {
 
     fun deleteCacheTechnical(codeTech: String){
 
+        try {
+            if (Variables.changeTechnical.isNotEmpty()){
 
-        if (Variables.changeTechnical.isNotEmpty()){
+                val code = Variables.changeTechnical.first { it == codeTech }
+                if (code.isNotEmpty() && code == codeTech){
+                    Variables.changeTechnical.remove(code)
+                    CachingLruRepository
+                            .instance
+                            .getLru()
+                            .remove(codeTech)
+                }
 
-            val code = Variables.changeTechnical.first { it == codeTech }
-            if (code.isNotEmpty() && code == codeTech){
-                Variables.changeTechnical.remove(code)
-                CachingLruRepository
-                        .instance
-                        .getLru()
-                        .remove(codeTech)
             }
 
+        }catch (ee: NoSuchElementException){
+            println(ee.message)
         }
     }
 

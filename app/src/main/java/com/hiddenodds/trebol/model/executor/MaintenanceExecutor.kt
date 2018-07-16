@@ -6,6 +6,7 @@ import com.hiddenodds.trebol.model.data.Maintenance
 import com.hiddenodds.trebol.model.interfaces.IMaintenanceRepository
 import com.hiddenodds.trebol.model.persistent.caching.CachingLruRepository
 import com.hiddenodds.trebol.model.persistent.database.CRUDRealm
+import com.hiddenodds.trebol.presentation.interfaces.IModel
 import com.hiddenodds.trebol.presentation.mapper.MaintenanceModelDataMapper
 import com.hiddenodds.trebol.presentation.model.MaintenanceModel
 import io.reactivex.Observable
@@ -72,12 +73,13 @@ class MaintenanceExecutor @Inject constructor(): CRUDRealm(),
 
             }else{
                 val clazz: Class<Maintenance> = Maintenance::class.java
-                val newMaintenance: List<Maintenance>? = this.getDataByField(clazz,
-                        "codeNotify", codeNotify)
+                val newMaintenance: List<IModel>? = this.getDataByField(clazz,
+                        "codeNotify", codeNotify,
+                        this.maintenanceModelDataMapper, taskListenerExecutor)
 
                 if (newMaintenance!!.isNotEmpty()){
-                    maintenanceModel = this.maintenanceModelDataMapper
-                            .transform(newMaintenance[0])
+                    maintenanceModel = newMaintenance[0] as MaintenanceModel
+
                     CachingLruRepository.instance.getLru()
                             .put(codeNotify, maintenanceModel)
                     subscriber.onNext(maintenanceModel)
