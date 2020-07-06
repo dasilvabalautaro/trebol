@@ -65,7 +65,7 @@ class AssignedMaterialExecutor @Inject constructor(): CRUDRealm(),
             if (!newAssignedMaterial.isNullOrEmpty()){
                 /*val assignedMaterialModel = this.assignedMaterialModelDataMapper
                         .transform(newAssignedMaterial)*/
-                listAssigned.add(newAssignedMaterial!!)
+                listAssigned.add(newAssignedMaterial)
             }
         }
 

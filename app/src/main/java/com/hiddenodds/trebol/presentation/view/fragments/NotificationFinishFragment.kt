@@ -18,9 +18,9 @@ import com.hiddenodds.trebol.presentation.interfaces.ILoadDataView
 import com.hiddenodds.trebol.presentation.model.EmailModel
 import com.hiddenodds.trebol.presentation.model.NotificationModel
 import com.hiddenodds.trebol.presentation.model.TechnicalModel
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -41,14 +41,14 @@ class NotificationFinishFragment: NotificationFragment(), ILoadDataView {
     fun savePdf() = runBlocking{
         pdfEndTask.manageImage = manageImage
         val client = etClient!!.text.toString()
-        val job = async {
+        val job = GlobalScope.async {
             pdfEndTask.inflateView()
-            pdfEndTask.setData(codeNotification, client, nameFileSignature)
+            codeNotification?.let { pdfEndTask.setData(it, client, nameFileSignature) }
             pdfEndTask.saveImage("$codeNotification$PRE_FIX")
         }
         job.join()
 
-        activity.runOnUiThread {
+        activity!!.runOnUiThread {
             viewPdf()
         }
     }
@@ -59,10 +59,10 @@ class NotificationFinishFragment: NotificationFragment(), ILoadDataView {
         if (signatureBitmap != null){
             manageImage.image = signatureBitmap
             manageImage.code = nameFileSignature
-            manageImage.addFileToGallery(activity)
+            manageImage.addFileToGallery(activity!!)
 
         }else{
-            context.toast(context.getString(R.string.image_not_found))
+            context!!.toast(context!!.getString(R.string.image_not_found))
         }
     }
 
@@ -80,13 +80,13 @@ class NotificationFinishFragment: NotificationFragment(), ILoadDataView {
                 emailModel.clip.isNotEmpty() &&
                 signatureClient!!.signatureBitmap != null){
             if (notificationModel!!.state != "1"){
-                async {
+                GlobalScope.async {
                     updateState("1")
                 }
             }
             executeEmail(emailModel)
         }else{
-            context.toast(context.getString(R.string.input_error))
+            context!!.toast(context!!.getString(R.string.input_error))
         }
 
     }
@@ -104,18 +104,19 @@ class NotificationFinishFragment: NotificationFragment(), ILoadDataView {
         }
     }
 
-    private val codeNotification: String by lazy { this.arguments.getString(inputNotification) }
-    private val codeTechnical: String by lazy { this.arguments.getString(inputTechnical) }
+    private val codeNotification: String? by lazy { this.arguments!!
+            .getString(inputNotification) }
+    private val codeTechnical: String? by lazy { this.arguments!!
+            .getString(inputTechnical) }
 
     private var technicalModel: TechnicalModel? = null
     private var notificationModel: NotificationModel? = null
     private val PRE_FIX = "end"
     private var nameFileSignature = ""
 
-    override fun onCreateView(inflater: LayoutInflater?,
-                              container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val root: View = inflater!!.inflate(R.layout.view_end_install,
+        val root: View = inflater.inflate(R.layout.view_end_install,
                 container,false)
         ButterKnife.bind(this, root)
         return root
@@ -127,26 +128,26 @@ class NotificationFinishFragment: NotificationFragment(), ILoadDataView {
         updateFieldNotificationPresenter.view = this
         signaturePresenter.view = this
         btEmail!!.visibility = View.INVISIBLE
-        async {
-            technicalPresenter.executeGetTechnical(codeTechnical)
+        GlobalScope.async {
+            codeTechnical?.let { technicalPresenter.executeGetTechnical(it) }
         }
 
 
     }
 
     override fun showMessage(message: String) {
-        if (message == context.getString(R.string.change_field)){
+        if (message == context!!.getString(R.string.change_field)){
             /*val tech = technicalModel!!.code
             Variables.changeTechnical = tech*/
-            context.toast(context.getString(R.string.change_good))
+            context!!.toast(context!!.getString(R.string.change_good))
 
         }else{
-            context.toast(message)
+            context!!.toast(message)
         }
     }
 
     override fun showError(message: String) {
-        context.toast(message)
+        context!!.toast(message)
     }
 
     override fun <T> executeTask(obj: T) {
@@ -162,13 +163,14 @@ class NotificationFinishFragment: NotificationFragment(), ILoadDataView {
     }
 
     private fun setTechnical(){
-        val listNotification = ArrayList(this.technicalModel!!.notifications)
-        async(CommonPool) {
-            notificationModel = getNotification(codeNotification, listNotification)
-            activity.runOnUiThread({
+        val listNotification = ArrayList(this
+                .technicalModel!!.notifications)
+        GlobalScope.async {
+            notificationModel = codeNotification?.let { getNotification(it, listNotification) }
+            activity!!.runOnUiThread {
                 setControls(notificationModel)
 
-            })
+            }
             if (notificationModel!!.businessName.isNotEmpty()){
 
                 signaturePresenter.executeGetNameFile(notificationModel!!
@@ -183,23 +185,23 @@ class NotificationFinishFragment: NotificationFragment(), ILoadDataView {
             val pdfViewFragment = PdfViewFragment
                     .newInstance(codeNotification + PRE_FIX,
                             codeTechnical, bluidEmailModel())
-            activity.supportFragmentManager
+            activity!!.supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.flContent, pdfViewFragment,
                             pdfViewFragment.javaClass.simpleName)
                     .commit()
         }else{
-            context.toast(context.getString(R.string.file_not_found))
+            context!!.toast(context!!.getString(R.string.file_not_found))
         }
     }
 
     private fun setSignature(codeNotification: String){
         manageImage.code = codeNotification
-        val bitmap = manageImage.getFileOfGallery(activity)
+        val bitmap = manageImage.getFileOfGallery(activity!!)
         if (bitmap != null){
-            activity.runOnUiThread({
+            activity!!.runOnUiThread {
                 signatureClient!!.signatureBitmap = bitmap
-            })
+            }
         }
     }
 

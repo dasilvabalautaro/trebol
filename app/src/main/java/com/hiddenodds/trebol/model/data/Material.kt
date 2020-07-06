@@ -12,8 +12,8 @@ open class Material: RealmObject(), IDataContent {
     var detail: String = ""
 
     override fun setContent(parcel: Parcel) {
-        code = parcel.readString()
-        detail = parcel.readString()
+        code = parcel.readString().toString()
+        detail = parcel.readString().toString()
     }
 
     override fun getContent(): Parcel {

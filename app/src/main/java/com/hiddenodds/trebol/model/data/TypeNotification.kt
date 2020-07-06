@@ -13,8 +13,8 @@ open class TypeNotification: RealmObject(), IDataContent {
     var description: String = ""
 
     override fun setContent(parcel: Parcel) {
-        code = parcel.readString()
-        description = parcel.readString()
+        code = parcel.readString().toString()
+        description = parcel.readString().toString()
     }
 
     override fun getContent(): Parcel {

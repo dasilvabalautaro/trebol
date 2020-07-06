@@ -1,16 +1,14 @@
 package com.hiddenodds.trebol.presentation.components
 
 import android.app.Service
-import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.os.Build
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ScrollView
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.hiddenodds.trebol.App
 import com.hiddenodds.trebol.R
 import com.hiddenodds.trebol.presentation.model.AssignedMaterialModel
@@ -28,7 +26,7 @@ class PdfNotification @Inject constructor() {
     private var view: View? = null
     private val pdfNotificationView = PdfNotificationView(context)
     private var codeNotification = ""
-    private val SUB_FIX = "_n"
+    //private val SUB_FIX = "_n"
     var manageImage: ManageImage? = null
 
     fun inflateView(){
@@ -109,10 +107,8 @@ class PdfNotification @Inject constructor() {
         (view as PdfNotificationView).rvMatUse!!
                 .layoutManager = LinearLayoutManager(context,
                 LinearLayoutManager.VERTICAL, false)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ChangeFormat.addDecorationRecycler((view as PdfNotificationView)
-                    .rvMatUse!!, context)
-        }
+        ChangeFormat.addDecorationRecycler((view as PdfNotificationView)
+                .rvMatUse!!, context)
         adapterMaterialUse = ItemProductSelectAdapter{
             println(it.id)
         }
@@ -124,10 +120,8 @@ class PdfNotification @Inject constructor() {
         (view as PdfNotificationView).rvMatOut!!
                 .layoutManager = LinearLayoutManager(context,
                 LinearLayoutManager.VERTICAL, false)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ChangeFormat.addDecorationRecycler((view as PdfNotificationView)
-                    .rvMatOut!!, context)
-        }
+        ChangeFormat.addDecorationRecycler((view as PdfNotificationView)
+                .rvMatOut!!, context)
         adapterMaterialOut = ItemProductSelectAdapter{
             println(it.id)
         }

@@ -2,7 +2,7 @@ package com.hiddenodds.trebol.presentation.view.fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.widget.Toast
 import com.hiddenodds.trebol.App
 import com.hiddenodds.trebol.R
@@ -28,7 +28,7 @@ abstract class NotificationFragment: Fragment() {
     }
 
     val Fragment.app: App
-        get() = activity.application as App
+        get() = activity!!.application as App
 
     private val component by lazy { app.
             getAppComponent().plus(PresenterModule())}
@@ -60,6 +60,9 @@ abstract class NotificationFragment: Fragment() {
     lateinit var verifyConnectServerPresenter: VerifyConnectServerPresenter
     @Inject
     lateinit var signaturePresenter: SignaturePresenter
+    @Inject
+    lateinit var sendFtpPresenter: SendFtpPresenter
+
 
     var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -74,7 +77,7 @@ abstract class NotificationFragment: Fragment() {
         val message = manageImage.observableMessage.map { m -> m }
         disposable.add(message.observeOn(AndroidSchedulers.mainThread())
                 .subscribe { s ->
-                    context.toast(s)
+                    context!!.toast(s)
                 })
         (activity as MainActivity).displayHome(true)
     }
@@ -83,7 +86,7 @@ abstract class NotificationFragment: Fragment() {
                                 list: java.util.ArrayList<NotificationModel>):
             NotificationModel? {
         if (list.isNotEmpty()){
-            val sortedList = list.sortedWith(compareBy({ it.code }))
+            val sortedList = list.sortedWith(compareBy { it.code })
 
             sortedList.forEach { notify: NotificationModel ->
                 if (notify.code == code){
@@ -98,7 +101,7 @@ abstract class NotificationFragment: Fragment() {
     protected fun removeFragmentProduct(){
         try {
 
-            val manager = activity.supportFragmentManager
+            val manager = activity!!.supportFragmentManager
 
             for (i in 0 until manager.backStackEntryCount){
 
@@ -117,7 +120,7 @@ abstract class NotificationFragment: Fragment() {
 
     fun executeEmail(emailModel: EmailModel){
         val emailFragment = EmailFragment.newInstance(emailModel)
-        activity.supportFragmentManager
+        activity!!.supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.flContent, emailFragment,
                         emailFragment.javaClass.simpleName)

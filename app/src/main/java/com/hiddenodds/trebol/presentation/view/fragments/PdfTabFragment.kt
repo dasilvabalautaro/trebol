@@ -5,7 +5,7 @@ import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.*
 import android.widget.ImageView
 import android.widget.ScrollView
@@ -22,8 +22,8 @@ import com.hiddenodds.trebol.presentation.view.activities.MainActivity
 import com.hiddenodds.trebol.tools.ManageImage
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -58,7 +58,7 @@ class PdfTabFragment: Fragment() {
     @JvmField var tvNameClient: TextView? = null
 
     val Fragment.app: App
-        get() = activity.application as App
+        get() = activity!!.application as App
 
     private val component by lazy { app.
             getAppComponent().plus(PresenterModule())}
@@ -81,11 +81,11 @@ class PdfTabFragment: Fragment() {
         }
     }
 
-    private val pdfGuideModel: PdfGuideModel by lazy { this.arguments
+    private val pdfGuideModel: PdfGuideModel by lazy { this.arguments!!
             .getSerializable(inputPdfGuideModel) as PdfGuideModel
     }
 
-    private val emailModel: EmailModel by lazy { this.arguments
+    private val emailModel: EmailModel by lazy { this.arguments!!
             .getSerializable(inputEmailModel) as EmailModel
     }
 
@@ -96,33 +96,32 @@ class PdfTabFragment: Fragment() {
         setHasOptionsMenu(true)
 
     }
-    override fun onCreateView(inflater: LayoutInflater?,
-                              container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val root: View = inflater!!.inflate(R.layout.view_pdf_tab,
+        val root: View = inflater.inflate(R.layout.view_pdf_tab,
                 container,false)
         ButterKnife.bind(this, root)
-        activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        activity!!.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 
         return root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        (activity as MainActivity).displayHome(true)
+        (activity!! as MainActivity).displayHome(true)
         val message = manageImage.observableMessage.map { m -> m }
         disposable.add(message.observeOn(AndroidSchedulers.mainThread())
                 .subscribe { s ->
-                    context.toast(s)
+                    context!!.toast(s)
                 })
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater!!.inflate(R.menu.options, menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.options, menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        val id = item!!.itemId
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
 
         if (id == R.id.action_email){
             emailModel.clip = pdfGuideModel.id + ".pdf"
@@ -151,12 +150,12 @@ class PdfTabFragment: Fragment() {
 
     override fun onPause() {
         super.onPause()
-        activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
+        activity!!.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
     }
 
     private fun getImageFile(name: String): Bitmap?{
         manageImage.code = name
-        return manageImage.getFileOfGallery(activity)
+        return manageImage.getFileOfGallery(activity!!)
     }
 
 
@@ -172,64 +171,64 @@ class PdfTabFragment: Fragment() {
     }
 
     private fun setImage(){
-        async {
-            var bitmap: Bitmap? = null
-            bitmap = getImage(pdfGuideModel.nameVerification)
+        GlobalScope.async {
+
+            val bitmap = getImage(pdfGuideModel.nameVerification)
             if (bitmap != null){
-                activity.runOnUiThread {
+                activity!!.runOnUiThread {
                     ivVerification!!.setImageBitmap(bitmap)
                 }
 
             }
         }
-        async {
-            var bitmap: Bitmap? = null
-            bitmap = getImage(pdfGuideModel.nameTest)
+        GlobalScope.async {
+
+            val bitmap = getImage(pdfGuideModel.nameTest)
             if (bitmap != null){
-                activity.runOnUiThread {
+                activity!!.runOnUiThread {
                     ivTest!!.setImageBitmap(bitmap)
                 }
 
             }
         }
 
-        async {
-            var bitmap: Bitmap? = null
-            bitmap = getImage(pdfGuideModel.nameMaintenance)
+        GlobalScope.async {
+
+            val bitmap = getImage(pdfGuideModel.nameMaintenance)
             if (bitmap != null){
-                activity.runOnUiThread {
+                activity!!.runOnUiThread {
                     ivMaintenance!!.setImageBitmap(bitmap)
                 }
 
             }
         }
 
-        async {
-            var bitmap: Bitmap? = null
-            bitmap = getImage(pdfGuideModel.nameKnow)
+        GlobalScope.async {
+
+            val bitmap = getImage(pdfGuideModel.nameKnow)
             if (bitmap != null){
-                activity.runOnUiThread {
+                activity!!.runOnUiThread {
                     ivKnow!!.setImageBitmap(bitmap)
                 }
 
             }
         }
-        async {
-            var bitmap: Bitmap? = null
+        GlobalScope.async {
 
-            bitmap = getImageFile(pdfGuideModel.signatureTechnical)
+
+            val bitmap = getImageFile(pdfGuideModel.signatureTechnical)
             if (bitmap != null){
-                activity.runOnUiThread {
+                activity!!.runOnUiThread {
                     ivSignatureTechnical!!.setImageBitmap(bitmap)
                     println("Imagen technical: ${pdfGuideModel.signatureTechnical}")
                 }
 
             }
 
-            var bitmapClient: Bitmap? = null
-            bitmapClient = getImageFile(pdfGuideModel.signatureClient)
+
+            val bitmapClient = getImageFile(pdfGuideModel.signatureClient)
             if (bitmapClient != null){
-                activity.runOnUiThread {
+                activity!!.runOnUiThread {
                     ivSignatureClient!!.setImageBitmap(bitmapClient)
                     println("Imagen Client: ${pdfGuideModel.signatureClient}")
                 }
@@ -244,7 +243,7 @@ class PdfTabFragment: Fragment() {
     private fun executeEmail(emailModel: EmailModel){
 
         val emailFragment = EmailFragment.newInstance(emailModel)
-        activity.supportFragmentManager
+        activity!!.supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.flContent, emailFragment,
                         emailFragment.javaClass.simpleName)
@@ -252,8 +251,8 @@ class PdfTabFragment: Fragment() {
     }
 
     private fun saveViewPdf(){
-        val viewContent = activity.findViewById<View>(R.id.sv_tab_pdf)
-        val viewScroll = activity.findViewById<ScrollView>(R.id.sv_tab_pdf)
+        val viewContent = activity!!.findViewById<View>(R.id.sv_tab_pdf)
+        val viewScroll = activity!!.findViewById<ScrollView>(R.id.sv_tab_pdf)
         val viewBitmap : Bitmap = Bitmap.createBitmap(viewScroll.getChildAt(0)
                 .width,
                 viewScroll.getChildAt(0).height, Bitmap.Config.ARGB_8888
@@ -261,12 +260,12 @@ class PdfTabFragment: Fragment() {
 
         val canvas = Canvas(viewBitmap)
         viewContent.draw(canvas)
-        async(CommonPool) {
+        GlobalScope.async {
             manageImage.image = viewBitmap
             manageImage.code = pdfGuideModel.id
             manageImage.scale = true
             manageImage.flagPdf = true
-            manageImage.addFileToGallery(activity)
+            manageImage.addFileToGallery(activity!!)
 
         }
     }

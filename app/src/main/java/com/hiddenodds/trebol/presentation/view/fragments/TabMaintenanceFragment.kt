@@ -1,18 +1,19 @@
 package com.hiddenodds.trebol.presentation.view.fragments
 
 import android.os.Bundle
-import android.support.v4.widget.NestedScrollView
-import android.support.v7.widget.RecyclerView
+import androidx.core.widget.NestedScrollView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.hiddenodds.trebol.R
 import com.hiddenodds.trebol.presentation.components.ItemTabAdapter
 import com.hiddenodds.trebol.presentation.model.GuideModel
 import io.reactivex.android.schedulers.AndroidSchedulers
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 
 
 class TabMaintenanceFragment: TabBaseFragment(){
@@ -39,17 +40,16 @@ class TabMaintenanceFragment: TabBaseFragment(){
                 })
     }
 
-    override fun onCreateView(inflater: LayoutInflater?,
-                              container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        return inflater!!.inflate(R.layout.view_tab_verification,
+        return inflater.inflate(R.layout.view_tab_verification,
                 container,false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        ButterKnife.bind(this, view!!)
+        ButterKnife.bind(this, view)
         setupRecyclerView(rvVerification!!)
         setAdapter()
     }
@@ -58,7 +58,7 @@ class TabMaintenanceFragment: TabBaseFragment(){
         if (rvVerification != null) rvVerification!!.clearFocus()
         if (isCreateImage(rvVerification, flagChange, sufix)){
 
-            async {
+            GlobalScope.async {
                 saveTableToBitmap(sufix, rvVerification!!)
                 pdfGuideModel.nameMaintenance = sufix
             }
@@ -182,7 +182,7 @@ class TabMaintenanceFragment: TabBaseFragment(){
         val free = listOf(0, 1, 8, 10, 11, 12, 13)
 
         val items: ArrayList<GuideModel> = ArrayList()
-        val labels = context
+        val labels = context!!
                 .resources.getStringArray(R.array.lbl_maintenance)
         val values: ArrayList<String> = ArrayList()
         values.add(maintenanceModel!!.maintenance1)

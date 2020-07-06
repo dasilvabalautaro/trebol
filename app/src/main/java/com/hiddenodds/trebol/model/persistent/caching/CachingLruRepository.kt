@@ -1,6 +1,6 @@
 package com.hiddenodds.trebol.model.persistent.caching
 
-import android.support.v4.util.LruCache
+import androidx.collection.LruCache
 
 class CachingLruRepository private constructor(){
     private var lru: LruCache<String, Any>

@@ -9,7 +9,6 @@ import com.hiddenodds.trebol.model.interfaces.IPersistent
 import com.hiddenodds.trebol.model.persistent.network.ServiceRemote
 import com.hiddenodds.trebol.tools.ConnectionNetwork
 import com.hiddenodds.trebol.tools.LocaleUtils
-import io.realm.CompactOnLaunchCallback
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import java.util.*
@@ -67,8 +66,8 @@ class App: Application() {
     }
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
-        super.onConfigurationChanged(newConfig)
-        localeUtils.updateConfiguration(this, newConfig!!)
+        super.onConfigurationChanged(newConfig!!)
+        localeUtils.updateConfiguration(this, newConfig)
     }
 
     fun getAppComponent(): AppComponent{

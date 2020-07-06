@@ -272,9 +272,7 @@ class ServiceRemote @Inject constructor() {
         preparedStatement.execute()
 
         println("Finish Update Notification")
-        if (preparedStatement != null){
-            preparedStatement.close()
-        }
+        preparedStatement?.close()
     }
 
     @Throws(Exception::class, SQLException::class)
@@ -302,9 +300,7 @@ class ServiceRemote @Inject constructor() {
 
         preparedStatement.execute()
         println("Finish Update Machine")
-        if (preparedStatement != null){
-            preparedStatement.close()
-        }
+        preparedStatement?.close()
     }
 
     @Throws(Exception::class, SQLException::class)
@@ -326,7 +322,7 @@ class ServiceRemote @Inject constructor() {
             if (res.next()){
                 var max = res.getLong("BIG")
                 max += 1
-                println("Get Max: " + max.toString())
+                //println("Get Max: " + max.toString())
                 preparedStatement = connect!!.prepareStatement(sqlAddPieces)
                 val paramsPieces = listParamsPieces(notification,
                         material)
@@ -363,7 +359,7 @@ class ServiceRemote @Inject constructor() {
                             val existence = resExistence
                                     .getLong("EXISTENCIA")
                             val quantityUpdate = existence - material.quantity
-                            println("Finish existence update: " + quantityUpdate.toString())
+                            println("Finish existence update: $quantityUpdate")
                             preparedStatement = connect!!
                                     .prepareStatement(sqlUpdateQuantity)
                             preparedStatement.setLong(1, quantityUpdate)
@@ -381,9 +377,7 @@ class ServiceRemote @Inject constructor() {
 
             }
         }
-        if (preparedStatement != null){
-            preparedStatement.close()
-        }
+        preparedStatement?.close()
     }
 
     private fun setDataNotification(notification: NotificationModel): Boolean{
@@ -462,9 +456,7 @@ class ServiceRemote @Inject constructor() {
 
             }
         }finally {
-            if (preparedStatement != null){
-                preparedStatement.close()
-            }
+            preparedStatement?.close()
 
             if (connect != null){
                 connect!!.close()
@@ -524,12 +516,8 @@ class ServiceRemote @Inject constructor() {
 
             }
         }finally {
-            if (statement != null){
-                statement.close()
-            }
-            if (resultSet != null){
-                resultSet.close()
-            }
+            statement?.close()
+            resultSet?.close()
             if (connect != null){
                 connect!!.close()
             }

@@ -1,16 +1,16 @@
 package com.hiddenodds.trebol.tools
 
 object Constants {
-    val SQLSERVER = "sqlServer" //  192.168.1.110:1433
-    val URL_SERVER = "213.37.130.240:36000"
-    val DATABASE = "database"
-    val USER = "user"
-    val PASSWORD = "password"
-    val SUCCESS = "success"
-    val PREFERENCE_TREBOL = "com.hiddenodds.trebolv2.PREFERENCE_FILE_KEY"
-    val TECHNICAL_DB = "db_tech"
-    val CACHE_LIST_TYPE_NOTIFICATION = "list_type_notification"
-    val TECHNICAL_KEY = "key_master"
-    val TECHNICAL_PASSWORD = "key_password"
+    const val SQLSERVER = "sqlServer" //  192.168.1.110:1433
+    const val URL_SERVER = "app.trebolgroup.es " //213.37.130.240:36000
+    const val DATABASE = "database"
+    const val USER = "user"
+    const val PASSWORD = "password"
+    const val SUCCESS = "success"
+    const val PREFERENCE_TREBOL = "com.hiddenodds.trebolv2.PREFERENCE_FILE_KEY"
+    const val TECHNICAL_DB = "db_tech"
+    const val CACHE_LIST_TYPE_NOTIFICATION = "list_type_notification"
+    const val TECHNICAL_KEY = "key_master"
+    const val TECHNICAL_PASSWORD = "key_password"
 
 }

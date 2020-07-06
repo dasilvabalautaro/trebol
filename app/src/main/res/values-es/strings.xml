@@ -114,4 +114,6 @@
     <string name="lbl_know_visual">4. CONOCIMIENTOS DEL USUARIO</string>
     <string name="lbl_build_reference">Oficinas centrales:\nNicolas Mórales. 38 40, 3 Nave 9 28019 Madrid\nTel: +34915398142 Fax: +34914670038\ntrebolgroup@trebolgroup.com www.trebolgroup.com\nCIF: 8 83198705</string>
     <string name="lbl_footer">Delegaciones: Madrid Catalunya Levante Andalucia P.Vasco Galicia Navarra Murcia Canarias Lisboa Oporto</string>
+    <string name="send_email">Correcto envío Email</string>
+    <string name="lbl_tech_observations">Observaciones del técnico</string>
 </resources>

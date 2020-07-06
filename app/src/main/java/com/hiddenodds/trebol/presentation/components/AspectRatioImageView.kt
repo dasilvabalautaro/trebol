@@ -1,10 +1,11 @@
 package com.hiddenodds.trebol.presentation.components
 
 import android.content.Context
-import android.support.annotation.IntDef
-import android.support.v7.widget.AppCompatImageView
+import androidx.annotation.IntDef
 import android.util.AttributeSet
+import androidx.appcompat.widget.AppCompatImageView
 import com.hiddenodds.trebol.R
+import kotlin.math.roundToInt
 
 class AspectRatioImageView: AppCompatImageView {
     constructor(context: Context): super(context)
@@ -53,14 +54,14 @@ class AspectRatioImageView: AppCompatImageView {
                     return
                 }
                 aspect = WIDTH
-                aspectRatio = Math.round(height.toDouble() / width).toFloat()
+                aspectRatio = (height.toDouble() / width).roundToInt().toFloat()
                 setMeasuredDimensionByHeight(height)
             } else {
                 if (height == 0) {
                     return
                 }
                 aspect = HEIGHT
-                aspectRatio = Math.round(width.toDouble() / height).toFloat()
+                aspectRatio = (width.toDouble() / height).roundToInt().toFloat()
                 setMeasuredDimensionByWidth(width)
             }
             WIDTH -> setMeasuredDimensionByHeight(height)
@@ -96,7 +97,7 @@ class AspectRatioImageView: AppCompatImageView {
         requestLayout()
     }
 
-    @IntDef(WIDTH.toLong(), HEIGHT.toLong())
+    @IntDef(WIDTH.toLong().toInt(), HEIGHT.toLong().toInt())
     @Retention(AnnotationRetention.SOURCE)
     annotation class Aspect
 

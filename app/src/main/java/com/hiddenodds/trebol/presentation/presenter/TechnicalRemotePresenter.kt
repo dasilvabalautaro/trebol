@@ -45,7 +45,7 @@ class TechnicalRemotePresenter @Inject constructor(private val getRemoteDataUseC
         if (jsonArray.length() != 0){
             (0 until jsonArray.length()).forEach { i ->
                 val jsonObject: JSONObject = jsonArray.getJSONObject(i)
-                var code: String = ""
+                var code = ""
 
                 if (jsonObject.has("TECNICO")){
                     code = jsonObject.getString("TECNICO")?: ""
@@ -55,7 +55,7 @@ class TechnicalRemotePresenter @Inject constructor(private val getRemoteDataUseC
                 if (jsonObject.has("TRD")){
                     var trd = jsonObject.getString("TRD")?: ""
                     trd = trd.trim()
-                    if (!trd.isEmpty() && trd != code){
+                    if (trd.isNotEmpty() && trd != code){
                         if (!dependentTechnicians.containsKey(trd)){
                             val list: ArrayList<String> = ArrayList()
                             list.add(code)

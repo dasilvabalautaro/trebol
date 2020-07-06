@@ -1,63 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.percent.PercentRelativeLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/back_login">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/left_guideline"
+        app:layout_constraintGuide_percent=".15"
+        android:orientation="vertical"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/right_guideline"
+        app:layout_constraintGuide_percent=".85"
+        android:orientation="vertical"/>
+    <androidx.constraintlayout.widget.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/top_guideline"
+        app:layout_constraintGuide_percent=".20"
+        android:orientation="horizontal"/>
+
     <ImageView
-        app:layout_widthPercent="70%"
-        app:layout_heightPercent="5%"
-        app:layout_marginTopPercent="22%"
+        app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+        app:layout_constraintRight_toRightOf="@+id/right_guideline"
+        app:layout_constraintTop_toTopOf="@+id/top_guideline"
         android:id="@+id/img_logo"
-        android:layout_centerHorizontal="true"
         android:src="@drawable/logo_letter"
-        android:contentDescription="@string/description_image"/>
+        android:contentDescription="@string/description_image"
+        android:layout_height="0dp"
+        android:layout_width="0dp"
+        app:layout_constraintDimensionRatio="7.45f"/>
     <EditText
         android:labelFor="@+id/edt_user"
         android:id="@+id/edt_user"
-        android:layout_below="@+id/img_logo"
+        app:layout_constraintTop_toBottomOf="@+id/img_logo"
         android:inputType="textPersonName"
-        android:layout_centerHorizontal="true"
-        app:layout_widthPercent="75%"
-        app:layout_heightPercent="7%"
-        app:layout_marginTopPercent="10%"
+        app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+        app:layout_constraintRight_toRightOf="@+id/right_guideline"
+        android:layout_marginTop="50dp"
         android:hint="@string/lbl_usuario"
+        android:textSize="25sp"
         android:paddingStart="20dp"
         android:background="@android:color/white"
-        tools:ignore="RtlSymmetry" />
+        tools:ignore="Autofill,LabelFor,RtlSymmetry"
+        android:layout_height="wrap_content"
+        android:layout_width="0dp" />
     <EditText
         android:labelFor="@+id/edt_password"
         android:id="@+id/edt_password"
-        android:layout_below="@+id/edt_user"
+        app:layout_constraintTop_toBottomOf="@+id/edt_user"
         android:inputType="textPassword"
-        android:layout_centerHorizontal="true"
-        app:layout_widthPercent="75%"
-        app:layout_heightPercent="7%"
-        app:layout_marginTopPercent="4%"
+        app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+        app:layout_constraintRight_toRightOf="@+id/right_guideline"
+        android:layout_marginTop="30dp"
         android:hint="@string/lbl_password"
+        android:textSize="25sp"
         android:paddingStart="20dp"
         android:background="@android:color/white"
-        tools:ignore="RtlSymmetry" />
+        tools:ignore="Autofill,LabelFor,RtlSymmetry"
+        android:layout_height="wrap_content"
+        android:layout_width="0dp" />
 
     <Button
         android:id="@+id/btn_ok"
-        android:layout_below="@+id/edt_password"
-        android:layout_centerHorizontal="true"
-        app:layout_widthPercent="53%"
-        app:layout_heightPercent="10%"
-        app:layout_marginTopPercent="6%"
-        android:background="@drawable/button_login"/>
+        app:layout_constraintTop_toBottomOf="@+id/edt_password"
+        app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+        app:layout_constraintRight_toRightOf="@+id/right_guideline"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/button_login"
+        android:layout_height="0dp"
+        android:layout_width="0dp"
+        app:layout_constraintDimensionRatio="4.76f"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fa_test"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:src="@drawable/ic_test" />
 
-</android.support.percent.PercentRelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
 

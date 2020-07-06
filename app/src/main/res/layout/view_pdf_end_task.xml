@@ -14,26 +14,64 @@
         android:fillViewport="true"
         tools:ignore="UselessParent">
 
-        <android.support.percent.PercentRelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <androidx.constraintlayout.widget.Guideline
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/left_guideline"
+                app:layout_constraintGuide_percent=".05"
+                android:orientation="vertical"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/middle_guideline"
+                app:layout_constraintGuide_percent=".50"
+                android:orientation="vertical"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/left1_guideline"
+                app:layout_constraintGuide_percent=".75"
+                android:orientation="vertical"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/right_guideline"
+                app:layout_constraintGuide_percent=".95"
+                android:orientation="vertical"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/top_guideline"
+                app:layout_constraintGuide_percent=".05"
+                android:orientation="horizontal"/>
+
             <ImageView
                 android:id="@+id/img_left"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintTop_toTopOf="@+id/top_guideline"
+                app:layout_constraintRight_toRightOf="@+id/middle_guideline"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:contentDescription="@string/lbl_logo"
                 android:scaleType="fitStart"
-                android:src="@drawable/logo_claim"
-                app:layout_marginLeftPercent="4%"
-                app:layout_marginRightPercent="1%"
-                app:layout_widthPercent="50%" />
+                android:src="@drawable/logo_claim"/>
+
             <ImageView
                 android:id="@+id/img_right"
-                app:layout_marginRightPercent="4%"
-                android:layout_alignParentEnd="true"
-                android:layout_alignTop="@+id/img_left"
-                app:layout_widthPercent="20%"
+                android:layout_width="0dp"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toTopOf="@+id/top_guideline"
+                app:layout_constraintLeft_toLeftOf="@+id/left1_guideline"
+                android:layout_marginTop="10dp"
                 android:scaleType="fitEnd"
                 android:src="@drawable/hitachi_pdf"
                 android:layout_height="wrap_content"
@@ -41,10 +79,12 @@
 
             <TextView
                 android:id="@+id/lbl_title"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/img_left"
                 android:textAlignment="center"
-                android:layout_below="@+id/img_left"
                 android:text="@string/lbl_end_instalation"
                 android:textColor="@color/colorLblTitle"
                 android:textSize="18sp"
@@ -54,40 +94,40 @@
             <TextView
                 android:id="@+id/lblContent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/lbl_title"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/lbl_title"
                 android:layout_marginTop="30dp"
                 android:textAlignment="textStart"
                 android:textColor="@android:color/black"
-                android:textSize="14sp"
-                app:layout_marginLeftPercent="5%"
-                app:layout_marginRightPercent="5%"
-                app:layout_widthPercent="100%" />
+                android:textSize="14sp" />
 
             <ImageView
-                app:layout_marginLeftPercent="4%"
-                app:layout_marginRightPercent="4%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/lblContent"
                 android:id="@+id/signatureClient"
                 android:layout_marginTop="20dp"
-                app:layout_widthPercent="100%"
                 android:layout_height="200dp"
-                android:layout_below="@+id/lblContent"
                 android:background="@android:color/white"
                 android:contentDescription="@string/lbl_logo"/>
 
             <com.hiddenodds.trebol.presentation.components.AspectRatioImageView
-                app:layout_marginLeftPercent="4%"
-                app:layout_marginRightPercent="4%"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/signatureClient"
                 android:layout_marginTop="20dp"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/signatureClient"
                 app:ari_aspect="height"
                 app:ari_ratio="0.144"
                 app:srcCompat="@drawable/footer_trebol"
                 android:contentDescription="@string/lbl_logo"/>
 
 
-        </android.support.percent.PercentRelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
 </RelativeLayout>

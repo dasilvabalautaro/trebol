@@ -16,9 +16,9 @@ open class Download: RealmObject(), IDataContent {
     var state: Byte = 0
 
     override fun setContent(parcel: Parcel) {
-        code = parcel.readString()
-        notification = parcel.readString()
-        customer = parcel.readString()
+        code = parcel.readString().toString()
+        notification = parcel.readString().toString()
+        customer = parcel.readString().toString()
         state = parcel.readByte()
     }
 

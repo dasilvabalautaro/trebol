@@ -14,15 +14,70 @@
         android:fillViewport="true"
         tools:ignore="UselessParent">
 
-        <android.support.percent.PercentRelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <androidx.constraintlayout.widget.Guideline
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/left_guideline"
+                app:layout_constraintGuide_percent=".04"
+                android:orientation="vertical"/>
+            <androidx.constraintlayout.widget.Guideline
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/left1_guideline"
+                app:layout_constraintGuide_percent=".30"
+                android:orientation="vertical"/>
+            <androidx.constraintlayout.widget.Guideline
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/right_guideline"
+                app:layout_constraintGuide_percent=".96"
+                android:orientation="vertical"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/middle_guideline"
+                app:layout_constraintGuide_percent=".50"
+                android:orientation="vertical"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/left_log_guideline"
+                app:layout_constraintGuide_percent=".76"
+                android:orientation="vertical"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/right1_guideline"
+                app:layout_constraintGuide_percent=".82"
+                android:orientation="vertical"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/right2_guideline"
+                app:layout_constraintGuide_percent=".66"
+                android:orientation="vertical"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/top_guideline"
+                app:layout_constraintGuide_percent=".05"
+                android:orientation="horizontal"/>
+
             <ImageView
-                app:layout_marginLeftPercent="4%"
-                app:layout_marginRightPercent="1%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintTop_toTopOf="@+id/top_guideline"
+                app:layout_constraintRight_toRightOf="@+id/middle_guideline"
                 android:layout_marginTop="10dp"
-                app:layout_widthPercent="50%"
                 android:scaleType="fitStart"
                 android:layout_height="wrap_content"
                 android:id="@+id/img_left"
@@ -31,21 +86,24 @@
 
             <ImageView
                 android:id="@+id/img_right"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignTop="@+id/img_left"
+                app:layout_constraintLeft_toLeftOf="@+id/left_log_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toTopOf="@+id/top_guideline"
+                android:layout_marginTop="10dp"
                 android:contentDescription="@string/lbl_logo"
                 android:scaleType="fitEnd"
-                android:src="@drawable/hitachi_pdf"
-                app:layout_marginRightPercent="4%"
-                app:layout_widthPercent="20%" />
+                android:src="@drawable/hitachi_pdf"/>
 
             <TextView
                 android:id="@+id/lbl_title"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:layout_below="@+id/img_left"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/img_left"
                 android:textColor="@color/colorLblTitle"
                 android:textSize="14sp"
                 android:textStyle="bold"
@@ -53,139 +111,159 @@
 
             <TextView
                 android:id="@+id/lblComercial"
-                app:layout_marginLeftPercent="4%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/lbl_title"
                 android:layout_marginTop="10dp"
-                app:layout_widthPercent="50%"
-                android:layout_below="@+id/lbl_title"
+                app:layout_constraintRight_toRightOf="@+id/middle_guideline"
                 android:layout_height="wrap_content"
                 android:text="@string/lbl_nombre_cliente"
                 android:textColor="@color/colorLblSubTitle"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"/>
             <TextView
-                app:layout_marginRightPercent="4%"
-                app:layout_widthPercent="50%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/middle_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/lbl_title"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="3dp"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorLblSubTitle"
                 android:text="@string/lbl_mod"
-                android:layout_toEndOf="@+id/lblComercial"
-                android:layout_alignTop="@+id/lblComercial"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"/>
 
             <TextView
                 android:id="@+id/txtComercial"
-                android:layout_alignStart="@+id/lblComercial"
-                app:layout_widthPercent="50%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/middle_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/lblComercial"
                 android:layout_marginTop="10dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/lblComercial"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"
                 android:textColor="@color/colorTxt" />
             <TextView
                 android:id="@+id/txtMod"
-                app:layout_marginRightPercent="4%"
-                app:layout_widthPercent="50%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/middle_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/lblComercial"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="3dp"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@+id/txtComercial"
-                android:layout_alignTop="@+id/txtComercial"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"
                 android:textColor="@color/colorTxt" />
+
             <!--Change-->
             <TextView
                 android:id="@+id/lblTech"
-                app:layout_marginLeftPercent="4%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/txtComercial"
                 android:layout_marginTop="10dp"
-                app:layout_widthPercent="50%"
-                android:layout_below="@+id/txtComercial"
+                app:layout_constraintRight_toRightOf="@+id/middle_guideline"
                 android:layout_height="wrap_content"
                 android:text="@string/lbl_nombre_tecnico"
                 android:textColor="@color/colorLblSubTitle"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"/>
             <TextView
-                app:layout_marginRightPercent="4%"
-                app:layout_widthPercent="50%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/middle_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/txtMod"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="3dp"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorLblSubTitle"
                 android:text="@string/lbl_contract"
-                android:layout_toEndOf="@+id/lblTech"
-                android:layout_alignTop="@+id/lblTech"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"/>
 
             <TextView
                 android:id="@+id/txtNameTech"
-                android:layout_alignStart="@+id/lblTech"
-                app:layout_widthPercent="50%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/middle_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/lblTech"
                 android:layout_marginTop="10dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/lblTech"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"
                 android:textColor="@color/colorTxt" />
             <TextView
                 android:id="@+id/txtContract"
-                app:layout_marginRightPercent="4%"
-                app:layout_widthPercent="50%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/middle_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/lblTech"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="3dp"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@+id/txtNameTech"
-                android:layout_alignTop="@+id/txtNameTech"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"
                 android:textColor="@color/colorTxt" />
             <!--Change-->
             <TextView
                 android:id="@+id/lblSerie"
-                app:layout_marginLeftPercent="4%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/middle_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/txtNameTech"
                 android:layout_marginTop="10dp"
-                app:layout_widthPercent="50%"
-                android:layout_below="@+id/txtNameTech"
                 android:layout_height="wrap_content"
                 android:text="@string/lbl_serie"
                 android:textColor="@color/colorLblSubTitle"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"/>
             <TextView
-                app:layout_marginRightPercent="4%"
-                app:layout_widthPercent="50%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/middle_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/txtNameTech"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="3dp"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorLblSubTitle"
                 android:text="@string/lbl_tinta"
-                android:layout_toEndOf="@+id/lblSerie"
-                android:layout_alignTop="@+id/lblSerie"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"/>
 
             <TextView
                 android:id="@+id/txtSerie"
-                android:layout_alignStart="@+id/lblSerie"
-                app:layout_widthPercent="50%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/middle_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/lblSerie"
                 android:layout_marginTop="10dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/lblSerie"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"
                 android:textColor="@color/colorTxt" />
             <TextView
                 android:id="@+id/txtTinta"
-                app:layout_marginRightPercent="4%"
-                app:layout_widthPercent="50%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/middle_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/lblSerie"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="3dp"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@+id/txtSerie"
-                android:layout_alignTop="@+id/txtSerie"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"
                 android:textColor="@color/colorTxt"/>
 
             <TextView
                 android:id="@+id/lblEntrada"
-                app:layout_marginLeftPercent="4%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/middle_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/txtSerie"
                 android:layout_marginTop="10dp"
-                app:layout_widthPercent="50%"
-                android:layout_below="@+id/txtSerie"
                 android:layout_height="wrap_content"
                 android:text="@string/lbl_entrada"
                 android:textColor="@color/colorLblSubTitle"
@@ -194,23 +272,26 @@
 
             <TextView
                 android:id="@+id/lblSalida"
-                app:layout_widthPercent="50%"
-                app:layout_marginRightPercent="4%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/middle_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/txtSerie"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="3dp"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorLblSubTitle"
                 android:text="@string/lbl_salida"
-                android:layout_toEndOf="@+id/lblEntrada"
-                android:layout_alignTop="@+id/lblEntrada"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"/>
 
             <TextView
                 android:id="@+id/spnEntrada"
-                android:layout_alignStart="@+id/lblEntrada"
-                app:layout_widthPercent="40%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/middle_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/lblEntrada"
                 android:layout_marginTop="10dp"
                 android:layout_height="28dp"
-                android:layout_below="@+id/lblEntrada"
                 android:textSize="@dimen/txt_size"
                 android:paddingStart="10dp"
                 android:textAlignment="textStart"
@@ -219,10 +300,12 @@
                 tools:ignore="LabelFor,RtlSymmetry,TextFields" />
             <TextView
                 android:id="@+id/spnSalida"
-                android:layout_alignStart="@+id/lblSalida"
-                app:layout_widthPercent="50%"
-                app:layout_marginRightPercent="4%"
-                android:layout_alignTop="@+id/spnEntrada"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/middle_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/lblSalida"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="3dp"
                 android:layout_height="28dp"
                 android:textSize="@dimen/txt_size"
                 android:paddingStart="10dp"
@@ -234,10 +317,11 @@
 
             <TextView
                 android:id="@+id/lblHrsTrabajo"
-                app:layout_marginLeftPercent="4%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/middle_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/spnEntrada"
                 android:layout_marginTop="10dp"
-                app:layout_widthPercent="50%"
-                android:layout_below="@+id/spnEntrada"
                 android:layout_height="wrap_content"
                 android:text="@string/lbl_sat"
                 android:textColor="@color/colorLblSubTitle"
@@ -245,86 +329,99 @@
                 android:textAlignment="textStart"/>
 
             <TextView
-                app:layout_widthPercent="50%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/middle_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/spnSalida"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="3dp"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorLblSubTitle"
                 android:text="@string/lbl_peaje"
-                android:layout_toEndOf="@+id/lblHrsTrabajo"
-                android:layout_alignTop="@+id/lblHrsTrabajo"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"/>
 
             <TextView
                 android:id="@+id/txtHrsTrabajo"
-                android:layout_alignStart="@+id/lblHrsTrabajo"
-                app:layout_widthPercent="50%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/middle_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/lblHrsTrabajo"
                 android:layout_marginTop="10dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/lblHrsTrabajo"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"
                 android:textColor="@color/colorTxt" />
 
             <TextView
                 android:id="@+id/txtPeaje"
-                app:layout_marginRightPercent="4%"
-                app:layout_widthPercent="50%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/middle_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/lblHrsTrabajo"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="3dp"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@+id/txtHrsTrabajo"
-                android:layout_alignTop="@+id/txtHrsTrabajo"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"
                 android:textColor="@color/colorTxt"/>
 
             <TextView
                 android:id="@+id/lblSat"
-                app:layout_marginLeftPercent="4%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/middle_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/txtHrsTrabajo"
                 android:layout_marginTop="10dp"
-                app:layout_widthPercent="50%"
-                android:layout_below="@+id/txtHrsTrabajo"
                 android:layout_height="wrap_content"
                 android:text="@string/lbl_satd"
                 android:textColor="@color/colorLblSubTitle"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"/>
             <TextView
-                app:layout_widthPercent="50%"
-                app:layout_marginRightPercent="4%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/middle_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/txtHrsTrabajo"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="3dp"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorLblSubTitle"
                 android:text="@string/lbl_satdk"
-                android:layout_toEndOf="@+id/lblSat"
-                android:layout_alignTop="@+id/lblSat"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"/>
 
             <TextView
                 android:id="@+id/txtSat"
-                android:layout_alignStart="@+id/lblSat"
-                app:layout_widthPercent="50%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/middle_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/lblSat"
                 android:layout_marginTop="10dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/lblSat"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"
                 android:textColor="@color/colorTxt" />
             <TextView
                 android:id="@+id/txtSatdk"
-                app:layout_widthPercent="50%"
-                app:layout_marginRightPercent="4%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/middle_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/lblSat"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="3dp"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@+id/txtSat"
-                android:layout_alignTop="@+id/txtSat"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"
                 android:textColor="@color/colorTxt" />
 
             <TextView
                 android:id="@+id/lblDieta"
-                app:layout_marginLeftPercent="4%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/middle_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/txtSat"
                 android:layout_marginTop="10dp"
-                app:layout_widthPercent="50%"
-                android:layout_below="@+id/txtSat"
                 android:layout_height="wrap_content"
                 android:text="@string/lbl_dieta"
                 android:textColor="@color/colorLblSubTitle"
@@ -333,23 +430,26 @@
 
             <TextView
                 android:id="@+id/lblVSoft"
-                app:layout_widthPercent="50%"
-                app:layout_marginRightPercent="4%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/middle_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/txtSat"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="3dp"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorLblSubTitle"
                 android:text="@string/lbl_vsoft"
-                android:layout_toEndOf="@+id/lblDieta"
-                android:layout_alignTop="@+id/lblDieta"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"/>
 
             <TextView
                 android:id="@+id/spnDieta"
-                android:layout_alignStart="@+id/lblDieta"
-                app:layout_widthPercent="40%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/middle_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/lblDieta"
                 android:layout_marginTop="10dp"
                 android:layout_height="28dp"
-                android:layout_below="@+id/lblDieta"
                 android:paddingStart="10dp"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"
@@ -360,12 +460,13 @@
 
             <TextView
                 android:id="@+id/edtVsoft1"
-                app:layout_widthPercent="13%"
-                app:layout_marginRightPercent="1%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/middle_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right2_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/lblDieta"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="3dp"
                 android:layout_height="28dp"
-                android:layout_toEndOf="@+id/spnDieta"
-                android:layout_alignTop="@+id/spnDieta"
-                android:layout_alignStart="@+id/lblVSoft"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="center"
                 android:textColor="@color/colorTxt"
@@ -373,22 +474,26 @@
                 tools:ignore="LabelFor" />
             <TextView
                 android:id="@+id/edtVsoft2"
-                app:layout_widthPercent="13%"
-                app:layout_marginRightPercent="1%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/right2_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right1_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/lblDieta"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="3dp"
                 android:layout_height="28dp"
-                android:layout_toEndOf="@+id/edtVsoft1"
-                android:layout_alignTop="@+id/edtVsoft1"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="center"
                 android:textColor="@color/colorTxt"
                 android:background="@drawable/rounded_pass"/>
             <TextView
                 android:id="@+id/edtVsoft3"
-                app:layout_widthPercent="15%"
-                app:layout_marginRightPercent="4%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/right1_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/lblDieta"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="3dp"
                 android:layout_height="28dp"
-                android:layout_toEndOf="@+id/edtVsoft2"
-                android:layout_alignTop="@+id/edtVsoft2"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="center"
                 android:textColor="@color/colorTxt"
@@ -397,10 +502,11 @@
 
             <TextView
                 android:id="@+id/lblHrs"
-                app:layout_marginLeftPercent="4%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/middle_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/spnDieta"
                 android:layout_marginTop="10dp"
-                app:layout_widthPercent="50%"
-                android:layout_below="@+id/spnDieta"
                 android:layout_height="wrap_content"
                 android:text="@string/lbl_hrs"
                 android:textColor="@color/colorLblSubTitle"
@@ -408,24 +514,27 @@
                 android:textAlignment="textStart"/>
             <TextView
                 android:id="@+id/lblTotEquipo"
-                app:layout_widthPercent="50%"
-                app:layout_marginRightPercent="4%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/middle_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/spnDieta"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="3dp"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorLblSubTitle"
                 android:text="@string/lbl_equipo_totales"
-                android:layout_toEndOf="@+id/lblHrs"
-                android:layout_alignTop="@+id/lblHrs"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"/>
 
             <TextView
                 android:id="@+id/edtHrs"
-                android:layout_alignStart="@+id/lblHrs"
-                app:layout_widthPercent="40%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/middle_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/lblHrs"
                 android:layout_marginTop="10dp"
                 android:layout_height="28dp"
                 android:paddingStart="10dp"
-                android:layout_below="@+id/lblHrs"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"
                 android:textColor="@color/colorTxt"
@@ -434,13 +543,14 @@
 
             <TextView
                 android:id="@+id/edtTotalesEquipo"
-                app:layout_widthPercent="50%"
-                app:layout_marginRightPercent="4%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/middle_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/lblHrs"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="3dp"
                 android:layout_height="28dp"
-                android:layout_toEndOf="@+id/edtHrs"
-                android:layout_alignTop="@+id/edtHrs"
                 android:paddingStart="10dp"
-                android:layout_alignStart="@+id/lblTotEquipo"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"
                 android:textColor="@color/colorTxt"
@@ -449,10 +559,11 @@
 
             <TextView
                 android:id="@+id/lblUltimoMnto"
-                app:layout_marginLeftPercent="4%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/middle_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/edtHrs"
                 android:layout_marginTop="10dp"
-                app:layout_widthPercent="50%"
-                android:layout_below="@+id/edtHrs"
                 android:layout_height="wrap_content"
                 android:text="@string/lbl_ult_mnto"
                 android:textColor="@color/colorLblSubTitle"
@@ -460,22 +571,25 @@
                 android:textAlignment="textStart"/>
             <TextView
                 android:id="@+id/lblFinish"
-                app:layout_widthPercent="50%"
-                app:layout_marginRightPercent="4%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/middle_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/edtHrs"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="3dp"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorLblSubTitle"
                 android:text="@string/lbl_date_finish"
-                android:layout_toEndOf="@+id/lblUltimoMnto"
-                android:layout_alignTop="@+id/lblUltimoMnto"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"/>
             <TextView
                 android:id="@+id/edtUltimoMnto"
-                android:layout_alignStart="@+id/lblUltimoMnto"
-                app:layout_widthPercent="40%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/middle_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/lblUltimoMnto"
                 android:layout_marginTop="10dp"
                 android:layout_height="28dp"
-                android:layout_below="@+id/lblUltimoMnto"
                 android:paddingStart="10dp"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"
@@ -484,21 +598,23 @@
                 tools:ignore="RtlSymmetry" />
             <TextView
                 android:id="@+id/txtFinish"
-                android:layout_alignStart="@+id/lblFinish"
-                app:layout_marginRightPercent="4%"
-                app:layout_widthPercent="50%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/middle_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/lblUltimoMnto"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="3dp"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"
-                android:textColor="@color/colorTxt"
-                android:layout_alignTop="@+id/edtUltimoMnto"
-                android:layout_toEndOf="@+id/edtUltimoMnto" />
+                android:textColor="@color/colorTxt" />
             <TextView
                 android:id="@+id/lblSintomas"
-                app:layout_marginLeftPercent="4%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/middle_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/edtUltimoMnto"
                 android:layout_marginTop="10dp"
-                app:layout_widthPercent="50%"
-                android:layout_below="@+id/edtUltimoMnto"
                 android:layout_height="wrap_content"
                 android:text="@string/lbl_sintomas"
                 android:textColor="@color/colorLblSubTitle"
@@ -506,23 +622,23 @@
                 android:textAlignment="textStart"/>
             <TextView
                 android:id="@+id/txtSintomas"
-                android:layout_alignStart="@+id/lblSintomas"
-                app:layout_widthPercent="100%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/lblSintomas"
                 android:layout_marginTop="10dp"
-                app:layout_marginRightPercent="4%"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/lblSintomas"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"
                 android:textColor="@color/colorTxt" />
 
             <TextView
                 android:id="@+id/lblInformeTecnico"
-                app:layout_marginLeftPercent="4%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/txtSintomas"
                 android:layout_marginTop="10dp"
-                app:layout_marginRightPercent="4%"
-                app:layout_widthPercent="100%"
-                android:layout_below="@+id/txtSintomas"
                 android:layout_height="wrap_content"
                 android:text="@string/lbl_informe_tec"
                 android:textColor="@color/colorLblSubTitle"
@@ -531,14 +647,14 @@
 
             <TextView
                 android:id="@+id/edtInformeTecnico"
-                android:layout_alignStart="@+id/lblInformeTecnico"
-                app:layout_widthPercent="100%"
-                app:layout_marginRightPercent="4%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/lblInformeTecnico"
                 android:layout_marginTop="10dp"
                 android:layout_height="wrap_content"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
-                android:layout_below="@+id/lblInformeTecnico"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"
                 android:textColor="@color/colorTxt"
@@ -547,14 +663,14 @@
 
             <TextView
                 android:id="@+id/edtObservaciones"
-                android:layout_alignStart="@+id/lblInformeTecnico"
-                app:layout_widthPercent="100%"
-                app:layout_marginRightPercent="4%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/edtInformeTecnico"
                 android:layout_marginTop="2dp"
                 android:layout_height="wrap_content"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
-                android:layout_below="@+id/edtInformeTecnico"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"
                 android:textColor="@color/colorTxt"
@@ -563,32 +679,34 @@
 
             <TextView
                 android:id="@+id/lblMaterialRetirado"
-                app:layout_marginLeftPercent="4%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/middle_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/edtObservaciones"
                 android:layout_marginTop="15dp"
-                app:layout_widthPercent="60%"
-                android:layout_below="@+id/edtObservaciones"
                 android:layout_height="wrap_content"
                 android:text="@string/lbl_material_empleado"
                 android:textColor="@color/colorLblSubTitle"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"/>
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_mat_use"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/lblMaterialRetirado"
-                app:layout_marginRightPercent="4%"
-                android:layout_below="@+id/lblMaterialRetirado"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/lblMaterialRetirado"
                 android:layout_marginTop="20dp"
                 android:padding="2dp"
                 android:scrollbars="vertical"/>
 
             <TextView
                 android:id="@+id/lblMaterialEmpleado"
-                app:layout_marginLeftPercent="4%"
-                app:layout_widthPercent="70%"
-                android:layout_below="@+id/rv_mat_use"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right2_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/rv_mat_use"
                 android:layout_marginTop="13dp"
                 android:layout_height="wrap_content"
                 android:text="@string/lbl_material_retirado"
@@ -596,68 +714,67 @@
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"/>
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_mat_out"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/lblMaterialEmpleado"
-                app:layout_marginRightPercent="4%"
-                android:layout_below="@+id/lblMaterialEmpleado"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/lblMaterialEmpleado"
                 android:layout_marginTop="20dp"
                 android:padding="2dp"
                 android:scrollbars="vertical"/>
 
             <TextView
                 android:id="@+id/lblFirma"
-                app:layout_marginLeftPercent="4%"
-                android:layout_width="wrap_content"
-                android:layout_below="@+id/rv_mat_out"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/left1_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/rv_mat_out"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@string/lbl_firma"
-                app:layout_marginRightPercent="1%"
                 android:textColor="@color/colorLblSubTitle"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"/>
 
             <TextView
                 android:id="@+id/tv_client"
-                app:layout_marginLeftPercent="1%"
-                app:layout_marginRightPercent="4%"
-                android:layout_width="wrap_content"
+                app:layout_constraintLeft_toLeftOf="@+id/left1_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/rv_mat_out"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="3dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"
-                android:textColor="@color/colorTxt"
-                android:layout_alignTop="@+id/lblFirma"
-                android:layout_toEndOf="@+id/lblFirma" />
+                android:textColor="@color/colorTxt" />
 
             <ImageView
-                app:layout_marginLeftPercent="4%"
-                app:layout_marginRightPercent="4%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/tv_client"
                 android:id="@+id/signatureClient"
                 android:layout_marginTop="10dp"
-                app:layout_widthPercent="100%"
                 android:layout_height="200dp"
-                android:layout_below="@+id/tv_client"
                 android:background="@android:color/white"
                 android:contentDescription="@string/lbl_logo"/>
 
             <com.hiddenodds.trebol.presentation.components.AspectRatioImageView
-                app:layout_marginLeftPercent="4%"
-                app:layout_marginRightPercent="4%"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/signatureClient"
                 android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/signatureClient"
                 app:ari_aspect="height"
                 app:ari_ratio="0.144"
                 app:srcCompat="@drawable/footer_trebol"
                 android:contentDescription="@string/lbl_logo"/>
 
-
-
-        </android.support.percent.PercentRelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
 </RelativeLayout>

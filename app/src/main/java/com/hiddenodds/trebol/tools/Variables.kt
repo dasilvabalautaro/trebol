@@ -6,8 +6,8 @@ object Variables {
     var listTechnicals: ArrayList<String> = ArrayList()
     var changeTechnical: ArrayList<String> = ArrayList()
     var endApp = true
-    var sqlServer = "213.37.130.240:36000"
+    var sqlServer = "app.trebolgroup.es:36000" //213.37.130.240:36000   79.148.251.8
     var database = "TREBOLDATA"
-    var user = "ALBERTO"
-    var password = "Alb23erto23manza\$%AO451"
+    var user = "APP"
+    var password = "Trebol2019"
 }

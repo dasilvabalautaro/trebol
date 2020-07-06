@@ -5,15 +5,15 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.support.annotation.RequiresApi
-import android.support.v4.app.Fragment
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.annotation.RequiresApi
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.hiddenodds.trebol.App
@@ -25,20 +25,16 @@ import com.hiddenodds.trebol.presentation.interfaces.ILoadDataView
 import com.hiddenodds.trebol.presentation.model.EmailModel
 import com.hiddenodds.trebol.presentation.model.NotificationModel
 import com.hiddenodds.trebol.presentation.model.TechnicalModel
-import com.hiddenodds.trebol.presentation.presenter.TechnicalMasterPresenter
 import com.hiddenodds.trebol.presentation.presenter.TechnicalPresenter
-import com.hiddenodds.trebol.presentation.view.activities.MainActivity
 import com.hiddenodds.trebol.tools.ChangeFormat
-import com.hiddenodds.trebol.tools.Constants
-import com.hiddenodds.trebol.tools.PreferenceHelper
-import com.hiddenodds.trebol.tools.PreferenceHelper.get
 import com.hiddenodds.trebol.tools.Variables
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Cancellable
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import org.jetbrains.anko.alert
 import java.text.SimpleDateFormat
 import java.util.*
@@ -54,11 +50,10 @@ class OtsFragment: Fragment(), ILoadDataView {
     private var technicalModel: TechnicalModel? = null
     private var notificationModel: NotificationModel? = null
     private var positionSpinner = -1
-    var outState: Bundle? = null
+    private var outState: Bundle? = null
     private var listNotification: ArrayList<NotificationModel> = ArrayList()
     private var listNotificationView: ArrayList<NotificationModel> = ArrayList()
     private var listTech: ArrayList<String> = ArrayList()
-
     @BindView(R.id.sp_tech)
     @JvmField var spTech: Spinner? = null
     @BindView(R.id.rv_ots)
@@ -67,13 +62,12 @@ class OtsFragment: Fragment(), ILoadDataView {
     @JvmField var pbLoad: ProgressBar? = null
 
     val Fragment.app: App
-        get() = activity.application as App
+        get() = activity!!.application as App
 
     private val component by lazy { app.
             getAppComponent().plus(PresenterModule())}
 
-    /*@Inject
-    lateinit var technicalMasterPresenter: TechnicalMasterPresenter*/
+
     @Inject
     lateinit var technicalPresenter: TechnicalPresenter
 
@@ -83,20 +77,19 @@ class OtsFragment: Fragment(), ILoadDataView {
 
     }
 
-    override fun onCreateView(inflater: LayoutInflater?,
-                              container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val root: View = inflater!!.inflate(R.layout.view_list_ot,
+        val root: View = inflater.inflate(R.layout.view_list_ot,
                 container,false)
         ButterKnife.bind(this, root)
         return root
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (outState != null){
             positionSpinner = outState!!.getInt("position")
-            this.listTech = outState!!.getStringArrayList("listSpin")
+            this.listTech = outState!!.getStringArrayList("listSpin")!!
 
         }else{
             this.listTech = ArrayList(Variables.listTechnicals)
@@ -109,17 +102,16 @@ class OtsFragment: Fragment(), ILoadDataView {
                 addDataToList()
             }
 
+
         })
 
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        //technicalMasterPresenter.view = this
+
         technicalPresenter.view = this
         setupRecyclerView()
-
-
     }
 
 
@@ -132,11 +124,11 @@ class OtsFragment: Fragment(), ILoadDataView {
 
                         positionSpinner = position
                         this.codeTech = spTech!!.getItemAtPosition(position) as String
-                        activity.runOnUiThread {
+                        activity!!.runOnUiThread {
                             pbLoad!!.visibility = View.VISIBLE
                         }
 
-                        async {
+                        GlobalScope.async {
                             technicalPresenter.executeGetTechnical(codeTech)
                         }
 
@@ -148,7 +140,7 @@ class OtsFragment: Fragment(), ILoadDataView {
 
     override fun onResume() {
         super.onResume()
-        async {
+        GlobalScope.async {
 
             removeFragment()
         }
@@ -170,7 +162,7 @@ class OtsFragment: Fragment(), ILoadDataView {
 
     private fun removeFragment(){
         try {
-            val manager = activity.supportFragmentManager
+            val manager = activity!!.supportFragmentManager
 
             for (i in 0 until manager.backStackEntryCount){
                 val fragment = manager.fragments[i]
@@ -187,34 +179,26 @@ class OtsFragment: Fragment(), ILoadDataView {
     }
 
     override fun showMessage(message: String) {
-        context.toast(message)
+        context!!.toast(message)
     }
 
     override fun showError(message: String) {
         pbLoad!!.visibility = View.INVISIBLE
-        context.toast(message)
+        context!!.toast(message)
     }
 
     override fun <T> executeTask(obj: T) {
         if (obj != null){
             this.technicalModel = (obj as TechnicalModel)
-            //val code = (obj as TechnicalModel).code
-            setListRecycler()
 
-            /*if (code == this.techMasterCode && spTech!!.adapter == null){
-                this.listTech = ArrayList((obj as TechnicalModel).trd)
-                setDataSpinner()
-                //verifyInstance()
-            }else{
-                setListRecycler()
-            }*/
+            setListRecycler()
 
         }
 
     }
 
     private fun addDataToList(){
-        Handler().postDelayed(Runnable {
+        Handler().postDelayed({
 
             var firstVisibleItem = 0
             val itemView = listNotificationView.size
@@ -232,12 +216,12 @@ class OtsFragment: Fragment(), ILoadDataView {
                     count++
                 }
 
-                async {
+                GlobalScope.async {
                     adapter!!.setObjectList(listNotificationView)
                 }
 
                 try {
-                    activity.runOnUiThread {
+                    activity!!.runOnUiThread {
                         if (itemView != 0){
                             firstVisibleItem = (rvOts!!
                                     .layoutManager as LinearLayoutManager)
@@ -256,7 +240,7 @@ class OtsFragment: Fragment(), ILoadDataView {
             }else if ((listNotificationView.size == 0) &&
                     (listNotification.size == 0)){
                 adapter!!.setObjectList(listNotificationView)
-                activity.runOnUiThread {
+                activity!!.runOnUiThread {
                     pbLoad!!.visibility = View.INVISIBLE
                 }
 
@@ -282,11 +266,9 @@ class OtsFragment: Fragment(), ILoadDataView {
 
     private fun setupRecyclerView(){
         rvOts!!.setHasFixedSize(true)
-        rvOts!!.layoutManager = LinearLayoutManager(activity,
+        rvOts!!.layoutManager = LinearLayoutManager(activity!!,
                 LinearLayoutManager.VERTICAL, false)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            addDecorationRecycler()
-        }
+        addDecorationRecycler()
         adapter = ItemOtAdapter{
             this.notificationModel = it
             launchOptions()
@@ -296,7 +278,7 @@ class OtsFragment: Fragment(), ILoadDataView {
 
     private fun setDataSpinner(){
 
-        val spinnerAdapter: ArrayAdapter<String> = ArrayAdapter(context,
+        val spinnerAdapter: ArrayAdapter<String> = ArrayAdapter(context!!,
                 android.R.layout.simple_list_item_1, this.listTech)
         spTech!!.adapter = spinnerAdapter
 
@@ -305,10 +287,10 @@ class OtsFragment: Fragment(), ILoadDataView {
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun addDecorationRecycler(){
         val horizontalDecoration =
-                DividerItemDecoration(rvOts!!.context,
+                DividerItemDecoration(rvOts!!.context!!,
                         DividerItemDecoration.VERTICAL)
-        val horizontalDivider: Drawable = context
-                .getDrawable(R.drawable.horizontal_divider)
+        val horizontalDivider: Drawable = context!!
+                .getDrawable(R.drawable.horizontal_divider)!!
         horizontalDecoration.setDrawable(horizontalDivider)
         rvOts!!.addItemDecoration(horizontalDecoration)
     }
@@ -336,23 +318,8 @@ class OtsFragment: Fragment(), ILoadDataView {
     }
 
 
-   /* private fun getTechnicalMaster(){
-        val prefs = PreferenceHelper.customPrefs(context,
-                Constants.PREFERENCE_TREBOL)
-        this.techMasterCode = prefs[Constants.TECHNICAL_KEY, ""]
-        val techPassword: String? = prefs[Constants.TECHNICAL_PASSWORD, ""]
-        if (techMasterCode!!.isNotEmpty() && techPassword!!.isNotEmpty()){
-            technicalMasterPresenter
-                    .executeGetTechnicalMaster(this.techMasterCode!!,
-                            techPassword)
-        }else{
-            context.toast(context.resources
-                    .getString(R.string.input_error))
-        }
-    }*/
-
     private fun launchOptions(){
-        activity.alert(R.string.lbl_end_instalation) {
+        activity!!.alert(R.string.lbl_end_instalation) {
             title = "Alerta"
             positiveButton(R.string.lbl_confirm) {
                 callNotificationFinish(notificationModel!!.code,
@@ -370,7 +337,7 @@ class OtsFragment: Fragment(), ILoadDataView {
                                        codeTechnical: String){
         val finishFragment = NotificationFinishFragment.newInstance(codeNotification,
                 codeTechnical)
-        activity.supportFragmentManager
+        activity!!.supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.flContent, finishFragment,
                         finishFragment.javaClass.simpleName)
@@ -397,7 +364,7 @@ class OtsFragment: Fragment(), ILoadDataView {
 
     private fun executeEmail(emailModel: EmailModel){
         val emailFragment = EmailFragment.newInstance(emailModel)
-        activity.supportFragmentManager
+        activity!!.supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.flContent, emailFragment,
                         emailFragment.javaClass.simpleName)

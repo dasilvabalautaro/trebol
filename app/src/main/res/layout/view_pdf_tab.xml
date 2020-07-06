@@ -12,52 +12,108 @@
         android:fillViewport="true"
         tools:ignore="UselessParent">
 
-        <android.support.percent.PercentRelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/back_options">
 
+            <androidx.constraintlayout.widget.Guideline
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/left_guideline"
+                app:layout_constraintGuide_percent=".04"
+                android:orientation="vertical"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/left1_guideline"
+                app:layout_constraintGuide_percent=".18"
+                android:orientation="vertical"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/left2_guideline"
+                app:layout_constraintGuide_percent=".50"
+                android:orientation="vertical"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/left3_guideline"
+                app:layout_constraintGuide_percent=".63"
+                android:orientation="vertical"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/left4_guideline"
+                app:layout_constraintGuide_percent=".76"
+                android:orientation="vertical"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/right_guideline"
+                app:layout_constraintGuide_percent=".96"
+                android:orientation="vertical"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/top_guideline"
+                app:layout_constraintGuide_percent=".05"
+                android:orientation="horizontal"/>
+
             <ImageView
                 android:id="@+id/iv_logo"
-                app:layout_marginLeftPercent="4%"
-                app:layout_marginRightPercent="2%"
-                android:layout_marginTop="10dp"
-                app:layout_widthPercent="50%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintTop_toTopOf="@+id/top_guideline"
+                app:layout_constraintRight_toRightOf="@+id/left2_guideline"
                 android:src="@drawable/logo_claim"
+                android:layout_marginTop="10dp"
                 android:scaleType="fitStart"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/lbl_logo"/>
+                android:contentDescription="@string/lbl_logo"
+                tools:ignore="MissingConstraints" />
 
             <TextView
                 android:id="@+id/tv_title"
-                app:layout_marginLeftPercent="4%"
-                app:layout_marginRightPercent="4%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
                 android:layout_marginTop="10dp"
-                app:layout_widthPercent="92%"
-                android:layout_below="@+id/iv_logo"
+                app:layout_constraintTop_toBottomOf="@+id/iv_logo"
                 android:layout_height="wrap_content"
                 android:text="@string/lbl_title_veridication"
                 android:textColor="@android:color/black"
                 android:textSize="17sp"
                 android:textStyle="bold"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                tools:ignore="MissingConstraints" />
 
             <ImageView
                 android:id="@+id/img_right"
-                app:layout_marginRightPercent="4%"
-                android:layout_alignParentEnd="true"
-                android:layout_alignTop="@+id/iv_logo"
-                app:layout_widthPercent="20%"
+                android:layout_width="0dp"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toTopOf="@+id/top_guideline"
+                app:layout_constraintLeft_toLeftOf="@+id/left4_guideline"
                 android:scaleType="fitEnd"
+                android:layout_marginTop="10dp"
                 android:src="@drawable/hitachi_pdf"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/lbl_logo"/>
+                android:contentDescription="@string/lbl_logo"
+                tools:ignore="MissingConstraints" />
+
             <TextView
                 android:id="@+id/tv_client"
-                app:layout_marginLeftPercent="4%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
                 android:layout_marginTop="10dp"
-                app:layout_widthPercent="10%"
-                android:layout_below="@+id/tv_title"
+                app:layout_constraintRight_toRightOf="@+id/left1_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/tv_title"
                 android:layout_height="wrap_content"
                 android:text="@string/lbl_client"
                 android:textColor="@android:color/black"
@@ -66,11 +122,12 @@
 
             <TextView
                 android:id="@+id/tv_name"
-                app:layout_marginLeftPercent="1%"
-                android:layout_alignTop="@+id/tv_client"
-                android:layout_toEndOf="@+id/tv_client"
-                app:layout_widthPercent="35%"
-                android:layout_below="@+id/tv_title"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left1_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/tv_title"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="3dp"
+                app:layout_constraintRight_toRightOf="@+id/left2_guideline"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/txt_size"
@@ -78,11 +135,12 @@
 
             <TextView
                 android:id="@+id/tv_part"
-                app:layout_marginLeftPercent="1%"
-                android:layout_alignTop="@+id/tv_client"
-                android:layout_toEndOf="@+id/tv_name"
-                app:layout_widthPercent="13%"
-                android:layout_below="@+id/tv_title"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left2_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/tv_title"
+                app:layout_constraintRight_toRightOf="@+id/left3_guideline"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="3dp"
                 android:text="@string/lbl_part"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
@@ -90,12 +148,12 @@
                 android:textAlignment="textStart"/>
             <TextView
                 android:id="@+id/tv_number_part"
-                app:layout_marginLeftPercent="1%"
-                android:layout_alignTop="@+id/tv_client"
-                android:layout_toEndOf="@+id/tv_part"
-                app:layout_widthPercent="32%"
-                app:layout_marginRightPercent="4%"
-                android:layout_below="@+id/tv_title"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left3_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/tv_title"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="3dp"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/txt_size"
@@ -103,10 +161,12 @@
 
             <TextView
                 android:id="@+id/tv_serie"
-                app:layout_marginLeftPercent="4%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/tv_part"
                 android:layout_marginTop="10dp"
-                app:layout_widthPercent="10%"
-                android:layout_below="@+id/tv_client"
+                android:layout_marginStart="3dp"
+                app:layout_constraintRight_toRightOf="@+id/left1_guideline"
                 android:layout_height="wrap_content"
                 android:text="@string/lbl_serie"
                 android:textColor="@android:color/black"
@@ -115,10 +175,12 @@
 
             <TextView
                 android:id="@+id/tv_number_serie"
-                app:layout_marginLeftPercent="1%"
-                android:layout_alignTop="@+id/tv_serie"
-                android:layout_toEndOf="@+id/tv_serie"
-                app:layout_widthPercent="35%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left1_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/tv_part"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="3dp"
+                app:layout_constraintRight_toRightOf="@+id/left2_guideline"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/txt_size"
@@ -126,10 +188,12 @@
 
             <TextView
                 android:id="@+id/tv_date"
-                app:layout_marginLeftPercent="1%"
-                android:layout_alignTop="@+id/tv_serie"
-                android:layout_toEndOf="@+id/tv_number_serie"
-                app:layout_widthPercent="13%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left2_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/tv_part"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="3dp"
+                app:layout_constraintRight_toRightOf="@+id/left3_guideline"
                 android:text="@string/lbl_fecha"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
@@ -137,11 +201,12 @@
                 android:textAlignment="textStart"/>
             <TextView
                 android:id="@+id/tv_value_date"
-                app:layout_marginLeftPercent="1%"
-                android:layout_alignTop="@+id/tv_serie"
-                android:layout_toEndOf="@+id/tv_date"
-                app:layout_marginRightPercent="4%"
-                app:layout_widthPercent="32%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left3_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/tv_part"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="3dp"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/txt_size"
@@ -149,10 +214,11 @@
 
             <TextView
                 android:id="@+id/tv_note"
-                app:layout_marginLeftPercent="4%"
-                app:layout_marginRightPercent="4%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/tv_serie"
                 android:layout_marginTop="10dp"
-                app:layout_widthPercent="100%"
                 android:text="@string/lbl_note"
                 android:layout_below="@+id/tv_serie"
                 android:layout_height="wrap_content"
@@ -161,64 +227,71 @@
                 android:textAlignment="textStart"/>
             <TextView
                 android:id="@+id/tv_tab_verification"
-                app:layout_marginLeftPercent="4%"
-                app:layout_marginRightPercent="2%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/tv_note"
                 android:layout_marginTop="10dp"
-                app:layout_widthPercent="50%"
+                app:layout_constraintRight_toRightOf="@+id/left2_guideline"
                 android:text="@string/lbl_verification_visual"
-                android:layout_below="@+id/tv_note"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"/>
+
             <TextView
-                app:layout_marginRightPercent="4%"
-                app:layout_widthPercent="50%"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintLeft_toLeftOf="@+id/left2_guideline"
                 android:id="@+id/tv_test"
+                android:layout_width="0dp"
                 android:text="@string/lbl_test_visual"
-                android:layout_alignTop="@+id/tv_tab_verification"
-                android:layout_toEndOf="@+id/tv_tab_verification"
+                app:layout_constraintTop_toBottomOf="@+id/tv_note"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="3dp"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"/>
             <ImageView
                 android:id="@+id/iv_verification"
-                app:layout_marginLeftPercent="4%"
-                app:layout_marginRightPercent="2%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/left2_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/tv_test"
                 android:layout_marginTop="10dp"
-                app:layout_widthPercent="50%"
-                android:layout_below="@+id/tv_test"
                 android:scaleType="fitXY"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/lbl_logo"/>
             <ImageView
                 android:id="@+id/iv_test"
-                app:layout_marginRightPercent="4%"
-                android:layout_alignTop="@+id/iv_verification"
-                android:layout_toEndOf="@+id/iv_verification"
-                app:layout_widthPercent="50%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left2_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/tv_test"
+                android:layout_marginTop="10dp"
                 android:scaleType="fitXY"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/lbl_logo"/>
             <TextView
                 android:id="@+id/tv_tab_maintenance"
-                app:layout_marginLeftPercent="4%"
-                app:layout_marginRightPercent="2%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/left2_guideline"
                 android:layout_marginTop="10dp"
-                app:layout_widthPercent="50%"
                 android:text="@string/lbl_maintenance_visual"
-                android:layout_below="@+id/iv_test"
+                app:layout_constraintTop_toBottomOf="@+id/iv_test"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"/>
             <TextView
-                app:layout_marginRightPercent="4%"
-                app:layout_widthPercent="50%"
+                android:id="@+id/txt_know"
+                android:layout_width="0dp"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintLeft_toLeftOf="@+id/left2_guideline"
                 android:text="@string/lbl_know_visual"
-                android:layout_alignTop="@+id/tv_tab_maintenance"
-                android:layout_toEndOf="@+id/tv_tab_maintenance"
+                app:layout_constraintTop_toBottomOf="@+id/iv_test"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="3dp"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/txt_size"
@@ -226,43 +299,45 @@
 
             <ImageView
                 android:id="@+id/iv_maintenance"
-                app:layout_marginLeftPercent="4%"
-                app:layout_marginRightPercent="2%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/left2_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/txt_know"
                 android:layout_marginTop="10dp"
-                app:layout_widthPercent="50%"
-                android:layout_below="@+id/tv_tab_maintenance"
                 android:scaleType="fitXY"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/lbl_logo"/>
             <ImageView
                 android:id="@+id/iv_know"
-                app:layout_marginRightPercent="4%"
-                android:layout_alignTop="@+id/iv_maintenance"
-                android:layout_toEndOf="@+id/iv_maintenance"
-                app:layout_widthPercent="50%"
+                android:layout_width="0dp"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/txt_know"
+                android:layout_marginTop="10dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left2_guideline"
                 android:scaleType="fitXY"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/lbl_logo"/>
             <TextView
                 android:id="@+id/tv_lbl_description"
-                app:layout_marginRightPercent="4%"
-                app:layout_widthPercent="50%"
+                android:layout_width="0dp"
+                app:layout_constraintRight_toRightOf="@+id/left2_guideline"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/iv_know"
                 android:layout_marginTop="10dp"
                 android:text="@string/lbl_tech_observations"
-                android:layout_below="@+id/iv_know"
-                android:layout_alignStart="@id/iv_know"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"/>
+
             <TextView
                 android:id="@+id/tv_observations"
-                app:layout_marginRightPercent="4%"
-                app:layout_widthPercent="50%"
+                android:layout_width="0dp"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintLeft_toLeftOf="@+id/left2_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/iv_know"
                 android:layout_marginTop="10dp"
                 android:text="@string/lbl_tech_observations"
-                android:layout_below="@+id/tv_lbl_description"
-                android:layout_alignStart="@id/tv_lbl_description"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/txt_size"
@@ -270,22 +345,25 @@
                 android:textAlignment="textStart"/>
             <TextView
                 android:id="@+id/tv_signature_technical"
-                app:layout_marginLeftPercent="4%"
-                app:layout_marginRightPercent="2%"
-                app:layout_widthPercent="50%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/left2_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/tv_observations"
                 android:layout_marginTop="10dp"
                 android:text="@string/lbl_signature_technical"
-                android:layout_below="@+id/iv_maintenance"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"/>
+
             <TextView
-                app:layout_marginRightPercent="4%"
-                app:layout_widthPercent="50%"
+                android:id="@+id/tv_signature_client"
+                android:layout_width="0dp"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintLeft_toLeftOf="@+id/left2_guideline"
                 android:text="@string/lbl_signature_client"
-                android:layout_alignTop="@+id/tv_signature_technical"
-                android:layout_toEndOf="@+id/tv_signature_technical"
+                app:layout_constraintTop_toBottomOf="@+id/tv_observations"
+                android:layout_marginTop="10dp"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/txt_size"
@@ -293,21 +371,22 @@
 
             <TextView
                 android:id="@+id/tv_name_technical"
-                app:layout_marginLeftPercent="4%"
-                app:layout_marginRightPercent="2%"
-                app:layout_widthPercent="50%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/left2_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/tv_signature_technical"
                 android:layout_marginTop="10dp"
-                android:layout_below="@+id/tv_signature_technical"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/txt_size"
                 android:textAlignment="textStart"/>
             <TextView
                 android:id="@+id/tv_name_client"
-                app:layout_marginRightPercent="4%"
-                app:layout_widthPercent="50%"
-                android:layout_alignTop="@+id/tv_name_technical"
-                android:layout_toEndOf="@+id/tv_name_technical"
+                android:layout_width="0dp"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintLeft_toLeftOf="@+id/left2_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/tv_signature_technical"
+                android:layout_marginTop="10dp"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/txt_size"
@@ -315,47 +394,50 @@
 
             <ImageView
                 android:id="@+id/iv_signature_technical"
-                app:layout_marginLeftPercent="4%"
-                app:layout_marginRightPercent="2%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/left2_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/tv_name_technical"
                 android:layout_marginTop="10dp"
-                app:layout_widthPercent="45%"
-                android:layout_below="@+id/tv_name_technical"
                 android:layout_height="200dp"
                 android:contentDescription="@string/lbl_logo"/>
             <ImageView
                 android:id="@+id/iv_signature_client"
-                app:layout_marginRightPercent="4%"
-                android:layout_alignTop="@+id/iv_signature_technical"
-                android:layout_toEndOf="@+id/iv_signature_technical"
-                app:layout_widthPercent="50%"
+                android:layout_width="0dp"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/tv_name_technical"
+                app:layout_constraintLeft_toLeftOf="@+id/left2_guideline"
+                android:layout_marginTop="10dp"
                 android:layout_height="200dp"
                 android:contentDescription="@string/lbl_logo"/>
 
-
             <TextView
                 android:id="@+id/tv_reference"
-                app:layout_marginLeftPercent="4%"
-                app:layout_widthPercent="50%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/left2_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/iv_signature_technical"
                 android:text="@string/lbl_build_reference"
                 android:layout_marginTop="10dp"
-                android:layout_below="@+id/iv_signature_technical"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
                 android:textSize="10sp"
-                android:textAlignment="textStart"/>
+                android:textAlignment="textStart"
+                tools:ignore="SmallSp" />
             <TextView
-                app:layout_marginLeftPercent="4%"
-                app:layout_marginRightPercent="4%"
-                app:layout_widthPercent="100%"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+                app:layout_constraintRight_toRightOf="@+id/right_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/tv_reference"
                 android:layout_marginTop="10dp"
                 android:text="@string/lbl_footer"
-                android:layout_below="@+id/tv_reference"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
                 android:textSize="10sp"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                tools:ignore="SmallSp" />
 
-        </android.support.percent.PercentRelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
 </RelativeLayout>

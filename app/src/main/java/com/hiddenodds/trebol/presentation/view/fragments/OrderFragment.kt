@@ -1,29 +1,29 @@
 package com.hiddenodds.trebol.presentation.view.fragments
 
-import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+//import android.support.v7.widget.LinearLayoutManager
+//import android.support.v7.widget.RecyclerView
 import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import butterknife.*
 import com.github.gcacace.signaturepad.views.SignaturePad
 import com.hiddenodds.trebol.R
-import com.hiddenodds.trebol.model.persistent.caching.CachingLruRepository
 import com.hiddenodds.trebol.model.persistent.file.ManageFile
 import com.hiddenodds.trebol.presentation.components.ItemProductSelectAdapter
 import com.hiddenodds.trebol.presentation.interfaces.ILoadDataView
 import com.hiddenodds.trebol.presentation.model.*
 import com.hiddenodds.trebol.tools.ChangeFormat
 import com.hiddenodds.trebol.tools.Variables
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -89,7 +89,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
     @OnClick(R.id.btnPDF)
     fun savePdf() = runBlocking{
 
-        val job = async {
+        val job = GlobalScope.async {
             pdfNotification.manageImage = manageImage
             pdfNotification.inflateView()
             pdfNotification.setData(notificationModel!!,
@@ -98,7 +98,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
             pdfNotification.saveImage()
         }
         job.join()
-        activity.runOnUiThread {
+        activity!!.runOnUiThread {
             viewPdf()
         }
 
@@ -111,21 +111,21 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
             manageImage.image = signatureBitmap
             manageImage.code = nameFileSignature
             if (notificationModel!!.state != "1"){
-                async {
+                GlobalScope.async {
                     updateState("1")
                 }
             }
-            manageImage.addFileToGallery(activity)
+            manageImage.addFileToGallery(activity!!)
 
         }else{
-            context.toast(context.getString(R.string.image_not_found))
+            context!!.toast(context!!.getString(R.string.image_not_found))
         }
     }
 
     @OnClick(R.id.btnClearSignature)
     fun clearSignature(){
         if (notificationModel!!.state != "0"){
-            async {
+            GlobalScope.async {
                 updateState("0")
             }
         }
@@ -139,7 +139,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         val value = spnDieta!!.selectedItem.toString()
         if (notificationModel != null && flagSpinner){
             if (notificationModel!!.diet != value){
-                async {
+                GlobalScope.async {
                     updateFieldNotificationPresenter
                             .updateNotification(notificationModel!!.id,
                                     "diet", value)
@@ -152,13 +152,13 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
 
     @OnClick(R.id.spnEntrada)
     fun setTimeInside(){
-        ChangeFormat.setTimeToControl(spnEntrada!!, context)
+        ChangeFormat.setTimeToControl(spnEntrada!!, context!!)
 
     }
 
     @OnClick(R.id.spnSalida)
     fun setTimeOutside(){
-        ChangeFormat.setTimeToControl(spnSalida!!, context)
+        ChangeFormat.setTimeToControl(spnSalida!!, context!!)
     }
 
     @OnTextChanged(R.id.edtObservaciones)
@@ -166,7 +166,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         if (notificationModel != null){
             val value = edtObservaciones!!.text.toString()
             if (notificationModel!!.observations != edtObservaciones!!.text.toString()){
-                async {
+                GlobalScope.async {
                     updateFieldNotificationPresenter
                             .updateNotification(notificationModel!!.id,
                                     "observations", value)
@@ -181,7 +181,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         if (notificationModel != null){
             val value = edtInformeTecnico!!.text.toString()
             if (notificationModel!!.reportTechnical != edtInformeTecnico!!.text.toString()){
-                async {
+                GlobalScope.async {
                     updateFieldNotificationPresenter
                             .updateNotification(notificationModel!!.id,
                                     "reportTechnical", value)
@@ -197,7 +197,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         if (notificationModel != null){
 
             if (notificationModel!!.lastAmount != edtUltimoMnto!!.text.toString()){
-                async {
+                GlobalScope.async {
                     updateFieldNotificationPresenter
                             .updateNotification(notificationModel!!.id,
                                     "lastAmount", edtUltimoMnto!!.text.toString())
@@ -213,7 +213,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         if (notificationModel != null){
 
             if (notificationModel!!.totalTeam != edtTotalesEquipo!!.text.toString()){
-                async {
+                GlobalScope.async {
                     updateFieldNotificationPresenter
                             .updateNotification(notificationModel!!.id,
                                     "totalTeam", edtTotalesEquipo!!.text.toString())
@@ -229,7 +229,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         if (notificationModel != null){
 
             if (notificationModel!!.hours != edtHrs!!.text.toString()){
-                async {
+                GlobalScope.async {
                     updateFieldNotificationPresenter
                             .updateNotification(notificationModel!!.id,
                                     "hours", edtHrs!!.text.toString())
@@ -245,7 +245,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         if (notificationModel != null){
 
             if (notificationModel!!.vSoft1 != edtVsoft1!!.text.toString()){
-                async {
+                GlobalScope.async {
                     updateFieldNotificationPresenter
                             .updateNotification(notificationModel!!.id,
                                     "vSoft1", edtVsoft1!!.text.toString())
@@ -260,7 +260,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         if (notificationModel != null){
 
             if (notificationModel!!.vSoft2 != edtVsoft2!!.text.toString()){
-                async {
+                GlobalScope.async {
                     updateFieldNotificationPresenter
                             .updateNotification(notificationModel!!.id,
                                     "vSoft2", edtVsoft2!!.text.toString())
@@ -276,7 +276,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
     fun changeVsoft3(){
         if (notificationModel != null){
             if (notificationModel!!.vSoft3 != edtVsoft3!!.text.toString()){
-                async {
+                GlobalScope.async {
                     updateFieldNotificationPresenter
                             .updateNotification(notificationModel!!.id,
                                     "vSoft3", edtVsoft3!!.text.toString())
@@ -291,7 +291,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         if (notificationModel != null){
             val value = txtHrsTrabajo!!.text.toString()
             if (notificationModel!!.workHours != txtHrsTrabajo!!.text.toString()){
-                async {
+                GlobalScope.async {
                     updateFieldNotificationPresenter
                             .updateNotification(notificationModel!!.id,
                                     "workHours", value)
@@ -308,7 +308,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
             if (notificationModel != null && spnEntrada!!.text.isNotEmpty()){
                 val value = spnEntrada!!.text.toString()
                 if (notificationModel!!.inside != spnEntrada!!.text.toString()){
-                    async {
+                    GlobalScope.async {
                         updateFieldNotificationPresenter
                                 .updateNotification(notificationModel!!.id,
                                         "inside", value)
@@ -334,7 +334,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
                 val valueOutside = spnSalida!!.text.toString()
 
                 if (notificationModel!!.outside != spnSalida!!.text.toString()){
-                    async {
+                    GlobalScope.async {
 
                         updateFieldNotificationPresenter
                                 .updateNotification(notificationModel!!.id,
@@ -378,8 +378,8 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         }
     }
 
-    private val codeNotification: String by lazy { this.arguments.getString(inputNotification) }
-    private val codeTechnical: String by lazy { this.arguments.getString(inputTechnical) }
+    private val codeNotification: String? by lazy { this.arguments!!.getString(inputNotification) }
+    private val codeTechnical: String? by lazy { this.arguments!!.getString(inputTechnical) }
 
     private var technicalModel: TechnicalModel? = null
     private var notificationModel: NotificationModel? = null
@@ -390,10 +390,9 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
     private var flagSpinner = false
     private var nameFileSignature = ""
 
-    override fun onCreateView(inflater: LayoutInflater?,
-                              container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val root: View = inflater!!.inflate(R.layout.view_ot,
+        val root: View = inflater.inflate(R.layout.view_ot,
                 container,false)
         ButterKnife.bind(this, root)
         return root
@@ -408,19 +407,19 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         signaturePresenter.view = this
         initControls()
 
-        async {
-            technicalPresenter.executeGetTechnical(codeTechnical)
+        GlobalScope.async {
+            codeTechnical?.let { technicalPresenter.executeGetTechnical(it) }
         }
     }
 
     private fun setSignature(codeNotification: String){
         manageImage.code = codeNotification
-        val bitmap = manageImage.getFileOfGallery(activity)
+        val bitmap = manageImage.getFileOfGallery(activity!!)
         if (bitmap != null){
-            async {
+            GlobalScope.async {
                 updateState("1")
             }
-            activity.runOnUiThread {
+            activity!!.runOnUiThread {
                 signatureClient!!.signatureBitmap = bitmap
             }
         }
@@ -435,14 +434,14 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
                 if (Variables.changeTechnical.isNotEmpty()){
                     val code: String? = Variables.changeTechnical.first { it == codeTechnical }
                     if (code.isNullOrEmpty()){
-                        Variables.changeTechnical.add(codeTechnical)
+                        codeTechnical?.let { Variables.changeTechnical.add(it) }
                     }
 
                 }else{
-                    Variables.changeTechnical.add(codeTechnical)
+                    codeTechnical?.let { Variables.changeTechnical.add(it) }
                 }
 
-                async {
+                GlobalScope.async {
                     addAssignedMaterialToNotificationPresenter.addAsignedMaterial(listSave,
                             notificationModel!!.id, flagUse)
                 }
@@ -453,14 +452,14 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
 
     override fun onResume() {
         super.onResume()
-        async {
+        GlobalScope.async {
             removeFragment()
         }
     }
     override fun onPause() {
         super.onPause()
 
-        async(CommonPool) {
+        GlobalScope.async{
             addAssignedMaterialRepository(listMaterialUse, true)
             addAssignedMaterialRepository(listMaterialOut, false)
 
@@ -469,14 +468,14 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
     }
 
     override fun showMessage(message: String) {
-        if (message != context.getString(R.string.change_field)){
-            context.toast(message)
+        if (message != context!!.getString(R.string.change_field)){
+            context!!.toast(message)
 
         }
     }
 
     override fun showError(message: String) {
-        context.toast(message)
+        context!!.toast(message)
     }
     override fun <T> executeTask(objList: List<T>) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -498,23 +497,23 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         if (ManageFile.isFileExist("$codeNotification.pdf")){
             val pdfViewFragment = PdfViewFragment
                     .newInstance(codeNotification, codeTechnical, buildEmailModel())
-            activity.supportFragmentManager
+            activity!!.supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.flContent, pdfViewFragment,
                             pdfViewFragment.javaClass.simpleName)
                     .addToBackStack(null)
                     .commit()
         }else{
-            context.toast(context.getString(R.string.file_not_found))
+            context!!.toast(context!!.getString(R.string.file_not_found))
         }
 
     }
 
     private fun setTechnical(){
         val listNotification = ArrayList(this.technicalModel!!.notifications)
-        async(CommonPool) {
-            notificationModel = getNotification(codeNotification, listNotification)
-            activity.runOnUiThread {
+        GlobalScope.async {
+            notificationModel = codeNotification?.let { getNotification(it, listNotification) }
+            activity!!.runOnUiThread {
                 setControls(notificationModel)
 
             }
@@ -574,8 +573,8 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
             updateListMaterial()
             adapterMaterialUse!!.setObjectList(listMaterialUse)
             adapterMaterialOut!!.setObjectList(listMaterialOut)
-            rvMatUse!!.scrollToPosition(rvMatUse!!.adapter.itemCount)
-            rvMatOut!!.scrollToPosition(rvMatOut!!.adapter.itemCount)
+            rvMatUse!!.scrollToPosition(rvMatUse!!.adapter!!.itemCount)
+            rvMatOut!!.scrollToPosition(rvMatOut!!.adapter!!.itemCount)
 
         }
     }
@@ -585,7 +584,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         list.add("NO")
         list.add("1/2")
         list.add("1")
-        val spinnerAdapter: ArrayAdapter<String> = ArrayAdapter(context,
+        val spinnerAdapter: ArrayAdapter<String> = ArrayAdapter(context!!,
                 android.R.layout.simple_list_item_1, list)
         spnDieta!!.adapter = spinnerAdapter
 
@@ -597,23 +596,21 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
 
     private fun setupRecyclerViewMaterialUse(){
         rvMatUse!!.setHasFixedSize(true)
-        rvMatUse!!.layoutManager = LinearLayoutManager(activity,
+        rvMatUse!!.layoutManager = LinearLayoutManager(activity!!,
                 LinearLayoutManager.VERTICAL, false)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ChangeFormat.addDecorationRecycler(rvMatUse!!, context)
-        }
+        ChangeFormat.addDecorationRecycler(rvMatUse!!, context!!)
         adapterMaterialUse = ItemProductSelectAdapter{
             if (it.change == 1){
                 it.change = 0
-                async {
+                GlobalScope.async {
                     updateAssignedMaterialRepository(it.id, it.quantity)
                 }
 
             }else{
                 delRowListMaterial(it.material!!.code, listMaterialUse)
                 adapterMaterialUse!!.setObjectList(listMaterialUse)
-                rvMatUse!!.scrollToPosition(rvMatUse!!.adapter.itemCount - 1)
-                async {
+                rvMatUse!!.scrollToPosition(rvMatUse!!.adapter!!.itemCount - 1)
+                GlobalScope.async {
                     deleteAssignedMaterialRepository(notificationModel!!.id,
                             it.id, true)
                 }
@@ -625,23 +622,21 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
 
     private fun setupRecyclerViewMaterialOut(){
         rvMatOut!!.setHasFixedSize(true)
-        rvMatOut!!.layoutManager = LinearLayoutManager(activity,
+        rvMatOut!!.layoutManager = LinearLayoutManager(activity!!,
                 LinearLayoutManager.VERTICAL, false)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ChangeFormat.addDecorationRecycler(rvMatOut!!, context)
-        }
+        ChangeFormat.addDecorationRecycler(rvMatOut!!, context!!)
         adapterMaterialOut = ItemProductSelectAdapter{
             if (it.change == 1){
                 it.change = 0
-                async {
+                GlobalScope.async {
                     updateAssignedMaterialRepository(it.id, it.quantity)
                 }
 
             }else{
                 delRowListMaterial(it.material!!.code, listMaterialOut)
                 adapterMaterialOut!!.setObjectList(listMaterialOut)
-                rvMatOut!!.scrollToPosition(rvMatOut!!.adapter.itemCount - 1)
-                async {
+                rvMatOut!!.scrollToPosition(rvMatOut!!.adapter!!.itemCount - 1)
+                GlobalScope.async {
                     deleteAssignedMaterialRepository(notificationModel!!.id,
                             it.id, false)
                 }
@@ -712,7 +707,8 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
 
             for (material: MaterialModel in listMaterialSelect){
 
-                val list = listMaterial.filter { it.material!!.code == material.code }
+                val list = listMaterial.filter { it
+                        .material!!.code == material.code }
                 if (list.isEmpty()){
                     val materialSelect = AssignedMaterialModel()
                     materialSelect.material = material
@@ -738,7 +734,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
 
         val productFragment = ProductFragment.newInstance(codeNotification,
                 codeTechnical)
-        activity.supportFragmentManager
+        activity!!.supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.flContent, productFragment,
                         productFragment.javaClass.simpleName)
@@ -797,7 +793,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
 
     private fun removeFragment(){
         try {
-            val manager = activity.supportFragmentManager
+            val manager = activity!!.supportFragmentManager
 
             for (i in 0 until manager.backStackEntryCount){
                 val fragment = manager.fragments[i]

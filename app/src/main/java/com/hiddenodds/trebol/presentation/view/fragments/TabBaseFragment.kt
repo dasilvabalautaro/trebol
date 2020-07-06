@@ -4,12 +4,11 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.os.Build
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.hiddenodds.trebol.App
 import com.hiddenodds.trebol.dagger.PresenterModule
 import com.hiddenodds.trebol.presentation.components.ItemTabAdapter
@@ -24,9 +23,9 @@ import com.hiddenodds.trebol.tools.ManageImage
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.set
@@ -49,7 +48,7 @@ abstract class TabBaseFragment: Fragment(), ILoadDataView {
     }
 
     val Fragment.app: App
-        get() = activity.application as App
+        get() = activity!!.application as App
 
     private val component by lazy { app.
             getAppComponent().plus(PresenterModule())}
@@ -69,10 +68,12 @@ abstract class TabBaseFragment: Fragment(), ILoadDataView {
     protected var disposable: CompositeDisposable = CompositeDisposable()
 
 
-    init {
+    /*init {
         observableMessageLoad
                 .subscribe { messageLoad }
-    }
+    }*/
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         component.inject(this)
@@ -106,7 +107,7 @@ abstract class TabBaseFragment: Fragment(), ILoadDataView {
         if (maintenanceModel!!.codeNotify.isEmpty()){
             maintenanceModel!!.codeNotify = codeNotify!!
 
-            async {
+            GlobalScope.async {
                 updateFieldMaintenancePresenter
                         .updateMaintenance(maintenanceModel!!.id,
                                 "codeNotify",
@@ -116,7 +117,7 @@ abstract class TabBaseFragment: Fragment(), ILoadDataView {
     }
 
     protected fun executeGetMaintenance(){
-        launch(CommonPool) {
+         GlobalScope.launch {
             println("Codigo notification: $codeNotify")
             if (codeNotify != null){
                 getMaintenancePresenter.executeGet(codeNotify!!)
@@ -126,26 +127,27 @@ abstract class TabBaseFragment: Fragment(), ILoadDataView {
 
     }
 
+    @Suppress("DEPRECATION")
     protected fun saveTableToBitmap(sufix: String,
-                          rvVerification: RecyclerView) {
+                                    rvVerification: RecyclerView) {
         var heightAllItems = 0
 
-        if (rvVerification.adapter.itemCount > 0) {
+        if (rvVerification.adapter!!.itemCount > 0) {
             val holderSize = rvVerification
                     .findViewHolderForAdapterPosition(0)
-            val heightHolder = holderSize.itemView.measuredHeight
-            heightAllItems = heightHolder * rvVerification.adapter.itemCount
+            val heightHolder = holderSize!!.itemView.measuredHeight
+            heightAllItems = heightHolder * rvVerification.adapter!!.itemCount
 
             val bigBitmap = Bitmap.createBitmap(rvVerification.measuredWidth,
                     heightAllItems, Bitmap.Config.ARGB_8888)
             val canvas = Canvas(bigBitmap)
             var iHeight = 0
             val paint = Paint()
-            for (i in 0 until rvVerification.adapter.itemCount) {
+            for (i in 0 until rvVerification.adapter!!.itemCount) {
                 val holder = rvVerification
                         .findViewHolderForAdapterPosition(i)
 
-                holder.itemView.isDrawingCacheEnabled = true
+                holder!!.itemView.isDrawingCacheEnabled = true
                 holder.itemView.buildDrawingCache()
                 val bitmap = holder.itemView
                         .drawingCache.copy(Bitmap.Config.ARGB_8888, true)
@@ -166,7 +168,7 @@ abstract class TabBaseFragment: Fragment(), ILoadDataView {
     }
 
     protected fun executeGetTechnical(){
-        async(CommonPool) {
+        GlobalScope.async {
             if (codeTech != null){
                 technicalPresenter.executeGetTechnical(codeTech!!)
             }
@@ -177,7 +179,7 @@ abstract class TabBaseFragment: Fragment(), ILoadDataView {
 
     private fun executeGetFileSignature(nameClient: String){
         if (nameClient.isNotEmpty()){
-            async {
+            GlobalScope.async {
                 signaturePresenter.executeGetNameFile(nameClient.trim())
             }
 
@@ -187,7 +189,7 @@ abstract class TabBaseFragment: Fragment(), ILoadDataView {
     }
 
     protected fun sendUpdate(nameField: String, value: String){
-        async {
+        GlobalScope.async {
             updateFieldMaintenancePresenter
                     .updateMaintenance(maintenanceModel!!.id,
                             nameField,
@@ -201,11 +203,9 @@ abstract class TabBaseFragment: Fragment(), ILoadDataView {
     protected fun setupRecyclerView(rvVerification: RecyclerView){
         rvVerification.isNestedScrollingEnabled = false
         rvVerification.setHasFixedSize(true)
-        rvVerification.layoutManager = LinearLayoutManager(activity,
+        rvVerification.layoutManager = LinearLayoutManager(activity!!,
                 LinearLayoutManager.VERTICAL, false)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ChangeFormat.addDecorationRecycler(rvVerification, context)
-        }
+        ChangeFormat.addDecorationRecycler(rvVerification, context!!)
 
     }
 
@@ -214,13 +214,13 @@ abstract class TabBaseFragment: Fragment(), ILoadDataView {
     protected fun setDataToControl(adapter: ItemTabAdapter,
                                    rvVerification: RecyclerView){
 
-         async {
+         GlobalScope.async {
             val list = buildListOfData()
             adapter.setObjectList(list)
-            activity.runOnUiThread({
+            activity!!.runOnUiThread {
                 rvVerification.scrollToPosition(0)
-            })
-        }
+            }
+         }
 
 
     }
@@ -269,11 +269,11 @@ abstract class TabBaseFragment: Fragment(), ILoadDataView {
     }
 
     override fun showError(message: String) {
-        context.toast(message)
+        context!!.toast(message)
     }
 
     override fun showMessage(message: String) {
-        context.toast(message)
+        context!!.toast(message)
     }
 
     fun Context.toast(message: CharSequence) =

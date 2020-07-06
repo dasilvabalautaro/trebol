@@ -1,17 +1,17 @@
 package com.hiddenodds.trebol.presentation.components
 
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 abstract class EndlessRecyclerOnScrollListener: RecyclerView.OnScrollListener() {
     private var previousVisibleItem = 0
     private var flag = false
 
-    override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
 
-        val visibleItemCount = recyclerView!!.childCount
-        val totalItemCount = recyclerView.layoutManager.itemCount
+        val visibleItemCount = recyclerView.childCount
+        val totalItemCount = recyclerView.layoutManager!!.itemCount
         val firstVisibleItem = (recyclerView
                 .layoutManager as LinearLayoutManager)
                 .findFirstVisibleItemPosition()

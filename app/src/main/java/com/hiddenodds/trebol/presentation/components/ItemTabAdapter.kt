@@ -1,12 +1,12 @@
 package com.hiddenodds.trebol.presentation.components
 
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import com.hiddenodds.trebol.R
 import com.hiddenodds.trebol.presentation.model.GuideModel
 import com.hiddenodds.trebol.tools.DataListDiffCallback
@@ -17,12 +17,12 @@ class ItemTabAdapter(private val listener: (GuideModel) -> Unit):
         RecyclerView.Adapter<ItemTabAdapter.ViewHolder>(){
     private val items: ArrayList<GuideModel> = ArrayList()
     override fun getItemCount(): Int = items.size
-    override fun onBindViewHolder(holder: ItemTabAdapter.ViewHolder?, position: Int)=
-            holder!!.bind(items[position], listener)
+    override fun onBindViewHolder(holder: ItemTabAdapter.ViewHolder, position: Int)=
+            holder.bind(items[position], listener)
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int):
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):
             ItemTabAdapter.ViewHolder {
-        val view: ItemRowTabView = LayoutInflater.from(parent!!.context)
+        val view: ItemRowTabView = LayoutInflater.from(parent.context)
                 .inflate(R.layout.view_row_tab,
                         parent, false) as ItemRowTabView
         return ItemTabAdapter.ViewHolder(view)

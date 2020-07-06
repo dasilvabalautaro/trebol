@@ -101,8 +101,8 @@ class MaterialExecutor @Inject constructor(): CRUDRealm(),
             val clazz: Class<Material> = Material::class.java
             val listMaterial: List<IModel>? = this.getAllData(clazz,
                     materialModelDataMapper, taskListenerExecutor)
-            println("Mostrar lista: ${listMaterial!!.size}")
-            if (listMaterial.isNotEmpty()){
+            //println("Mostrar lista: ${listMaterial!!.size}")
+            if (listMaterial!!.isNotEmpty()){
                 val materialModelCollection = listMaterial
                         .filterIsInstance<MaterialModel>()
                 subscriber.onNext(materialModelCollection)

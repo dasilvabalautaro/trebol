@@ -2,7 +2,8 @@ package com.hiddenodds.trebol.tools
 
 import android.content.Context
 import android.net.ConnectivityManager
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.net.ConnectException
 import java.net.HttpURLConnection
 import java.net.URL
@@ -18,8 +19,8 @@ class ConnectionNetwork(val context: Context) {
     fun isOnline(): Boolean {
         val connectivityManager = context.getSystemService(
                 Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val netInfo = connectivityManager.activeNetworkInfo
-        return netInfo != null && netInfo.isConnected
+        val netInfo = connectivityManager.activeNetwork
+        return netInfo != null
     }
 
     private fun checkUrl(): Boolean{
@@ -37,7 +38,7 @@ class ConnectionNetwork(val context: Context) {
     }
 
     private fun verifyConnect(){
-        launch{
+        GlobalScope.launch{
             isConnect = if (isOnline()){
                 checkUrl()
             }else{

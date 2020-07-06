@@ -9,7 +9,8 @@ import com.hiddenodds.trebol.domain.interactor.SetRemoteNotificationDataUseCase
 import com.hiddenodds.trebol.model.persistent.file.ManageFile
 import com.hiddenodds.trebol.presentation.model.NotificationModel
 import io.reactivex.observers.DisposableObserver
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import javax.inject.Inject
 
 class UpdateDataRemoteWaterPresenter @Inject constructor(private val getFinishedNotificationUseCase:
@@ -54,7 +55,7 @@ class UpdateDataRemoteWaterPresenter @Inject constructor(private val getFinished
     }
 
     private fun deleteNotification(){
-        async {
+        GlobalScope.async {
             deleteMaintenanceUseCase.codeNotify = notificationModel!!.code
             deleteMaintenanceUseCase.execute(DeleteMaintenanceObserver())
         }
@@ -103,10 +104,11 @@ class UpdateDataRemoteWaterPresenter @Inject constructor(private val getFinished
 
     inner class DeleteNotificationObserver: DisposableObserver<Boolean>(){
         override fun onNext(t: Boolean) {
-            async {
+            GlobalScope.async {
                 ManageFile.deleteFileOfWork(notificationModel!!.code)
             }
             getUpdateNext()
+
         }
 
         override fun onComplete() {

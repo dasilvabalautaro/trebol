@@ -18,10 +18,10 @@ open class Technical: RealmObject(), IDataContent {
     var notifications: RealmList<Notification> = RealmList()
 
     override fun setContent(parcel: Parcel) {
-        code = parcel.readString()
-        name = parcel.readString()
-        email = parcel.readString()
-        password = parcel.readString()
+        code = parcel.readString().toString()
+        name = parcel.readString().toString()
+        email = parcel.readString().toString()
+        password = parcel.readString().toString()
     }
 
     override fun getContent(): Parcel {

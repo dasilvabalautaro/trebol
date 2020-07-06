@@ -1,10 +1,11 @@
 package com.hiddenodds.trebol.presentation.components
 
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import com.hiddenodds.trebol.R
 import com.hiddenodds.trebol.presentation.model.NotificationModel
 import com.hiddenodds.trebol.tools.DataListDiffCallback
@@ -14,14 +15,14 @@ class ItemOtAdapter(private val listener:
                     (NotificationModel) -> Unit): RecyclerView.Adapter<ItemOtAdapter.ViewHolder>() {
     private val items: ArrayList<NotificationModel> = ArrayList()
 
-    override fun onBindViewHolder(holder: ItemOtAdapter.ViewHolder?, position: Int) =
-            holder!!.bind(items[position], listener)
+    override fun onBindViewHolder(holder: ItemOtAdapter.ViewHolder, position: Int) =
+            holder.bind(items[position], listener)
 
     override fun getItemCount(): Int = items.size
 
-    override fun onCreateViewHolder(parent: ViewGroup?,
+    override fun onCreateViewHolder(parent: ViewGroup,
                                     viewType: Int): ViewHolder {
-        val view: ItemRowOtView = LayoutInflater.from(parent!!.context)
+        val view: ItemRowOtView = LayoutInflater.from(parent.context)
                 .inflate(R.layout.view_row_ot,
                         parent, false) as ItemRowOtView
         return ViewHolder(view)

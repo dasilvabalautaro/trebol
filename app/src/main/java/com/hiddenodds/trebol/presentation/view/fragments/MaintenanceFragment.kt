@@ -1,19 +1,19 @@
 package com.hiddenodds.trebol.presentation.view.fragments
 
 import android.os.Bundle
-import android.support.design.widget.TabLayout
-import android.support.v4.view.ViewPager
+import androidx.viewpager.widget.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import butterknife.BindView
 import butterknife.ButterKnife
+import com.google.android.material.tabs.TabLayout
 import com.hiddenodds.trebol.R
 import com.hiddenodds.trebol.presentation.components.MaintenancePagesAdapter
 import com.hiddenodds.trebol.presentation.model.GuideModel
 import com.hiddenodds.trebol.tools.ChangeFormat
-import kotlinx.coroutines.experimental.async
-
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 
 class MaintenanceFragment: TabBaseFragment() {
     override fun buildListOfData(): ArrayList<GuideModel> {
@@ -43,23 +43,22 @@ class MaintenanceFragment: TabBaseFragment() {
         }
     }
 
-    private val codeNotification: String by lazy { this.arguments.getString(inputNotification) }
-    private val codeTechnical: String by lazy { this.arguments.getString(inputTechnical) }
+    private val codeNotification: String? by lazy { this.arguments!!.getString(inputNotification) }
+    private val codeTechnical: String? by lazy { this.arguments!!.getString(inputTechnical) }
     private var beforePosition = -1
     private var positionUpdate = 0
 
 
-    override fun onCreateView(inflater: LayoutInflater?,
-                              container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val root: View = inflater!!.inflate(R.layout.view_maintenance,
+        val root: View = inflater.inflate(R.layout.view_maintenance,
                 container,false)
         ButterKnife.bind(this, root)
 
         codeNotify = codeNotification
         codeTech = codeTechnical
         beforePosition = 0
-        vpList!!.adapter = MaintenancePagesAdapter(activity
+        vpList!!.adapter = MaintenancePagesAdapter(activity!!
                 .supportFragmentManager, vpList!!)
         vpList!!.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
 
@@ -111,7 +110,7 @@ class MaintenanceFragment: TabBaseFragment() {
         return root
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (outState != null){
             codeNotify = outState!!.getString("codeNotify")
@@ -119,16 +118,16 @@ class MaintenanceFragment: TabBaseFragment() {
 
         }
 
-        tlOptions!!.getTabAt(0)!!.text = context.getString(R.string.lbl_tab_verify)
-        tlOptions!!.getTabAt(1)!!.text = context.getString(R.string.lbl_tab_maintenance)
-        tlOptions!!.getTabAt(2)!!.text = context.getString(R.string.lbl_tab_test)
-        tlOptions!!.getTabAt(3)!!.text = context.getString(R.string.lbl_tab_observations)
+        tlOptions!!.getTabAt(0)!!.text = context!!.getString(R.string.lbl_tab_verify)
+        tlOptions!!.getTabAt(1)!!.text = context!!.getString(R.string.lbl_tab_maintenance)
+        tlOptions!!.getTabAt(2)!!.text = context!!.getString(R.string.lbl_tab_test)
+        tlOptions!!.getTabAt(3)!!.text = context!!.getString(R.string.lbl_tab_observations)
 
     }
 
     override fun onResume() {
         super.onResume()
-        async {
+        GlobalScope.async {
             removeFragment()
         }
 
@@ -139,7 +138,7 @@ class MaintenanceFragment: TabBaseFragment() {
 
     private fun removeFragment(){
         try {
-            val manager = activity.supportFragmentManager
+            val manager = activity!!.supportFragmentManager
 
             for (i in 0 until manager.backStackEntryCount){
                 val fragment = manager.fragments[i]
@@ -166,7 +165,7 @@ class MaintenanceFragment: TabBaseFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        ChangeFormat.deleteCache(codeNotification)
+        codeNotification?.let { ChangeFormat.deleteCache(it) }
         codeNotify = null
         codeTech = null
         outState = null

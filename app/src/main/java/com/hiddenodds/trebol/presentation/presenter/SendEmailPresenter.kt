@@ -3,10 +3,11 @@ package com.hiddenodds.trebol.presentation.presenter
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import com.hiddenodds.trebol.R
 import com.hiddenodds.trebol.model.persistent.file.ManageFile
 import com.hiddenodds.trebol.presentation.model.EmailModel
+import java.lang.Exception
 import javax.inject.Inject
 
 class SendEmailPresenter @Inject constructor(): BasePresenter(){
@@ -24,11 +25,14 @@ class SendEmailPresenter @Inject constructor(): BasePresenter(){
 
             try {
                 launchEmailIntent(emailTO, emailCC, pathFile)
+                showMessage(context.getString(R.string.send_email))
             }catch (ae: ActivityNotFoundException){
                 if (!ae.message.isNullOrEmpty()){
                     println(ae.message)
                 }
 
+            }catch (ex: Exception){
+                println(ex.localizedMessage)
             }
 
         }else{
@@ -41,7 +45,7 @@ class SendEmailPresenter @Inject constructor(): BasePresenter(){
                                   emailCc: Array<String>,
                                   pathFile: Uri?){
         val emailIntent = Intent(Intent.ACTION_SEND)
-        emailIntent.data = Uri.parse("mailto:")
+        //emailIntent.data = Uri.parse("mailto:")
         emailIntent.putExtra(Intent.EXTRA_EMAIL, emailTo)
         emailIntent.putExtra(Intent.EXTRA_CC, emailCc)
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, emailModel!!.subject)

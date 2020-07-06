@@ -17,10 +17,10 @@ open class Machine: RealmObject(), IDataContent {
 
 
     override fun setContent(parcel: Parcel) {
-        code = parcel.readString()
-        compressor = parcel.readString()
-        circuits = parcel.readString()
-        others = parcel.readString()
+        code = parcel.readString().toString()
+        compressor = parcel.readString().toString()
+        circuits = parcel.readString().toString()
+        others = parcel.readString().toString()
 
     }
 

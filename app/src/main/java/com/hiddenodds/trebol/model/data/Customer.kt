@@ -17,11 +17,11 @@ open class Customer: RealmObject(), IDataContent {
     var tech: String = ""
 
     override fun setContent(parcel: Parcel) {
-        code = parcel.readString()
-        name = parcel.readString()
-        email = parcel.readString()
-        phone = parcel.readString()
-        tech = parcel.readString()
+        code = parcel.readString().toString()
+        name = parcel.readString().toString()
+        email = parcel.readString().toString()
+        phone = parcel.readString().toString()
+        tech = parcel.readString().toString()
     }
 
     override fun getContent(): Parcel {

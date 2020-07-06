@@ -1,17 +1,18 @@
 package com.hiddenodds.trebol.presentation.view.fragments
 
 import android.os.Bundle
-import android.support.v4.widget.NestedScrollView
-import android.support.v7.widget.RecyclerView
+import androidx.core.widget.NestedScrollView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.hiddenodds.trebol.R
 import com.hiddenodds.trebol.presentation.components.ItemTabAdapter
 import com.hiddenodds.trebol.presentation.model.GuideModel
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 
 
 class TabTestFragment: TabBaseFragment(){
@@ -24,17 +25,16 @@ class TabTestFragment: TabBaseFragment(){
     @JvmField var rvVerification: RecyclerView? = null
 
 
-    override fun onCreateView(inflater: LayoutInflater?,
-                              container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        return inflater!!.inflate(R.layout.view_tab_verification,
+        return inflater.inflate(R.layout.view_tab_verification,
                 container,false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        ButterKnife.bind(this, view!!)
+        ButterKnife.bind(this, view)
         setupRecyclerView(rvVerification!!)
         setAdapter()
         executeGetTechnical()
@@ -49,7 +49,7 @@ class TabTestFragment: TabBaseFragment(){
         if (rvVerification != null) rvVerification!!.clearFocus()
         if (isCreateImage(rvVerification, flagChange, sufix)){
 
-            async {
+            GlobalScope.async {
                 saveTableToBitmap(sufix, rvVerification!!)
                 pdfGuideModel.nameTest = sufix
             }
@@ -183,7 +183,7 @@ class TabTestFragment: TabBaseFragment(){
         val free = listOf(4, 5)
 
         val items: ArrayList<GuideModel> = ArrayList()
-        val labels = context
+        val labels = context!!
                 .resources.getStringArray(R.array.lbl_test)
         val values: ArrayList<String> = ArrayList()
         values.add(maintenanceModel!!.test1)

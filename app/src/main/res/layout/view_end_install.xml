@@ -6,68 +6,67 @@
     android:background="@drawable/back_options"
     android:fillViewport="true">
 
-    <android.support.constraint.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp">
 
-        <android.support.constraint.Guideline
+        <androidx.constraintlayout.widget.Guideline
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/left_guideline"
             app:layout_constraintGuide_percent=".05"
             android:orientation="vertical"/>
 
-        <android.support.constraint.Guideline
+        <androidx.constraintlayout.widget.Guideline
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/left_one_guideline"
             app:layout_constraintGuide_percent=".45"
             android:orientation="vertical"/>
 
-        <android.support.constraint.Guideline
+        <androidx.constraintlayout.widget.Guideline
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/left_two_guideline"
             app:layout_constraintGuide_percent=".55"
             android:orientation="vertical"/>
 
-        <android.support.constraint.Guideline
+        <androidx.constraintlayout.widget.Guideline
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/left_three_guideline"
             app:layout_constraintGuide_percent=".65"
             android:orientation="vertical"/>
-        <android.support.constraint.Guideline
+        <androidx.constraintlayout.widget.Guideline
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/left_four_guideline"
             app:layout_constraintGuide_percent=".75"
             android:orientation="vertical"/>
-        <android.support.constraint.Guideline
+        <androidx.constraintlayout.widget.Guideline
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/left_five_guideline"
             app:layout_constraintGuide_percent=".85"
             android:orientation="vertical"/>
-        <android.support.constraint.Guideline
+        <androidx.constraintlayout.widget.Guideline
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/right_guideline"
             app:layout_constraintGuide_percent=".95"
             android:orientation="vertical"/>
 
-        <android.support.constraint.Guideline
+        <androidx.constraintlayout.widget.Guideline
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/top_guideline"
             app:layout_constraintGuide_percent=".02"
             android:orientation="horizontal"/>
 
-        <android.support.constraint.Guideline
+        <androidx.constraintlayout.widget.Guideline
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintGuide_percent="0.95"
@@ -95,7 +94,6 @@
             android:layout_marginTop="15dp"
             android:fontFamily="@font/calibri"
             android:text="@string/lbl_serie"
-            android:textSize="12sp"
             android:textColor="@color/colorLblSubTitle"
             android:textAlignment="textStart"
             android:id="@+id/tv_model"/>
@@ -154,7 +152,7 @@
             android:textAlignment="textStart"
             android:background="@drawable/rounded_pass"
             android:id="@+id/et_client"
-            tools:ignore="LabelFor" />
+            tools:ignore="Autofill,LabelFor" />
 
         <TextView
             android:layout_width="0dp"
@@ -225,7 +223,6 @@
             app:layout_constraintTop_toBottomOf="@+id/et_client" />-->
 
         <com.github.gcacace.signaturepad.views.SignaturePad
-            xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/signatureClient"
             android:layout_width="0dp"
@@ -250,5 +247,5 @@
             android:background="@drawable/email_update_thing"
             tools:ignore="ButtonStyle" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

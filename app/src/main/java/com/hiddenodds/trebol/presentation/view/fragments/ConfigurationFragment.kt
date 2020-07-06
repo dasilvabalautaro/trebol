@@ -31,15 +31,14 @@ class ConfigurationFragment: NotificationFragment(), ILoadDataView {
             pbConnect!!.visibility = View.VISIBLE
             verifyConnectServerPresenter.verifyConnect()
         }else{
-            context.toast(context.resources
+            context!!.toast(context!!.resources
                     .getString(R.string.input_error))
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?,
-                              container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val root: View = inflater!!.inflate(R.layout.view_configuration,
+        val root: View = inflater.inflate(R.layout.view_configuration,
                 container,false)
         ButterKnife.bind(this, root)
         return root
@@ -57,14 +56,14 @@ class ConfigurationFragment: NotificationFragment(), ILoadDataView {
 
     override fun showMessage(message: String) {
         pbConnect!!.visibility = View.INVISIBLE
-        ChangeFormat.changeVariablesConnect(context)
-        context.toast(message)
+        ChangeFormat.changeVariablesConnect(context!!)
+        context!!.toast(message)
     }
 
     override fun showError(message: String) {
         pbConnect!!.visibility = View.INVISIBLE
-        ChangeFormat.refreshVariablesconnect(context)
-        context.toast(message)
+        ChangeFormat.refreshVariablesconnect(context!!)
+        context!!.toast(message)
     }
 
     override fun onResume() {

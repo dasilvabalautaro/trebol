@@ -1,15 +1,17 @@
+@file:Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "DEPRECATION")
+
 package com.hiddenodds.trebol.tools
 
 import android.app.TimePickerDialog
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Build
-import android.support.annotation.RequiresApi
-import android.support.percent.PercentLayoutHelper
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.RecyclerView
+import androidx.annotation.RequiresApi
+import androidx.percentlayout.widget.PercentLayoutHelper
 import android.view.View
 import android.widget.EditText
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.RecyclerView
 import com.hiddenodds.trebol.R
 import com.hiddenodds.trebol.model.persistent.caching.CachingLruRepository
 import com.hiddenodds.trebol.tools.PreferenceHelper.get
@@ -33,6 +35,7 @@ object ChangeFormat {
 
     fun convertStringToDate(date: String): java.sql.Date{
         val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+        @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
         return java.sql.Date(formatter.parse(date).time)
 
     }
@@ -41,14 +44,14 @@ object ChangeFormat {
     fun substracHours(etIn: String, etOut: String): String{
         var difHrs = "0"
 
-        val hrsInit = etIn.split(":".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
-        val hrsEnd = etOut.split(":".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
+        val hrsInit = etIn.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        val hrsEnd = etOut.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
         if (hrsInit.isNotEmpty() && hrsEnd.isNotEmpty()) {
             val minInit = (hrsInit[0].toInt() * 60) + hrsInit[1].toInt()
             val minEnd = (hrsEnd[0].toInt() * 60) + hrsEnd[1].toInt()
             val dif = minEnd - minInit
             val minWork = (dif % 60)
-            var hrsWork = (dif / 60)
+            val hrsWork = (dif / 60)
             var minModify = 0
             when(minWork){
                 in 1..15 -> minModify = 25
@@ -56,7 +59,7 @@ object ChangeFormat {
                 in 31..45 -> minModify = 75
                 in 46..59 -> hrsWork + 1
             }
-            difHrs = hrsWork.toString() + "." + minModify.toString()
+            difHrs = "$hrsWork.$minModify"
         }
 
         return difHrs
@@ -71,8 +74,8 @@ object ChangeFormat {
                 TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
                     var h = hourOfDay.toString()
                     var m = minute.toString()
-                    if (hourOfDay < 10) h = "0" + hourOfDay.toString()
-                    if (minute < 10) m = "0" + minute.toString()
+                    if (hourOfDay < 10) h = "0$hourOfDay"
+                    if (minute < 10) m = "0$minute"
                     val timeSelect = "$h:$m"
                     editText.setText(timeSelect)
                 }, hour, min, false)
@@ -85,9 +88,11 @@ object ChangeFormat {
         val horizontalDecoration =
                 DividerItemDecoration(rv.context,
                         DividerItemDecoration.VERTICAL)
-        val horizontalDivider: Drawable = context
+        val horizontalDivider: Drawable? = context
                 .getDrawable(R.drawable.horizontal_divider)
-        horizontalDecoration.setDrawable(horizontalDivider)
+        if (horizontalDivider != null) {
+            horizontalDecoration.setDrawable(horizontalDivider)
+        }
         rv.addItemDecoration(horizontalDecoration)
     }
 

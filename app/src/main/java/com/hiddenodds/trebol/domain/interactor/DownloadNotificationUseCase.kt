@@ -88,7 +88,7 @@ class DownloadNotificationUseCase @Inject constructor(private val getRemoteDataU
         }else if (!finishDownload){
             finishDownload = true
             observableFinishDownload.onNext(finishDownload)
-            println("Finish download notification: " + finishDownload.toString())
+            //println("Finish download notification: " + finishDownload.toString())
         }
     }
 
@@ -109,7 +109,7 @@ class DownloadNotificationUseCase @Inject constructor(private val getRemoteDataU
         }
 
         override fun onError(e: Throwable) {
-            println("Error: JSONARRAY")
+            //println("Error: JSONARRAY")
             if (e.message != null) {
                 messageError = e.message!!
                 observableMessageError.onNext(messageError)

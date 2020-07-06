@@ -12,6 +12,8 @@ import butterknife.OnClick
 import com.hiddenodds.trebol.R
 import com.hiddenodds.trebol.presentation.interfaces.ILoadDataView
 import com.hiddenodds.trebol.presentation.model.EmailModel
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 class EmailFragment: NotificationFragment(), ILoadDataView {
@@ -33,9 +35,11 @@ class EmailFragment: NotificationFragment(), ILoadDataView {
     @JvmField var etMessage: EditText? = null
     @OnClick(R.id.bt_send_email)
     fun sendEmail(){
+
         emailModel.whoFor = etFor!!.text.toString()
         sendEmailPresenter.emailModel = emailModel
         sendEmailPresenter.executeSendEmail()
+
     }
 
     companion object Factory {
@@ -49,13 +53,12 @@ class EmailFragment: NotificationFragment(), ILoadDataView {
         }
     }
 
-    private val emailModel: EmailModel by lazy { this.arguments
+    private val emailModel: EmailModel by lazy { this.arguments!!
             .getSerializable(inputEmailModel) as EmailModel}
 
-    override fun onCreateView(inflater: LayoutInflater?,
-                              container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val root: View = inflater!!.inflate(R.layout.view_mail,
+        val root: View = inflater.inflate(R.layout.view_mail,
                 container,false)
         ButterKnife.bind(this, root)
         return root
@@ -64,6 +67,7 @@ class EmailFragment: NotificationFragment(), ILoadDataView {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         sendEmailPresenter.view = this
+        sendFtpPresenter.view = this
         setDataControl()
     }
 
@@ -79,12 +83,23 @@ class EmailFragment: NotificationFragment(), ILoadDataView {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        //Execute FTP
+        sendFtpPresenter.nameFile = emailModel.clip
+        if (sendFtpPresenter.nameFile.isNotEmpty()){
+            GlobalScope.launch {
+                sendFtpPresenter.executeSendFile()
+            }
+
+        }
+    }
     override fun showMessage(message: String) {
-        context.toast(message)
+        context!!.toast(message)
     }
 
     override fun showError(message: String) {
-        context.toast(message)
+        context!!.toast(message)
     }
 
     override fun <T> executeTask(obj: T) {

@@ -9,8 +9,8 @@ import com.hiddenodds.trebol.presentation.model.TypeNotificationModel
 import com.hiddenodds.trebol.tools.ChangeFormat
 import com.hiddenodds.trebol.tools.Variables
 import io.reactivex.observers.DisposableObserver
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import org.json.JSONArray
 import org.json.JSONObject
 import javax.inject.Inject
@@ -153,7 +153,7 @@ class SaveNotificationPresenter @Inject constructor(private val getDownloadUseCa
                     mapperNotification.trade = mapperNotification.trade.trim()
                 }
 
-                async {
+                GlobalScope.async {
                     deleteMaintenanceUseCase.codeNotify = mapperNotification.code
                     deleteMaintenanceUseCase.execute(DeleteMaintenanceObserver())
                 }
@@ -168,7 +168,7 @@ class SaveNotificationPresenter @Inject constructor(private val getDownloadUseCa
         deleteListNotification()
 
         if (jsonString.isNotEmpty()){
-            async(CommonPool) {
+            GlobalScope.async{
                 val jsonArray = JSONArray(jsonString)
                 buildListMapper(jsonArray)
                 saveListNotification()

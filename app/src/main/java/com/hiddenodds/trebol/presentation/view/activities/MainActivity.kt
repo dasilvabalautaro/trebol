@@ -1,19 +1,12 @@
 package com.hiddenodds.trebol.presentation.view.activities
 
-import android.annotation.SuppressLint
-import android.os.Build
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v7.app.AppCompatActivity
-import android.view.MenuItem
-import android.view.View
-import android.widget.ProgressBar
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import com.hiddenodds.trebol.R
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.hiddenodds.trebol.App
-import com.hiddenodds.trebol.R
 import com.hiddenodds.trebol.model.persistent.caching.CachingLruRepository
 import com.hiddenodds.trebol.presentation.view.fragments.MenuFragment
 import com.hiddenodds.trebol.presentation.view.fragments.SignInFragment
@@ -22,7 +15,10 @@ import com.hiddenodds.trebol.tools.Constants
 import com.hiddenodds.trebol.tools.PreferenceHelper
 import com.hiddenodds.trebol.tools.PreferenceHelper.set
 import com.hiddenodds.trebol.tools.Variables
-
+import android.os.StrictMode
+import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.appbar.AppBarLayout
 
 class MainActivity : AppCompatActivity() {
 
@@ -38,17 +34,10 @@ class MainActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayShowTitleEnabled(false)
         supportActionBar!!.setDisplayHomeAsUpEnabled(false)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            supportActionBar!!.setBackgroundDrawable(getDrawable(R.drawable.head_back))
-        }else{
+        supportActionBar!!.setBackgroundDrawable(getDrawable(R.drawable.head_back))
+        val builder = StrictMode.VmPolicy.Builder()
+        StrictMode.setVmPolicy(builder.build())
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                supportActionBar!!.setBackgroundDrawable(this.getDrawable(R.drawable.head_back))
-            }else{
-                supportActionBar!!.setBackgroundDrawable(this.resources
-                        .getDrawable(R.drawable.head_back))
-            }
-        }
         ChangeFormat.setVariablesConnect(this)
         val signInFragment = SignInFragment()
         addFragment(signInFragment)
@@ -85,7 +74,7 @@ class MainActivity : AppCompatActivity() {
         //android.os.Process.killProcess(android.os.Process.myPid())
     }
 
-    @SuppressLint("PrivateResource")
+    /*@SuppressLint("PrivateResource")
     private fun addFragment(newFragment: Fragment) {
         supportFragmentManager
                 .beginTransaction()
@@ -93,8 +82,14 @@ class MainActivity : AppCompatActivity() {
                         R.anim.design_bottom_sheet_slide_out)
                 .replace(R.id.flContent, newFragment, newFragment.javaClass.simpleName)
                 .commit()
-    }
+    }*/
 
+    private fun addFragment(newFragment: Fragment){
+        val fragmentManager = supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.add(R.id.flContent, newFragment)
+        fragmentTransaction.commit()
+    }
     override fun onDestroy() {
         super.onDestroy()
         (App.appComponent.context() as App).onTerminate()

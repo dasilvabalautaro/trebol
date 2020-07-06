@@ -5,8 +5,8 @@ import android.app.Activity
 import android.content.pm.PackageManager
 import android.graphics.*
 import android.net.Uri
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.hiddenodds.trebol.App
 import com.hiddenodds.trebol.R
 import com.hiddenodds.trebol.model.persistent.file.ManageFile
@@ -39,8 +39,8 @@ class ManageImage @Inject constructor(private val permissionUtils:
             PublishSubject.create()
 
     init {
-        observableMessage
-                .subscribe { message }
+//        observableMessage
+//                .subscribe { message }
     }
 
     fun addFileToGallery(activity: Activity){
@@ -155,7 +155,7 @@ class ManageImage @Inject constructor(private val permissionUtils:
         scaleMatrix.setScale(ratioX, ratioY, middleX, middleY)
 
         val c = Canvas(newBitmap)
-        c.matrix = scaleMatrix
+        c.setMatrix(scaleMatrix)
         c.drawBitmap(bitmap, middleX - bitmap.width / 2,
                 middleY - bitmap.height / 2, Paint(Paint.FILTER_BITMAP_FLAG))
         return newBitmap

@@ -1,12 +1,13 @@
 package com.hiddenodds.trebol.presentation.components
 
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
+
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import com.hiddenodds.trebol.R
 import com.hiddenodds.trebol.presentation.model.AssignedMaterialModel
 import com.hiddenodds.trebol.tools.DataListDiffCallback
@@ -16,16 +17,16 @@ class ItemProductSelectAdapter(private val listener:
         RecyclerView.Adapter<ItemProductSelectAdapter.ViewHolder>(){
     private val items: ArrayList<AssignedMaterialModel> = ArrayList()
 
-    override fun onBindViewHolder(holder: ItemProductSelectAdapter.ViewHolder?,
+    override fun onBindViewHolder(holder: ItemProductSelectAdapter.ViewHolder,
                                   position: Int) =
-            holder!!.bind(items[position], listener)
+            holder.bind(items[position], listener)
 
     override fun getItemCount(): Int = items.size
 
-    override fun onCreateViewHolder(parent: ViewGroup?,
+    override fun onCreateViewHolder(parent: ViewGroup,
                                     viewType: Int):
             ItemProductSelectAdapter.ViewHolder {
-        val view: ItemRowProductSelectView = LayoutInflater.from(parent!!.context)
+        val view: ItemRowProductSelectView = LayoutInflater.from(parent.context)
                 .inflate(R.layout.view_row_product_select,
                         parent, false) as ItemRowProductSelectView
         return ItemProductSelectAdapter.ViewHolder(view)

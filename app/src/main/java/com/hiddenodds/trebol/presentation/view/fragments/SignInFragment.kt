@@ -3,8 +3,7 @@ package com.hiddenodds.trebol.presentation.view.fragments
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,7 +28,8 @@ import com.hiddenodds.trebol.tools.PreferenceHelper.get
 import com.hiddenodds.trebol.tools.Variables
 import io.realm.Realm
 import io.realm.RealmConfiguration
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -48,27 +48,15 @@ class SignInFragment: Fragment(), ILoadDataView {
                     .executeGetTechnicalMaster(edt_user?.text!!.trim().toString(),
                             edt_password?.text!!.trim().toString())
         }else{
-            context.toast(context.resources
+            context!!.toast(context!!.resources
                     .getString(R.string.input_error))
         }
 
 
     }
-    @BindView(R.id.fa_test)
-    @JvmField var faTest: FloatingActionButton? = null
-    @OnClick(R.id.fa_test)
-    fun changeVariablesConnect(){
-        val configurationFragment = ConfigurationFragment()
-        activity.supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.flContent, configurationFragment,
-                        configurationFragment.javaClass.simpleName)
-                .addToBackStack(null)
-                .commit()
-    }
 
     val Fragment.app: App
-        get() = activity.application as App
+        get() = activity!!.application as App
 
     private val component by lazy { app.
             getAppComponent().plus(PresenterModule())}
@@ -87,10 +75,9 @@ class SignInFragment: Fragment(), ILoadDataView {
 
     }
 
-    override fun onCreateView(inflater: LayoutInflater?,
-                              container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val root: View = inflater!!.inflate(R.layout.sign_in,
+        val root: View = inflater.inflate(R.layout.sign_in,
                 container,false)
         ButterKnife.bind(this, root)
         return root
@@ -101,11 +88,12 @@ class SignInFragment: Fragment(), ILoadDataView {
         technicalRemotePresenter.view = this
         technicalMasterPresenter.view = this
         typeNotificationRemotePresenter.view = this
+
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration?) {
+    override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        if (newConfig!!.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             ChangeFormat.setHeightPercent(btn_ok!!, 0.15f)
 
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -120,17 +108,17 @@ class SignInFragment: Fragment(), ILoadDataView {
         super.onResume()
 
         try {
-            val prefs = PreferenceHelper.customPrefs(context,
+            val prefs = PreferenceHelper.customPrefs(context!!,
                     Constants.PREFERENCE_TREBOL)
             val techKey: Boolean? = prefs[Constants.TECHNICAL_DB, false]
             if (techKey == null || !techKey){
-                launch{
+                GlobalScope.launch{
                     technicalRemotePresenter.executeQueryRemote()
                     typeNotificationRemotePresenter.executeQueryRemote()
                 }
 
             }else{
-                launch{
+                GlobalScope.launch{
                     technicalRemotePresenter.executeQueryRemote()
                 }
             }
@@ -146,13 +134,16 @@ class SignInFragment: Fragment(), ILoadDataView {
         val config: RealmConfiguration = Realm.getDefaultConfiguration()!!
         println(config.path + " " + Realm.getGlobalInstanceCount(config).toString())
 
-        context.toast(message)
+        context!!.toast(message)
     }
 
     override fun showError(message: String) {
         /*technicalRemotePresenter.destroy()
         typeNotificationRemotePresenter.destroy()*/
-        context.toast(message)
+        if (context != null){
+            context!!.toast(message)
+        }
+
     }
 
     private fun clearRemotePresenter(option: Int){
@@ -176,7 +167,7 @@ class SignInFragment: Fragment(), ILoadDataView {
                 Variables.codeTechMaster = (obj as TechnicalModel).code
                 Variables.listTechnicals = ArrayList((obj as TechnicalModel).trd)
 
-                context.toast(context.resources.getString(R.string.welcome) +
+                context!!.toast(context!!.resources.getString(R.string.welcome) +
                         "\n" + nameTech)
                 callMenu()
 
@@ -195,7 +186,7 @@ class SignInFragment: Fragment(), ILoadDataView {
     private fun license(): Boolean{
         val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
         val init = sdf.parse("2018-06-06")
-        val limit = (init.time + (86400000 * 10))
+        val limit = (init!!.time + (86400000 * 10))
         val dateWork = Date().time
 
         return (dateWork > limit)
@@ -210,7 +201,7 @@ class SignInFragment: Fragment(), ILoadDataView {
 
     private fun callMenu(){
         val fragmentMenu = MenuFragment()
-        activity.supportFragmentManager
+        activity!!.supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.flContent, fragmentMenu,
                         fragmentMenu.javaClass.simpleName)

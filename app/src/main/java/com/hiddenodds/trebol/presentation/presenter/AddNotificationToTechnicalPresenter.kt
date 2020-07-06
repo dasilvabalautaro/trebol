@@ -5,7 +5,8 @@ import com.hiddenodds.trebol.domain.interactor.AddNotificationToTechnicalUseCase
 import com.hiddenodds.trebol.model.persistent.file.ManageFile
 import com.hiddenodds.trebol.tools.Variables
 import io.reactivex.observers.DisposableObserver
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import javax.inject.Inject
 
 
@@ -41,7 +42,7 @@ class AddNotificationToTechnicalPresenter @Inject constructor(private val addNot
     }
 
     private fun stopProgress(){
-        async {
+        GlobalScope.async {
             ManageFile.deleteDirectoryOfWork()
         }
 
