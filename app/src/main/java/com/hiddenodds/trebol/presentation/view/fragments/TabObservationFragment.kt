@@ -300,6 +300,7 @@ class TabObservationFragment: TabBaseFragment() {
         emailModel.subject = "GDM ${notificationModel!!.code}, " +
                 "Cliente: ${notificationModel!!.businessName}, " +
                 "Máquina: ${notificationModel!!.machine}"
+
         emailModel.message = "Estimado cliente, adjunto le enviamos el " +
                 " documento de Guía de mantenimiento, correspondiente " +
                 " a la revisión efectuada en sus instalaciones el día $dateWork .\n" +
@@ -331,6 +332,7 @@ class TabObservationFragment: TabBaseFragment() {
                         pdfTabFragment.javaClass.simpleName)
                 .addToBackStack(null)
                 .commit()
+
     }
 
 }

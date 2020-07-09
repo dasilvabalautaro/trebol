@@ -71,6 +71,12 @@ class EmailFragment: NotificationFragment(), ILoadDataView {
         setDataControl()
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        //FIX: TransactionTooLargeException when sharing image via intent. Clear the Activity's bundle of the subsidiary fragments' bundles.
+        outState.clear()
+    }
+
     private fun setDataControl(){
         tvTitle!!.text = emailModel.title
         tvCc!!.text = emailModel.whoCopy

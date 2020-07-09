@@ -9,10 +9,10 @@ android {
     compileSdkVersion 29
     defaultConfig {
         applicationId "com.hiddenodds.trebol"
-        minSdkVersion 26
+        minSdkVersion 27
         targetSdkVersion 29
-        versionCode 19
-        versionName "19.0"
+        versionCode 21
+        versionName "21.0"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         //multiDexEnabled true
     }
@@ -74,6 +74,7 @@ dependencies {
     implementation 'org.apache:pdfbox-android:1.8.9.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'commons-net:commons-net:3.6'
+
 }
 repositories {
 

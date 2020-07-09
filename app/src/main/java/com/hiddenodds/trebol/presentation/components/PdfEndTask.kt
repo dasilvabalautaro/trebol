@@ -67,6 +67,7 @@ class PdfEndTask @Inject constructor() {
 
         val viewSv: View = view!!.findViewById(R.id.sv_pdf_end_task)
         val svScroll: ScrollView = view!!.findViewById(R.id.sv_pdf_end_task)
+
         val viewBitmap : Bitmap = Bitmap.createBitmap(svScroll.getChildAt(0).measuredWidth,
                 svScroll.getChildAt(0).measuredHeight, Bitmap.Config.RGB_565)
         val canvas = Canvas(viewBitmap)

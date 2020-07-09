@@ -1,6 +1,7 @@
 package com.hiddenodds.trebol.presentation.view.activities
 
 import android.os.Bundle
+import android.os.PersistableBundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.hiddenodds.trebol.R
@@ -93,6 +94,11 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         (App.appComponent.context() as App).onTerminate()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.clear()
     }
 }
 

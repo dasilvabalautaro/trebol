@@ -141,8 +141,11 @@ class ManageImage @Inject constructor(private val permissionUtils:
     }
 
     fun scaleBitmap(bitmap: Bitmap): Bitmap{
+        val relation = bitmap.width / bitmap.height
+
         val newWidth = bitmap.width/2
         val newHeight = bitmap.height/(bitmap.width/newWidth)
+
         val newBitmap = Bitmap.createBitmap(newWidth,
                 newHeight, Bitmap.Config.ARGB_8888)
 

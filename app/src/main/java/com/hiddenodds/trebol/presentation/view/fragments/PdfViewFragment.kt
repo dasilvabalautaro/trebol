@@ -37,11 +37,20 @@ class PdfViewFragment: Fragment(){
         }
     }
 
-    private val codeNotification: String? = this.arguments!!.getString(inputNotification)
-    private val codeTechnical: String? = this.arguments!!.getString(inputTechnical)
+    private val codeNotification: String? by lazy { this.arguments!!
+            .getString(PdfViewFragment.inputNotification) }
+    private val codeTechnical: String? by lazy { this.arguments!!
+            .getString(PdfViewFragment.inputTechnical) }
 
-    private val emailModel: EmailModel = this.arguments!!
-            .getSerializable(inputEmailModel) as EmailModel
+    private val emailModel: EmailModel? by lazy {this.arguments!!
+            .getSerializable(PdfViewFragment.inputEmailModel) as EmailModel}
+
+    //private val codeNotification: String? = this.arguments!!.getString(inputNotification)
+    //private val codeTechnical: String? = this.arguments!!.getString(inputTechnical)
+
+
+    /*private val emailModel: EmailModel = this.arguments!!
+            .getSerializable(inputEmailModel) as EmailModel*/
 
     private var uri: Uri? = null
     private var itemMenuSave: MenuItem? = null
@@ -64,7 +73,7 @@ class PdfViewFragment: Fragment(){
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (codeTechnical != null) {
-            ChangeFormat.deleteCacheTechnical(codeTechnical)
+            ChangeFormat.deleteCacheTechnical(codeTechnical!!)
         }
         (activity!! as MainActivity).displayHome(false)
     }
@@ -75,7 +84,7 @@ class PdfViewFragment: Fragment(){
             uri = ManageFile.getFile("$codeNotification.pdf")
             activity!!.runOnUiThread {
                 pdfView!!.fromUri(uri).load()
-                emailModel.clip = "$codeNotification.pdf"
+                emailModel?.clip ?: "$codeNotification.pdf"
             }
         }
 
@@ -92,7 +101,7 @@ class PdfViewFragment: Fragment(){
         val id = item.itemId
 
         if (id == R.id.action_email){
-            executeEmail(emailModel)
+            emailModel?.let { executeEmail(it) }
         }
         if (id == R.id.action_save){
 

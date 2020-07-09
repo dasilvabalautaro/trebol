@@ -116,6 +116,12 @@ class PdfTabFragment: Fragment() {
                 })
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        //FIX: TransactionTooLargeException when sharing image via intent. Clear the Activity's bundle of the subsidiary fragments' bundles.
+        outState.clear()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.options, menu)
     }
@@ -248,6 +254,7 @@ class PdfTabFragment: Fragment() {
                 .replace(R.id.flContent, emailFragment,
                         emailFragment.javaClass.simpleName)
                 .commit()
+
     }
 
     private fun saveViewPdf(){
@@ -263,7 +270,7 @@ class PdfTabFragment: Fragment() {
         GlobalScope.async {
             manageImage.image = viewBitmap
             manageImage.code = pdfGuideModel.id
-            manageImage.scale = true
+            manageImage.scale = false
             manageImage.flagPdf = true
             manageImage.addFileToGallery(activity!!)
 

@@ -39,9 +39,9 @@ class NotificationFinishFragment: NotificationFragment(), ILoadDataView {
 
     @OnClick(R.id.bt_pdf)
     fun savePdf() = runBlocking{
-        pdfEndTask.manageImage = manageImage
-        val client = etClient!!.text.toString()
         val job = GlobalScope.async {
+            pdfEndTask.manageImage = manageImage
+            val client = etClient!!.text.toString()
             pdfEndTask.inflateView()
             codeNotification?.let { pdfEndTask.setData(it, client, nameFileSignature) }
             pdfEndTask.saveImage("$codeNotification$PRE_FIX")
@@ -52,6 +52,9 @@ class NotificationFinishFragment: NotificationFragment(), ILoadDataView {
             viewPdf()
         }
     }
+
+
+
 
     @OnClick(R.id.bt_save)
     fun saveSignature(){

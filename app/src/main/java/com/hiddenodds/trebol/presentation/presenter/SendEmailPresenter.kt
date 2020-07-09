@@ -44,6 +44,7 @@ class SendEmailPresenter @Inject constructor(): BasePresenter(){
     private fun launchEmailIntent(emailTo: Array<String>,
                                   emailCc: Array<String>,
                                   pathFile: Uri?){
+
         val emailIntent = Intent(Intent.ACTION_SEND)
         //emailIntent.data = Uri.parse("mailto:")
         emailIntent.putExtra(Intent.EXTRA_EMAIL, emailTo)
