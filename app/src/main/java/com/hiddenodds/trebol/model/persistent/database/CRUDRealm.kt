@@ -9,13 +9,13 @@ import com.hiddenodds.trebol.model.interfaces.ITaskCompleteListener
 import com.hiddenodds.trebol.presentation.interfaces.IModel
 import com.hiddenodds.trebol.presentation.interfaces.IModelDataMapper
 import com.hiddenodds.trebol.presentation.model.AssignedMaterialModel
-import com.hiddenodds.trebol.presentation.model.MaterialModel
 import com.hiddenodds.trebol.presentation.model.TechnicalModel
 import io.realm.*
 import java.util.*
 import kotlin.collections.ArrayList
 
 
+@Suppress("NAME_SHADOWING")
 abstract class CRUDRealm: IRepository {
 
     override fun <E : RealmObject> save(clazz: Class<E>,
@@ -45,7 +45,7 @@ abstract class CRUDRealm: IRepository {
 
     fun saveMaterial(list: ArrayList<MapperMaterial>){
         Thread {
-            val realm: Realm = Realm.getDefaultInstance()
+            val realm = Realm.getDefaultInstance()
             realm.use { realm ->
                 for (i in list.indices){
                     val parcel: Parcel = list[i].getContent()
@@ -249,8 +249,8 @@ abstract class CRUDRealm: IRepository {
     fun nameFileSignature(name: String,
                       listener: ITaskCompleteListener): String{
         val realm: Realm = Realm.getDefaultInstance()
-        var nameFile = ""
-        var signature: Signature? = null
+        var nameFile: String = ""
+        var signature: Signature?
         try {
             realm.executeTransaction {
                 val e = realm.where(Signature::class.java)

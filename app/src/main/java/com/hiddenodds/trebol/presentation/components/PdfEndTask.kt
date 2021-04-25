@@ -1,5 +1,6 @@
 package com.hiddenodds.trebol.presentation.components
 
+import android.annotation.SuppressLint
 import android.app.Service
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -61,12 +62,13 @@ class PdfEndTask @Inject constructor() {
 
     }
 
+    @SuppressLint("CutPasteId")
     fun saveImage(nameFile: String){
         view!!.measure(FrameLayout.LayoutParams.WRAP_CONTENT,
                 FrameLayout.LayoutParams.WRAP_CONTENT)
 
-        val viewSv: View = view!!.findViewById(R.id.sv_pdf_end_task)
-        val svScroll: ScrollView = view!!.findViewById(R.id.sv_pdf_end_task)
+        val viewSv: View = view!!.requireViewById(R.id.sv_pdf_end_task)
+        val svScroll: ScrollView = view!!.requireViewById(R.id.sv_pdf_end_task)
 
         val viewBitmap : Bitmap = Bitmap.createBitmap(svScroll.getChildAt(0).measuredWidth,
                 svScroll.getChildAt(0).measuredHeight, Bitmap.Config.RGB_565)

@@ -5,6 +5,7 @@ import android.app.Application
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.view.ContextThemeWrapper
+import org.jetbrains.anko.displayMetrics
 import java.util.*
 
 
@@ -26,16 +27,21 @@ class LocaleUtils {
         }
     }
 
-    @SuppressLint("ObsoleteSdkInt")
+    //@SuppressLint("ObsoleteSdkInt")
     fun updateConfiguration(app: Application,
                             configurationNew: Configuration){
         if (locale != null ){
+//            val resources: Resources = app.baseContext.resources
             val configuration: Configuration = Configuration(configurationNew)
             configuration.setLocale(locale)
-            val resources: Resources = app.baseContext.resources
-            @Suppress("DEPRECATION")
-            resources.updateConfiguration(configuration, resources.displayMetrics)
+//            val displayMetrics = resources.displayMetrics
+            app.applicationContext.createConfigurationContext(configuration)
 
+        //            val resources: Resources = app.baseContext.resources
+//            configuration.densityDpi = resources.displayMetrics
+////            @Suppress("DEPRECATION")
+//            resources.updateConfiguration(configuration, resources.displayMetrics)
+        //            app.baseContext.createConfigurationContext(configuration)
         }
 
     }

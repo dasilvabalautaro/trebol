@@ -1,5 +1,6 @@
 package com.hiddenodds.trebol.presentation.view.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,12 +18,16 @@ import com.hiddenodds.trebol.tools.Variables
 
 
 class ConfigurationFragment: NotificationFragment(), ILoadDataView {
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.et_server)
     @JvmField var etServer: EditText? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.et_port)
     @JvmField var etPort: EditText? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.pb_connect)
     @JvmField var pbConnect: ProgressBar? = null
+    @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.bt_save)
     fun saveConfigurationServer(){
         if (validateInput()){
@@ -31,21 +36,21 @@ class ConfigurationFragment: NotificationFragment(), ILoadDataView {
             pbConnect!!.visibility = View.VISIBLE
             verifyConnectServerPresenter.verifyConnect()
         }else{
-            context!!.toast(context!!.resources
+            requireContext().toast(requireContext().resources
                     .getString(R.string.input_error))
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         val root: View = inflater.inflate(R.layout.view_configuration,
                 container,false)
         ButterKnife.bind(this, root)
         return root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onStart() {
+        super.onStart()
         verifyConnectServerPresenter.view = this
     }
 
@@ -56,14 +61,14 @@ class ConfigurationFragment: NotificationFragment(), ILoadDataView {
 
     override fun showMessage(message: String) {
         pbConnect!!.visibility = View.INVISIBLE
-        ChangeFormat.changeVariablesConnect(context!!)
-        context!!.toast(message)
+        ChangeFormat.changeVariablesConnect(requireContext())
+        requireContext().toast(message)
     }
 
     override fun showError(message: String) {
         pbConnect!!.visibility = View.INVISIBLE
-        ChangeFormat.refreshVariablesconnect(context!!)
-        context!!.toast(message)
+        ChangeFormat.refreshVariablesconnect(requireContext())
+        requireContext().toast(message)
     }
 
     override fun onResume() {

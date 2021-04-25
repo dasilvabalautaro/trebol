@@ -1,5 +1,6 @@
 package com.hiddenodds.trebol.presentation.components
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.fragment.app.FragmentActivity
 import android.util.AttributeSet
@@ -20,43 +21,59 @@ class ItemRowOtView: FrameLayout {
     constructor(context: Context, attributeSet: AttributeSet):
             super(context, attributeSet)
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.edtAnnounce)
     @JvmField var edtAnnounce: TextView? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.edtMachine)
     @JvmField var edtMachine: TextView? = null
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.edtType)
     @JvmField var edtType: TextView? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.edtName)
     @JvmField var edtName: TextView? = null
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.edtContact)
     @JvmField var edtContact: TextView? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.edtDate)
     @JvmField var edtDate: TextView? = null
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.edtDateFinish)
     @JvmField var edtDateFinish: TextView? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.edtAddress)
     @JvmField var edtAddress: TextView? = null
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.edtProvince)
     @JvmField var edtProvince: TextView? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.edtLocation)
     @JvmField var edtLocation: TextView? = null
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.edtPhone)
     @JvmField var edtPhone: TextView? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.edtObservation)
     @JvmField var edtObservation: TextView? = null
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.btnGuide)
     @JvmField var btnGuide: Button? = null
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.btnOpenOt)
     @JvmField var btnOpenOt: Button? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.btnEmail)
     @JvmField var btnEmail: Button? = null
+    @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.btnOpenOt)
     fun openOT(){
         val params = (btnOpenOt!!.tag as String).split("*")
@@ -75,6 +92,7 @@ class ItemRowOtView: FrameLayout {
 
     }
 
+    @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.btnGuide)
     fun openGuide(){
 
@@ -94,7 +112,6 @@ class ItemRowOtView: FrameLayout {
     }
 
     init {
-        val TAG = OtsFragment::class.java.name!!
         LayoutInflater.from(context)
                 .inflate(R.layout.view_item_ot, this, true)
         ButterKnife.bind(this)

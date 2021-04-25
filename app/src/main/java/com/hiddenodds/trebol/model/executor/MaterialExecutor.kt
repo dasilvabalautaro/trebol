@@ -67,7 +67,7 @@ class MaterialExecutor @Inject constructor(): CRUDRealm(),
     }
 
     override fun saveList(list: ArrayList<MapperMaterial>): Observable<Boolean> {
-        var flag = true
+        var flag: Boolean
         return Observable.create{subscriber ->
 
             this.saveMaterial(list)

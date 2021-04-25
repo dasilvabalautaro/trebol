@@ -3,6 +3,7 @@ package com.hiddenodds.trebol.presentation.components
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.hiddenodds.trebol.R
@@ -43,7 +44,9 @@ class ItemProductAdapter(private val listener: (MaterialModel) -> Unit):
             tvCode!!.text = item.code
             tvDescription!!.text = item.detail
             setOnClickListener {
-                itemView.background =  resources.getDrawable(R.color.colorPrimary)
+                itemView.background = ContextCompat
+                        .getDrawable(context,
+                                R.color.colorPrimary)
                 listener(item)
             }
         }

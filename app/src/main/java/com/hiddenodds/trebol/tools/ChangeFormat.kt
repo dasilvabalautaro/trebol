@@ -10,6 +10,7 @@ import androidx.annotation.RequiresApi
 import androidx.percentlayout.widget.PercentLayoutHelper
 import android.view.View
 import android.widget.EditText
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.hiddenodds.trebol.R
@@ -88,15 +89,15 @@ object ChangeFormat {
         val horizontalDecoration =
                 DividerItemDecoration(rv.context,
                         DividerItemDecoration.VERTICAL)
-        val horizontalDivider: Drawable? = context
-                .getDrawable(R.drawable.horizontal_divider)
+        val horizontalDivider: Drawable? = ContextCompat
+                .getDrawable(context, R.drawable.horizontal_divider)
         if (horizontalDivider != null) {
             horizontalDecoration.setDrawable(horizontalDivider)
         }
         rv.addItemDecoration(horizontalDecoration)
     }
 
-    @Suppress("DEPRECATION")
+    //@Suppress("DEPRECATION")
     fun setHeightPercent(view: View, height: Float){
         val params = view.layoutParams as PercentLayoutHelper.PercentLayoutParams
         val info = params.percentLayoutInfo

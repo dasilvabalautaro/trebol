@@ -1,5 +1,6 @@
 package com.hiddenodds.trebol.presentation.components
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.text.InputType
 import android.util.AttributeSet
@@ -16,10 +17,13 @@ class ItemRowTabView: FrameLayout {
     constructor(context: Context): super(context)
     constructor(context: Context, attributeSet: AttributeSet):
             super(context, attributeSet)
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.tv_description)
     @JvmField var tvDescription: TextView? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.et_value)
     @JvmField var etValue: EditText? = null
+    @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.et_value)
     fun defineValue(){
         if (etValue!!.inputType == InputType.TYPE_NULL){

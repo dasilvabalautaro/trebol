@@ -28,7 +28,7 @@ abstract class NotificationFragment: Fragment() {
     }
 
     val Fragment.app: App
-        get() = activity!!.application as App
+        get() = requireActivity().application as App
 
     private val component by lazy { app.
             getAppComponent().plus(PresenterModule())}
@@ -77,7 +77,7 @@ abstract class NotificationFragment: Fragment() {
         val message = manageImage.observableMessage.map { m -> m }
         disposable.add(message.observeOn(AndroidSchedulers.mainThread())
                 .subscribe { s ->
-                    context!!.toast(s)
+                    requireContext().toast(s)
                 })
         (activity as MainActivity).displayHome(true)
     }
@@ -101,7 +101,7 @@ abstract class NotificationFragment: Fragment() {
     protected fun removeFragmentProduct(){
         try {
 
-            val manager = activity!!.supportFragmentManager
+            val manager = requireActivity().supportFragmentManager
 
             for (i in 0 until manager.backStackEntryCount){
 
@@ -120,7 +120,7 @@ abstract class NotificationFragment: Fragment() {
 
     fun executeEmail(emailModel: EmailModel){
         val emailFragment = EmailFragment.newInstance(emailModel)
-        activity!!.supportFragmentManager
+        requireActivity().supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.flContent, emailFragment,
                         emailFragment.javaClass.simpleName)

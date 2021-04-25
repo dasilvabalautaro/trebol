@@ -1,5 +1,6 @@
 package com.hiddenodds.trebol.presentation.view.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,29 +18,36 @@ import kotlinx.coroutines.launch
 
 
 class EmailFragment: NotificationFragment(), ILoadDataView {
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.tv_title)
     @JvmField var tvTitle: TextView? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.tv_client)
     @JvmField var tvClient: TextView? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.tv_of)
     @JvmField var tvOf: TextView? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.tv_cc)
     @JvmField var tvCc: TextView? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.et_for)
     @JvmField var etFor: EditText? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.tv_subject)
     @JvmField var tvSubject: TextView? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.tv_clip)
     @JvmField var tvClip: TextView? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.et_message)
     @JvmField var etMessage: EditText? = null
+    @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.bt_send_email)
     fun sendEmail(){
-
         emailModel.whoFor = etFor!!.text.toString()
         sendEmailPresenter.emailModel = emailModel
         sendEmailPresenter.executeSendEmail()
-
     }
 
     companion object Factory {
@@ -53,22 +61,23 @@ class EmailFragment: NotificationFragment(), ILoadDataView {
         }
     }
 
-    private val emailModel: EmailModel by lazy { this.arguments!!
+    private val emailModel: EmailModel by lazy { this.requireArguments()
             .getSerializable(inputEmailModel) as EmailModel}
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         val root: View = inflater.inflate(R.layout.view_mail,
                 container,false)
         ButterKnife.bind(this, root)
         return root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onStart() {
+        super.onStart()
         sendEmailPresenter.view = this
         sendFtpPresenter.view = this
         setDataControl()
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -101,11 +110,11 @@ class EmailFragment: NotificationFragment(), ILoadDataView {
         }
     }
     override fun showMessage(message: String) {
-        context!!.toast(message)
+        requireContext().toast(message)
     }
 
     override fun showError(message: String) {
-        context!!.toast(message)
+        requireContext().toast(message)
     }
 
     override fun <T> executeTask(obj: T) {

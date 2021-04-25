@@ -1,5 +1,6 @@
 package com.hiddenodds.trebol.presentation.components
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -15,8 +16,10 @@ class PdfEndTaskView: FrameLayout {
     constructor(context: Context): super(context)
     constructor(context: Context, attributeSet: AttributeSet):
             super(context, attributeSet)
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.signatureClient)
     @JvmField var signatureClient: ImageView? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.lblContent)
     @JvmField var lblContent: TextView? = null
 

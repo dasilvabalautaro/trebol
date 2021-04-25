@@ -1,5 +1,6 @@
 package com.hiddenodds.trebol.presentation.view.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.core.widget.NestedScrollView
 import android.view.LayoutInflater
@@ -19,8 +20,10 @@ class TabTestFragment: TabBaseFragment(){
     private val sufix = "_t2"
     private var adapter: ItemTabAdapter? = null
     private var flagChange = false
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.sv_tab)
     @JvmField var svTab: NestedScrollView? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.rv_verification)
     @JvmField var rvVerification: RecyclerView? = null
 
@@ -183,7 +186,7 @@ class TabTestFragment: TabBaseFragment(){
         val free = listOf(4, 5)
 
         val items: ArrayList<GuideModel> = ArrayList()
-        val labels = context!!
+        val labels = requireContext()
                 .resources.getStringArray(R.array.lbl_test)
         val values: ArrayList<String> = ArrayList()
         values.add(maintenanceModel!!.test1)
@@ -217,5 +220,9 @@ class TabTestFragment: TabBaseFragment(){
         }
 
         return items
+    }
+
+    override fun buildListOfData(arrayTemp: java.util.ArrayList<String>): java.util.ArrayList<GuideModel> {
+        TODO("Not yet implemented")
     }
 }

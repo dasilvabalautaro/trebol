@@ -52,7 +52,7 @@ class MaintenanceExecutor @Inject constructor(): CRUDRealm(),
             if (!newMaintenance.isNullOrEmpty()){
 
                 val maintenanceModel = MaintenanceModel()
-                maintenanceModel.id = newMaintenance!!
+                maintenanceModel.id = newMaintenance
                 subscriber.onNext(maintenanceModel)
                 subscriber.onComplete()
             }else{

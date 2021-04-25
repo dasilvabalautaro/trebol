@@ -1,5 +1,6 @@
 package com.hiddenodds.trebol.presentation.components
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -16,12 +17,16 @@ class ItemRowProductSelectView: FrameLayout {
     constructor(context: Context, attributeSet: AttributeSet):
             super(context, attributeSet)
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.et_quantity)
     @JvmField var etQuantity: EditText? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.tv_code)
     @JvmField var tvCode: TextView? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.ib_delete)
     @JvmField var ibDelete: ImageButton? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.tv_detail)
     @JvmField var tvDetail: TextView? = null
 

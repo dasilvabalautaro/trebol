@@ -1,12 +1,8 @@
 package com.hiddenodds.trebol.tools
 
-import android.Manifest
 import android.app.Activity
-import android.content.pm.PackageManager
 import android.graphics.*
 import android.net.Uri
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import com.hiddenodds.trebol.App
 import com.hiddenodds.trebol.R
 import com.hiddenodds.trebol.model.persistent.file.ManageFile
@@ -23,50 +19,27 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ManageImage @Inject constructor(private val permissionUtils:
-                                      PermissionUtils):
-        ActivityCompat.OnRequestPermissionsResultCallback {
+class ManageImage @Inject constructor(
+        private val permissionUtils: PermissionUtils) {
 
     private val context = App.appComponent.context()
     var image: Bitmap? = null
     var code: String = ""
     var flagPdf = false
     var scale: Boolean = false
-    val WRITE_EXTERNAL_STORAGE = 1
-    val READ_EXTERNAL_STORAGE = 2
     private var message: String = ""
     var observableMessage: Subject<String> =
             PublishSubject.create()
 
-    init {
-//        observableMessage
-//                .subscribe { message }
+    fun addFileToGallery(activity: Activity){
+        executeSaveImage()
     }
 
-    fun addFileToGallery(activity: Activity){
-        when {
-            ContextCompat.checkSelfPermission(context,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
-                    PackageManager.PERMISSION_GRANTED -> permissionUtils
-                    .requestPermission(activity,
-                            WRITE_EXTERNAL_STORAGE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            else -> executeSaveImage()
-        }
-    }
 
     fun getFileOfGallery(activity: Activity):Bitmap?{
-        when {
-            ContextCompat.checkSelfPermission(context,
-                    Manifest.permission.READ_EXTERNAL_STORAGE) !=
-                    PackageManager.PERMISSION_GRANTED -> permissionUtils
-                    .requestPermission(activity,
-                            READ_EXTERNAL_STORAGE,
-                            Manifest.permission.READ_EXTERNAL_STORAGE)
-            else -> return getSignatureStore()
-        }
-        return null
+        return getSignatureStore()
     }
+
 
     private fun executeSaveImage(){
         when(flagPdf){
@@ -108,41 +81,11 @@ class ManageImage @Inject constructor(private val permissionUtils:
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<out String>,
-                                            grantResults: IntArray) {
-        when(requestCode) {
-
-            WRITE_EXTERNAL_STORAGE ->{
-                if (permissionUtils
-                                .permissionGranted(requestCode,
-                                        WRITE_EXTERNAL_STORAGE,
-                                        grantResults)) {
-                    //executeSaveImage()
-                    message = context.getString(R.string.lbl_permission_enabled)
-                    observableMessage.onNext(message)
-                }
-            }
-            READ_EXTERNAL_STORAGE ->{
-                if (permissionUtils
-                                .permissionGranted(requestCode,
-                                        READ_EXTERNAL_STORAGE,
-                                        grantResults)) {
-                    message = context.getString(R.string.lbl_permission_enabled)
-                    observableMessage.onNext(message)
-                }
-            }
-
-        }
-    }
-
     private fun getAlbumStorageDir(): File {
         return ManageFile.getAlbumStorageDir()
     }
 
     fun scaleBitmap(bitmap: Bitmap): Bitmap{
-        val relation = bitmap.width / bitmap.height
-
         val newWidth = bitmap.width/2
         val newHeight = bitmap.height/(bitmap.width/newWidth)
 
@@ -174,11 +117,8 @@ class ManageImage @Inject constructor(private val permissionUtils:
 
     @Throws(IOException::class)
     private fun saveBitmapToPDF(bitmap: Bitmap, filePdf: File){
-        var newBitmap: Bitmap? = null
 
-        newBitmap = if (scale){
-            bitmap
-        }else{
+        val newBitmap: Bitmap = if (scale) bitmap else{
             scaleBitmap(bitmap)
         }
 
@@ -222,6 +162,4 @@ class ManageImage @Inject constructor(private val permissionUtils:
     fun deleteSignatureStore(code:String){
         ManageFile.deleteFileOfWork(code)
     }
-
-
 }

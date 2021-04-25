@@ -1,5 +1,6 @@
 package com.hiddenodds.trebol.presentation.view.fragments
 
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.os.Bundle
 import androidx.core.widget.NestedScrollView
@@ -32,21 +33,29 @@ class TabObservationFragment: TabBaseFragment() {
     private var adapter: ItemTabAdapter? = null
     private var flagChange = false
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.sv_tab)
     @JvmField var svTab: NestedScrollView? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.rv_verification)
     @JvmField var rvVerification: RecyclerView? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.et_report)
     @JvmField var etReport: EditText? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.sp_technical)
     @JvmField var spTechnical: SignaturePad? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.sp_client)
     @JvmField var spClient: SignaturePad? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.et_client)
     @JvmField var etClient: EditText? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.et_technical)
     @JvmField var etTechnical: EditText? = null
 
+    @SuppressLint("NonConstantResourceId")
     @OnTextChanged(R.id.et_report)
     fun changeReportTechical(){
         if (maintenanceModel != null){
@@ -63,6 +72,7 @@ class TabObservationFragment: TabBaseFragment() {
         }
     }
 
+    @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.bt_save_technical)
     fun saveSignatureTechnical(){
 
@@ -71,13 +81,14 @@ class TabObservationFragment: TabBaseFragment() {
             pdfGuideModel.signatureTechnical = maintenanceModel!!.id + SUFIX_TECHNICAL
             manageImage.image = signatureBitmap
             manageImage.code = maintenanceModel!!.id + SUFIX_TECHNICAL
-            manageImage.addFileToGallery(activity!!)
+            manageImage.addFileToGallery(requireActivity())
 
         }else{
-            context!!.toast(context!!.getString(R.string.image_not_found))
+            requireContext().toast(requireContext().getString(R.string.image_not_found))
         }
     }
 
+    @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.bt_clear_technical)
     fun clearSignatureTechnical(){
         spTechnical!!.clear()
@@ -86,6 +97,7 @@ class TabObservationFragment: TabBaseFragment() {
         pdfGuideModel.signatureTechnical = ""
     }
 
+    @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.bt_save_client)
     fun saveSignatureClient(){
         val signatureBitmap: Bitmap? = spClient!!.signatureBitmap
@@ -93,13 +105,14 @@ class TabObservationFragment: TabBaseFragment() {
             pdfGuideModel.signatureClient = nameFileSignature
             manageImage.image = signatureBitmap
             manageImage.code = nameFileSignature
-            manageImage.addFileToGallery(activity!!)
+            manageImage.addFileToGallery(requireActivity())
 
         }else{
-            context!!.toast(context!!.getString(R.string.image_not_found))
+            requireContext().toast(requireContext().getString(R.string.image_not_found))
         }
     }
 
+    @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.bt_clear_client)
     fun clearSignatureClient(){
         spClient!!.clear()
@@ -108,6 +121,7 @@ class TabObservationFragment: TabBaseFragment() {
         pdfGuideModel.signatureClient = ""
     }
 
+    @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.bt_pdf)
     fun savePdf(){
         setTableToBitmap()
@@ -118,7 +132,7 @@ class TabObservationFragment: TabBaseFragment() {
             executePdfForm(pdfGuideModel)
 
         }else{
-            context!!.toast("Datos incompletos. Verifique las tablas y las firmas.")
+            requireContext().toast("Datos incompletos. Verifique las tablas y las firmas.")
         }
 
     }
@@ -143,7 +157,7 @@ class TabObservationFragment: TabBaseFragment() {
         val message = manageImage.observableMessage.map { m -> m }
         disposable.add(message.observeOn(AndroidSchedulers.mainThread())
                 .subscribe { s ->
-                    context!!.toast(s)
+                    requireContext().toast(s)
                 })
 
         try {
@@ -210,7 +224,7 @@ class TabObservationFragment: TabBaseFragment() {
                 "knowPrint", "nextHours")
 
         val items: ArrayList<GuideModel> = ArrayList()
-        val labels = context!!
+        val labels = requireContext()
                 .resources.getStringArray(R.array.lbl_observations)
         val values: ArrayList<String> = ArrayList()
         values.add(maintenanceModel!!.security)
@@ -230,6 +244,10 @@ class TabObservationFragment: TabBaseFragment() {
         }
 
         return items
+    }
+
+    override fun buildListOfData(arrayTemp: ArrayList<String>): ArrayList<GuideModel> {
+        TODO("Not yet implemented")
     }
 
     override fun updateField(nameField: String, value: String): Boolean{
@@ -275,9 +293,9 @@ class TabObservationFragment: TabBaseFragment() {
                              signature: SignaturePad): Boolean{
         var result = false
         manageImage.code = codeNotification
-        val bitmap = manageImage.getFileOfGallery(activity!!)
+        val bitmap = manageImage.getFileOfGallery(requireActivity())
         if (bitmap != null){
-            activity!!.runOnUiThread {
+            requireActivity().runOnUiThread {
                 signature.signatureBitmap = bitmap
             }
             result = true
@@ -313,7 +331,7 @@ class TabObservationFragment: TabBaseFragment() {
 
     private fun executeEmail(emailModel: EmailModel){
         val emailFragment = EmailFragment.newInstance(emailModel)
-        activity!!.supportFragmentManager
+        requireActivity().supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.flContent, emailFragment,
                         emailFragment.javaClass.simpleName)
@@ -326,11 +344,12 @@ class TabObservationFragment: TabBaseFragment() {
         pdfGuideModel.nameTechnical = etTechnical!!.text.toString()
         val pdfTabFragment = PdfTabFragment
                 .newInstance(pdfGuideModel, buildEmailModel())
-        activity!!.supportFragmentManager
+        requireActivity().supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.flContent, pdfTabFragment,
                         pdfTabFragment.javaClass.simpleName)
                 .addToBackStack(null)
+                .remove(this)
                 .commit()
 
     }

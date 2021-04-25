@@ -23,9 +23,7 @@ import com.hiddenodds.trebol.tools.ManageImage
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.set
@@ -40,7 +38,8 @@ abstract class TabBaseFragment: Fragment(), ILoadDataView {
         var codeNotify: String? = null
         var codeTech: String? = null
         var messageLoad = "NO"
-        var observableMessageLoad: Subject<String> = PublishSubject.create()
+        var observableMessageLoad: Subject<ArrayList<String>> = PublishSubject.create()
+        //var observableMessageMaintenance: Subject<ArrayList<String>> = PublishSubject.create()
         val mapImage: LinkedHashMap<String, ProxyBitmap> = LinkedHashMap()
         val pdfGuideModel = PdfGuideModel()
         var notificationModel: NotificationModel? = null
@@ -48,7 +47,7 @@ abstract class TabBaseFragment: Fragment(), ILoadDataView {
     }
 
     val Fragment.app: App
-        get() = activity!!.application as App
+        get() = requireActivity().application as App
 
     private val component by lazy { app.
             getAppComponent().plus(PresenterModule())}
@@ -64,15 +63,10 @@ abstract class TabBaseFragment: Fragment(), ILoadDataView {
     @Inject
     lateinit var signaturePresenter: SignaturePresenter
 
-    protected val YES = "YES"
+    private val YES = "YES"
     protected var disposable: CompositeDisposable = CompositeDisposable()
 
-
-    /*init {
-        observableMessageLoad
-                .subscribe { messageLoad }
-    }*/
-
+    private lateinit var ltaMaintenance: ArrayList<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,13 +77,53 @@ abstract class TabBaseFragment: Fragment(), ILoadDataView {
         signaturePresenter.view = this
     }
 
+    private fun listVerification(): ArrayList<String>{
+        val values: ArrayList<String> = ArrayList()
+        values.add(maintenanceModel!!.verification1)
+        values.add(maintenanceModel!!.verification2)
+        values.add(maintenanceModel!!.verification3)
+        values.add(maintenanceModel!!.verification4)
+        values.add(maintenanceModel!!.verification5)
+        values.add(maintenanceModel!!.verification6)
+        values.add(maintenanceModel!!.verification7)
+        values.add(maintenanceModel!!.verification8)
+        values.add(maintenanceModel!!.verification9)
+        values.add(maintenanceModel!!.verification10)
+        values.add(maintenanceModel!!.verification11)
+        values.add(maintenanceModel!!.verification12)
+        values.add(maintenanceModel!!.verification13)
+        values.add(maintenanceModel!!.verification14)
+        return values
+    }
+
+    private fun listMaintenance(): ArrayList<String>{
+        val values: ArrayList<String> = ArrayList()
+        values.add(maintenanceModel!!.maintenance1)
+        values.add(maintenanceModel!!.maintenance2)
+        values.add(maintenanceModel!!.maintenance3)
+        values.add(maintenanceModel!!.maintenance4)
+        values.add(maintenanceModel!!.maintenance5)
+        values.add(maintenanceModel!!.maintenance6)
+        values.add(maintenanceModel!!.maintenance7)
+        values.add(maintenanceModel!!.maintenance8)
+        values.add(maintenanceModel!!.maintenance9)
+        values.add(maintenanceModel!!.maintenance10)
+        values.add(maintenanceModel!!.maintenance11)
+        values.add(maintenanceModel!!.maintenance12)
+        values.add(maintenanceModel!!.maintenance13)
+        values.add(maintenanceModel!!.maintenance14)
+        return values
+    }
     override fun <T> executeTask(obj: T) {
         if (obj != null){
             if (obj is MaintenanceModel){
                 maintenanceModel = obj
                 setCodeNotification()
                 messageLoad = YES
-                observableMessageLoad.onNext(messageLoad)
+                val ltaVerify = listVerification()
+                ltaMaintenance = listMaintenance()
+                observableMessageLoad.onNext(ltaVerify)
+                //observableMessageMaintenance.onNext(ltaMaintenance)
             }
             if (obj is TechnicalModel){
                 technicalModel = obj
@@ -127,10 +161,10 @@ abstract class TabBaseFragment: Fragment(), ILoadDataView {
 
     }
 
-    @Suppress("DEPRECATION")
+    //@Suppress("DEPRECATION")
     protected fun saveTableToBitmap(sufix: String,
                                     rvVerification: RecyclerView) {
-        var heightAllItems = 0
+        var heightAllItems: Int
 
         if (rvVerification.adapter!!.itemCount > 0) {
             val holderSize = rvVerification
@@ -147,16 +181,22 @@ abstract class TabBaseFragment: Fragment(), ILoadDataView {
                 val holder = rvVerification
                         .findViewHolderForAdapterPosition(i)
 
-                holder!!.itemView.isDrawingCacheEnabled = true
+                /*holder!!.itemView.isDrawingCacheEnabled = true
                 holder.itemView.buildDrawingCache()
                 val bitmap = holder.itemView
                         .drawingCache.copy(Bitmap.Config.ARGB_8888, true)
-                println("${bitmap.height} item: $i")
-                canvas.drawBitmap(bitmap,
+*/
+                val bitmapItem: Bitmap = Bitmap.createBitmap(holder!!.itemView.width,
+                        holder.itemView.height, Bitmap.Config.ARGB_8888)
+                val canvasItem = Canvas(bitmapItem)
+                holder.itemView.draw(canvasItem)
+
+                println("${bitmapItem.height} item: $i")
+                canvas.drawBitmap(bitmapItem,
                         0f, iHeight.toFloat(),
                         paint)
-                iHeight += bitmap.height
-                bitmap.recycle()
+                iHeight += bitmapItem.height
+                bitmapItem.recycle()
             }
 
             val proxyBitmap = ProxyBitmap(bigBitmap)
@@ -198,14 +238,16 @@ abstract class TabBaseFragment: Fragment(), ILoadDataView {
     }
     @Throws(NullPointerException::class)
     abstract fun buildListOfData(): ArrayList<GuideModel>
+    @Throws(NullPointerException::class)
+    abstract fun buildListOfData(arrayTemp: ArrayList<String>): ArrayList<GuideModel>
     abstract fun updateField(nameField: String, value: String): Boolean
 
     protected fun setupRecyclerView(rvVerification: RecyclerView){
         rvVerification.isNestedScrollingEnabled = false
         rvVerification.setHasFixedSize(true)
-        rvVerification.layoutManager = LinearLayoutManager(activity!!,
+        rvVerification.layoutManager = LinearLayoutManager(requireActivity(),
                 LinearLayoutManager.VERTICAL, false)
-        ChangeFormat.addDecorationRecycler(rvVerification, context!!)
+        ChangeFormat.addDecorationRecycler(rvVerification, requireContext())
 
     }
 
@@ -213,15 +255,28 @@ abstract class TabBaseFragment: Fragment(), ILoadDataView {
     @Throws(NullPointerException::class)
     protected fun setDataToControl(adapter: ItemTabAdapter,
                                    rvVerification: RecyclerView){
-
          GlobalScope.async {
             val list = buildListOfData()
             adapter.setObjectList(list)
-            activity!!.runOnUiThread {
+            requireActivity().runOnUiThread {
                 rvVerification.scrollToPosition(0)
+
             }
          }
+    }
 
+    @Throws(NullPointerException::class)
+    protected fun setDataToControl(adapter: ItemTabAdapter,
+                                   rvVerification: RecyclerView,
+                                   arrayTemp: ArrayList<String>){
+        GlobalScope.async {
+            val list = buildListOfData(arrayTemp)
+            adapter.setObjectList(list)
+            requireActivity().runOnUiThread {
+                rvVerification.scrollToPosition(0)
+
+            }
+        }
 
     }
 
@@ -242,7 +297,7 @@ abstract class TabBaseFragment: Fragment(), ILoadDataView {
             val list = technicalModel!!.notifications
 
             if (list.isNotEmpty()){
-                val sortedList = list.sortedWith(compareBy({ it.code }))
+                val sortedList = list.sortedWith(compareBy { it.code })
 
                 sortedList.forEach { notify: NotificationModel ->
                     if (notify.code == codeNotify){
@@ -263,17 +318,16 @@ abstract class TabBaseFragment: Fragment(), ILoadDataView {
         super.onDestroy()
         getMaintenancePresenter.destroy()
     }
-
     override fun <T> executeTask(objList: List<T>) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun showError(message: String) {
-        context!!.toast(message)
+        requireContext().toast(message)
     }
 
     override fun showMessage(message: String) {
-        context!!.toast(message)
+        requireContext().toast(message)
     }
 
     fun Context.toast(message: CharSequence) =

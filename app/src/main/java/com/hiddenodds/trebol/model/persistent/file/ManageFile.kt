@@ -1,27 +1,23 @@
 package com.hiddenodds.trebol.model.persistent.file
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
-import android.os.Environment
 import com.hiddenodds.trebol.App
 import java.io.File
 
+@SuppressLint("StaticFieldLeak")
 object ManageFile {
-    private val DIRECTORY_WORK = "SignatureTrebol"
+    private const val directoryWork = "FolderWork"
     private var context: Context = App.appComponent.context()
 
     fun deleteDirectoryOfWork(){
-        val file = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), DIRECTORY_WORK)
-
-//        val file = File(Environment.getExternalStoragePublicDirectory(
-//                Environment.DIRECTORY_PICTURES), DIRECTORY_WORK)
-        if (file.isDirectory) {
-            val files = file.listFiles()
-            if (files != null) {
-                for (f in files) {
-                    if (f.delete()) {
-                        println("Delete OK")
-                    }
+        val dir = getAlbumStorageDir()
+        val files = dir.listFiles()
+        if (files != null) {
+            for (f in files) {
+                if (f.delete()) {
+                    println("Delete OK")
                 }
             }
         }
@@ -29,7 +25,7 @@ object ManageFile {
 
     fun isFileExist(file: String): Boolean{
         val fileFind = File(getAlbumStorageDir(), file)
-        if (fileFind.isFile){
+        if (fileFind.exists()){
             return true
         }
         return false
@@ -37,33 +33,42 @@ object ManageFile {
 
     fun getFile(file: String): Uri?{
         val fileFind = File(getAlbumStorageDir(), file)
-        if (fileFind.isFile){
+        if (fileFind.exists()){
             return Uri.fromFile(fileFind)
         }
         return null
     }
 
-    fun deleteFileOfWork(code: String){
-        val PRE_FIX = "end"
-        val file = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), DIRECTORY_WORK)
-
-        if (file.isDirectory) {
-            val files = file.listFiles()
-            files?.asSequence()?.filter {
-                (it.name == "$code.jpg" || it.name == "$code.pdf"
-                        || it.name == "$code$PRE_FIX.pdf")
-                        && it.delete() }?.forEach { _ -> println("Delete OK") }
+    fun getFileSingle(file: String): File?{
+        val fileFind = File(getAlbumStorageDir(), file)
+        if (fileFind.exists()){
+            return fileFind
         }
+        return null
+    }
+
+    fun deleteFileOfWork(code: String){
+        val prefix = "end"
+        val dir = getAlbumStorageDir()
+        val files = dir.listFiles()
+        files?.asSequence()?.filter {
+            (it.name == "$code.jpg" || it.name == "$code.pdf"
+                    || it.name == "$code$prefix.pdf")
+                    && it.delete() }?.forEach { _ -> println("Delete OK") }
     }
 
     fun getAlbumStorageDir(): File {
-        val file = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), DIRECTORY_WORK)
-
-        if (!file.mkdirs()) {
-            println("Directory not created")
+        val dir = File(context.filesDir, directoryWork)
+        return if (!dir.exists()){
+            dir.mkdirs()
+            dir
         }
-        return file
+        else{
+            dir
+        }
     }
 
-
+    fun getAlbumStorageDirUri(): Uri{
+        return Uri.fromFile(getAlbumStorageDir())
+    }
 }

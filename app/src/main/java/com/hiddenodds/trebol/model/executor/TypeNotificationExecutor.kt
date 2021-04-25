@@ -98,7 +98,7 @@ class TypeNotificationExecutor @Inject constructor(): CRUDRealm(),
 
     override fun getList(): Observable<List<TypeNotificationModel>> {
         return Observable.create { subscriber ->
-            var listTypeNotificationModel: List<TypeNotificationModel>? = null
+            var listTypeNotificationModel: List<TypeNotificationModel>?
             val list = getListTypeNotificationOfCache()
             if (list != null && list.isNotEmpty()){
                 listTypeNotificationModel = list.filterIsInstance<TypeNotificationModel>()

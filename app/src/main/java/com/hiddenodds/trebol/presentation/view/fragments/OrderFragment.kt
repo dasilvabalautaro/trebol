@@ -1,10 +1,8 @@
 package com.hiddenodds.trebol.presentation.view.fragments
 
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
-import android.os.Build
 import android.os.Bundle
-//import android.support.v7.widget.LinearLayoutManager
-//import android.support.v7.widget.RecyclerView
 import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import butterknife.*
 import com.github.gcacace.signaturepad.views.SignaturePad
 import com.hiddenodds.trebol.R
+import com.hiddenodds.trebol.model.persistent.caching.CachingLruRepository
 import com.hiddenodds.trebol.model.persistent.file.ManageFile
 import com.hiddenodds.trebol.presentation.components.ItemProductSelectAdapter
 import com.hiddenodds.trebol.presentation.interfaces.ILoadDataView
@@ -28,64 +27,93 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class OrderFragment: NotificationFragment(), ILoadDataView {
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.lbl_title)
     @JvmField var lbl_title: TextView? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.txtHrsTrabajo)
     @JvmField var txtHrsTrabajo: TextView? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.txtComercial)
     @JvmField var txtComercial: TextView? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.txtMod)
     @JvmField var txtMod: TextView? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.txtSerie)
     @JvmField var txtSerie: TextView? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.txtTinta)
     @JvmField var txtTinta: TextView? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.txtPeaje)
     @JvmField var txtPeaje: TextView? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.txtSat)
     @JvmField var txtSat: TextView? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.txtSatdk)
     @JvmField var txtSatdk: TextView? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.txtSintomas)
     @JvmField var txtSintomas: TextView? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.edtVsoft1)
     @JvmField var edtVsoft1: EditText? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.edtVsoft2)
     @JvmField var edtVsoft2: EditText? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.edtVsoft3)
     @JvmField var edtVsoft3: EditText? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.edtHrs)
     @JvmField var edtHrs: EditText? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.edtTotalesEquipo)
     @JvmField var edtTotalesEquipo: EditText? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.edtUltimoMnto)
     @JvmField var edtUltimoMnto: EditText? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.edtInformeTecnico)
     @JvmField var edtInformeTecnico: EditText? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.edtObservaciones)
     @JvmField var edtObservaciones: EditText? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.spnEntrada)
     @JvmField var spnEntrada: EditText? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.spnSalida)
     @JvmField var spnSalida: EditText? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.spnDieta)
     @JvmField var spnDieta: Spinner? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.rv_mat_out)
     @JvmField var rvMatOut: RecyclerView? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.rv_mat_use)
     @JvmField var rvMatUse: RecyclerView? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.signatureClient)
     @JvmField var signatureClient: SignaturePad? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.btnSaveSignature)
     @JvmField var btnSaveSignature: ImageButton? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.btnPDF)
     @JvmField var btnPDF: ImageButton? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.btnClearSignature)
     @JvmField var btnClearSignature: ImageButton? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.et_client)
     @JvmField var etClient: EditText? = null
 
 
+    @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.btnPDF)
     fun savePdf() = runBlocking{
 
@@ -98,12 +126,13 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
             pdfNotification.saveImage()
         }
         job.join()
-        activity!!.runOnUiThread {
+        requireActivity().runOnUiThread {
             viewPdf()
         }
 
     }
 
+    @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.btnSaveSignature)
     fun saveSignature(){
         val signatureBitmap: Bitmap? = signatureClient!!.signatureBitmap
@@ -115,25 +144,28 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
                     updateState("1")
                 }
             }
-            manageImage.addFileToGallery(activity!!)
+            manageImage.addFileToGallery(requireActivity())
 
         }else{
-            context!!.toast(context!!.getString(R.string.image_not_found))
+            requireContext().toast(requireContext().getString(R.string.image_not_found))
         }
     }
 
+    @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.btnClearSignature)
     fun clearSignature(){
         if (notificationModel!!.state != "0"){
             GlobalScope.async {
                 updateState("0")
             }
+
         }
         signatureClient!!.clear()
         manageImage.deleteSignatureStore(nameFileSignature)
 
     }
 
+    @SuppressLint("NonConstantResourceId")
     @OnItemSelected(R.id.spnDieta)
     fun selectDiet(){
         val value = spnDieta!!.selectedItem.toString()
@@ -150,17 +182,20 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         }
     }
 
+    @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.spnEntrada)
     fun setTimeInside(){
-        ChangeFormat.setTimeToControl(spnEntrada!!, context!!)
+        ChangeFormat.setTimeToControl(spnEntrada!!, requireContext())
 
     }
 
+    @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.spnSalida)
     fun setTimeOutside(){
-        ChangeFormat.setTimeToControl(spnSalida!!, context!!)
+        ChangeFormat.setTimeToControl(spnSalida!!, requireContext())
     }
 
+    @SuppressLint("NonConstantResourceId")
     @OnTextChanged(R.id.edtObservaciones)
     fun changeObservation(){
         if (notificationModel != null){
@@ -176,6 +211,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         }
     }
 
+    @SuppressLint("NonConstantResourceId")
     @OnTextChanged(R.id.edtInformeTecnico)
     fun changeReportTechical(){
         if (notificationModel != null){
@@ -192,6 +228,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         }
     }
 
+    @SuppressLint("NonConstantResourceId")
     @OnTextChanged(R.id.edtUltimoMnto)
     fun changeLastMount(){
         if (notificationModel != null){
@@ -208,6 +245,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         }
     }
 
+    @SuppressLint("NonConstantResourceId")
     @OnTextChanged(R.id.edtTotalesEquipo)
     fun changeTotalTeam(){
         if (notificationModel != null){
@@ -224,6 +262,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         }
     }
 
+    @SuppressLint("NonConstantResourceId")
     @OnTextChanged(R.id.edtHrs)
     fun changeHours(){
         if (notificationModel != null){
@@ -240,6 +279,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         }
     }
 
+    @SuppressLint("NonConstantResourceId")
     @OnTextChanged(R.id.edtVsoft1)
     fun changeVsoft1(){
         if (notificationModel != null){
@@ -255,6 +295,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
 
         }
     }
+    @SuppressLint("NonConstantResourceId")
     @OnTextChanged(R.id.edtVsoft2)
     fun changeVsoft2(){
         if (notificationModel != null){
@@ -272,6 +313,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
 
     }
 
+    @SuppressLint("NonConstantResourceId")
     @OnTextChanged(R.id.edtVsoft3)
     fun changeVsoft3(){
         if (notificationModel != null){
@@ -286,6 +328,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
 
         }
     }
+    @SuppressLint("NonConstantResourceId")
     @OnTextChanged(R.id.txtHrsTrabajo)
     fun changeHoursWork(){
         if (notificationModel != null){
@@ -302,6 +345,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         }
     }
 
+    @SuppressLint("NonConstantResourceId")
     @OnTextChanged(R.id.spnEntrada)
     fun changeInside(){
         try{
@@ -324,6 +368,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         }
     }
 
+    @SuppressLint("NonConstantResourceId")
     @OnTextChanged(R.id.spnSalida)
     fun changeOutside(){
         try {
@@ -351,6 +396,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
 
     }
 
+    @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.btnMatUse)
     fun setMaterialUse(){
         flagAddMaterial = true
@@ -358,6 +404,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         callProductsFragment()
     }
 
+    @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.btnMatOut)
     fun setMaterialOut(){
         flagAddMaterial = true
@@ -378,8 +425,8 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         }
     }
 
-    private val codeNotification: String? by lazy { this.arguments!!.getString(inputNotification) }
-    private val codeTechnical: String? by lazy { this.arguments!!.getString(inputTechnical) }
+    private val codeNotification: String? by lazy { this.requireArguments().getString(inputNotification) }
+    private val codeTechnical: String? by lazy { this.requireArguments().getString(inputTechnical) }
 
     private var technicalModel: TechnicalModel? = null
     private var notificationModel: NotificationModel? = null
@@ -391,35 +438,33 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
     private var nameFileSignature = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         val root: View = inflater.inflate(R.layout.view_ot,
                 container,false)
         ButterKnife.bind(this, root)
         return root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onStart() {
+        super.onStart()
         technicalPresenter.view = this
         updateFieldNotificationPresenter.view = this
         updateAssignedMaterialPresenter.view = this
         deleteAssignedMaterialPresenter.view = this
         signaturePresenter.view = this
         initControls()
+        codeTechnical?.let { technicalPresenter.executeGetTechnical(it) }
 
-        GlobalScope.async {
-            codeTechnical?.let { technicalPresenter.executeGetTechnical(it) }
-        }
     }
 
     private fun setSignature(codeNotification: String){
         manageImage.code = codeNotification
-        val bitmap = manageImage.getFileOfGallery(activity!!)
+        val bitmap = manageImage.getFileOfGallery(requireActivity())
         if (bitmap != null){
             GlobalScope.async {
                 updateState("1")
             }
-            activity!!.runOnUiThread {
+            requireActivity().runOnUiThread {
                 signatureClient!!.signatureBitmap = bitmap
             }
         }
@@ -441,13 +486,12 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
                     codeTechnical?.let { Variables.changeTechnical.add(it) }
                 }
 
-                GlobalScope.async {
-                    addAssignedMaterialToNotificationPresenter.addAsignedMaterial(listSave,
-                            notificationModel!!.id, flagUse)
-                }
+                addAssignedMaterialToNotificationPresenter.addAsignedMaterial(listSave,
+                        notificationModel!!.id, flagUse)
+
             }
         }
-
+        list.clear()
     }
 
     override fun onResume() {
@@ -459,23 +503,29 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
     override fun onPause() {
         super.onPause()
 
-        GlobalScope.async{
-            addAssignedMaterialRepository(listMaterialUse, true)
-            addAssignedMaterialRepository(listMaterialOut, false)
+        addAssignedMaterialRepository(listMaterialUse, true)
+        addAssignedMaterialRepository(listMaterialOut, false)
+        listMaterialSelect.clear()
+        codeTechnical?.let { CachingLruRepository.instance.delLru(it) }
 
-        }
+    }
+
+
+    override fun onDetach() {
+        super.onDetach()
+        flagAddMaterial = false
 
     }
 
     override fun showMessage(message: String) {
-        if (message != context!!.getString(R.string.change_field)){
-            context!!.toast(message)
+        if (message != requireContext().getString(R.string.change_field)){
+            requireContext().toast(message)
 
         }
     }
 
     override fun showError(message: String) {
-        context!!.toast(message)
+        requireContext().toast(message)
     }
     override fun <T> executeTask(objList: List<T>) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -497,32 +547,30 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         if (ManageFile.isFileExist("$codeNotification.pdf")){
             val pdfViewFragment = PdfViewFragment
                     .newInstance(codeNotification, codeTechnical, buildEmailModel())
-            activity!!.supportFragmentManager
+            requireActivity().supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.flContent, pdfViewFragment,
                             pdfViewFragment.javaClass.simpleName)
                     .addToBackStack(null)
                     .commit()
         }else{
-            context!!.toast(context!!.getString(R.string.file_not_found))
+            requireContext().toast(requireContext().getString(R.string.file_not_found))
         }
 
     }
 
     private fun setTechnical(){
         val listNotification = ArrayList(this.technicalModel!!.notifications)
-        GlobalScope.async {
-            notificationModel = codeNotification?.let { getNotification(it, listNotification) }
-            activity!!.runOnUiThread {
-                setControls(notificationModel)
+        notificationModel = codeNotification?.let { getNotification(it, listNotification) }
+        requireActivity().runOnUiThread {
+            setControls(notificationModel)
 
-            }
-            if (notificationModel!!.businessName.isNotEmpty()){
+        }
+        if (notificationModel!!.businessName.isNotEmpty()){
 
-                signaturePresenter.executeGetNameFile(notificationModel!!
-                        .businessName.trim())
+            signaturePresenter.executeGetNameFile(notificationModel!!
+                    .businessName.trim())
 
-            }
         }
     }
 
@@ -584,7 +632,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
         list.add("NO")
         list.add("1/2")
         list.add("1")
-        val spinnerAdapter: ArrayAdapter<String> = ArrayAdapter(context!!,
+        val spinnerAdapter: ArrayAdapter<String> = ArrayAdapter(requireContext(),
                 android.R.layout.simple_list_item_1, list)
         spnDieta!!.adapter = spinnerAdapter
 
@@ -596,9 +644,9 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
 
     private fun setupRecyclerViewMaterialUse(){
         rvMatUse!!.setHasFixedSize(true)
-        rvMatUse!!.layoutManager = LinearLayoutManager(activity!!,
+        rvMatUse!!.layoutManager = LinearLayoutManager(requireActivity(),
                 LinearLayoutManager.VERTICAL, false)
-        ChangeFormat.addDecorationRecycler(rvMatUse!!, context!!)
+        ChangeFormat.addDecorationRecycler(rvMatUse!!, requireContext())
         adapterMaterialUse = ItemProductSelectAdapter{
             if (it.change == 1){
                 it.change = 0
@@ -622,9 +670,9 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
 
     private fun setupRecyclerViewMaterialOut(){
         rvMatOut!!.setHasFixedSize(true)
-        rvMatOut!!.layoutManager = LinearLayoutManager(activity!!,
+        rvMatOut!!.layoutManager = LinearLayoutManager(requireActivity(),
                 LinearLayoutManager.VERTICAL, false)
-        ChangeFormat.addDecorationRecycler(rvMatOut!!, context!!)
+        ChangeFormat.addDecorationRecycler(rvMatOut!!, requireContext())
         adapterMaterialOut = ItemProductSelectAdapter{
             if (it.change == 1){
                 it.change = 0
@@ -734,7 +782,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
 
         val productFragment = ProductFragment.newInstance(codeNotification,
                 codeTechnical)
-        activity!!.supportFragmentManager
+        requireActivity().supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.flContent, productFragment,
                         productFragment.javaClass.simpleName)
@@ -793,7 +841,7 @@ class OrderFragment: NotificationFragment(), ILoadDataView {
 
     private fun removeFragment(){
         try {
-            val manager = activity!!.supportFragmentManager
+            val manager = requireActivity().supportFragmentManager
 
             for (i in 0 until manager.backStackEntryCount){
                 val fragment = manager.fragments[i]

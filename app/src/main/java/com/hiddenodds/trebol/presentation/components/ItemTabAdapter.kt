@@ -55,7 +55,7 @@ class ItemTabAdapter(private val listener: (GuideModel) -> Unit):
                 etValue!!.inputType = InputType.TYPE_NULL
             }
 
-            etValue!!.setOnFocusChangeListener { v, hasFocus ->
+            etValue!!.setOnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
                     if (item.free == 1){
                         listener(item)

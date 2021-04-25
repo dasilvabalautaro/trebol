@@ -1,5 +1,6 @@
 package com.hiddenodds.trebol.presentation.components
 
+import android.annotation.SuppressLint
 import android.app.Service
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -128,12 +129,13 @@ class PdfNotification @Inject constructor() {
         (view as PdfNotificationView).rvMatOut!!.adapter = adapterMaterialOut
     }
 
+    @SuppressLint("CutPasteId")
     fun saveImage(){
         view!!.measure(FrameLayout.LayoutParams.WRAP_CONTENT,
                 FrameLayout.LayoutParams.WRAP_CONTENT)
 
-        val viewSv: View = view!!.findViewById(R.id.sv_pdf_notification)
-        val svScroll: ScrollView = view!!.findViewById(R.id.sv_pdf_notification)
+        val viewSv: View = view!!.requireViewById(R.id.sv_pdf_notification)
+        val svScroll: ScrollView = view!!.requireViewById(R.id.sv_pdf_notification)
 
 
         val nameFile = this.codeNotification
@@ -152,7 +154,4 @@ class PdfNotification @Inject constructor() {
         manageImage!!.addFileToGallery(activity)
 
     }
-
-
-
 }

@@ -1,10 +1,12 @@
 package com.hiddenodds.trebol.presentation.view.fragments
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -44,7 +46,6 @@ import kotlin.collections.ArrayList
 class OtsFragment: Fragment(), ILoadDataView {
 
     private var adapter: ItemOtAdapter? = null
-    private var techMasterCode: String? = null
     private var codeTech: String = ""
     private var disposable: CompositeDisposable = CompositeDisposable()
     private var technicalModel: TechnicalModel? = null
@@ -54,15 +55,18 @@ class OtsFragment: Fragment(), ILoadDataView {
     private var listNotification: ArrayList<NotificationModel> = ArrayList()
     private var listNotificationView: ArrayList<NotificationModel> = ArrayList()
     private var listTech: ArrayList<String> = ArrayList()
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.sp_tech)
     @JvmField var spTech: Spinner? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.rv_ots)
     @JvmField var rvOts: RecyclerView? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.pb_load)
     @JvmField var pbLoad: ProgressBar? = null
 
     val Fragment.app: App
-        get() = activity!!.application as App
+        get() = requireActivity().application as App
 
     private val component by lazy { app.
             getAppComponent().plus(PresenterModule())}
@@ -78,7 +82,7 @@ class OtsFragment: Fragment(), ILoadDataView {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         val root: View = inflater.inflate(R.layout.view_list_ot,
                 container,false)
         ButterKnife.bind(this, root)
@@ -107,14 +111,6 @@ class OtsFragment: Fragment(), ILoadDataView {
 
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        technicalPresenter.view = this
-        setupRecyclerView()
-    }
-
-
     override fun onStart() {
         super.onStart()
         disposable.add( actionOnItemSelectedListenerObservable()
@@ -124,7 +120,7 @@ class OtsFragment: Fragment(), ILoadDataView {
 
                         positionSpinner = position
                         this.codeTech = spTech!!.getItemAtPosition(position) as String
-                        activity!!.runOnUiThread {
+                        requireActivity().runOnUiThread {
                             pbLoad!!.visibility = View.VISIBLE
                         }
 
@@ -136,12 +132,15 @@ class OtsFragment: Fragment(), ILoadDataView {
                     }
                 }
                 .subscribe { result -> println(result)})
+
+        technicalPresenter.view = this
+        setupRecyclerView()
+
     }
 
     override fun onResume() {
         super.onResume()
         GlobalScope.async {
-
             removeFragment()
         }
     }
@@ -162,7 +161,7 @@ class OtsFragment: Fragment(), ILoadDataView {
 
     private fun removeFragment(){
         try {
-            val manager = activity!!.supportFragmentManager
+            val manager = requireActivity().supportFragmentManager
 
             for (i in 0 until manager.backStackEntryCount){
                 val fragment = manager.fragments[i]
@@ -179,26 +178,24 @@ class OtsFragment: Fragment(), ILoadDataView {
     }
 
     override fun showMessage(message: String) {
-        context!!.toast(message)
+        requireContext().toast(message)
     }
 
     override fun showError(message: String) {
         pbLoad!!.visibility = View.INVISIBLE
-        context!!.toast(message)
+        requireContext().toast(message)
     }
 
     override fun <T> executeTask(obj: T) {
         if (obj != null){
             this.technicalModel = (obj as TechnicalModel)
-
             setListRecycler()
-
         }
 
     }
 
     private fun addDataToList(){
-        Handler().postDelayed({
+        Handler(Looper.getMainLooper()).postDelayed({
 
             var firstVisibleItem = 0
             val itemView = listNotificationView.size
@@ -221,7 +218,7 @@ class OtsFragment: Fragment(), ILoadDataView {
                 }
 
                 try {
-                    activity!!.runOnUiThread {
+                    requireActivity().runOnUiThread {
                         if (itemView != 0){
                             firstVisibleItem = (rvOts!!
                                     .layoutManager as LinearLayoutManager)
@@ -240,7 +237,7 @@ class OtsFragment: Fragment(), ILoadDataView {
             }else if ((listNotificationView.size == 0) &&
                     (listNotification.size == 0)){
                 adapter!!.setObjectList(listNotificationView)
-                activity!!.runOnUiThread {
+                requireActivity().runOnUiThread {
                     pbLoad!!.visibility = View.INVISIBLE
                 }
 
@@ -266,7 +263,7 @@ class OtsFragment: Fragment(), ILoadDataView {
 
     private fun setupRecyclerView(){
         rvOts!!.setHasFixedSize(true)
-        rvOts!!.layoutManager = LinearLayoutManager(activity!!,
+        rvOts!!.layoutManager = LinearLayoutManager(requireActivity(),
                 LinearLayoutManager.VERTICAL, false)
         addDecorationRecycler()
         adapter = ItemOtAdapter{
@@ -278,18 +275,19 @@ class OtsFragment: Fragment(), ILoadDataView {
 
     private fun setDataSpinner(){
 
-        val spinnerAdapter: ArrayAdapter<String> = ArrayAdapter(context!!,
+        val spinnerAdapter: ArrayAdapter<String> = ArrayAdapter(requireContext(),
                 android.R.layout.simple_list_item_1, this.listTech)
         spTech!!.adapter = spinnerAdapter
 
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun addDecorationRecycler(){
         val horizontalDecoration =
                 DividerItemDecoration(rvOts!!.context!!,
                         DividerItemDecoration.VERTICAL)
-        val horizontalDivider: Drawable = context!!
+        val horizontalDivider: Drawable = requireContext()
                 .getDrawable(R.drawable.horizontal_divider)!!
         horizontalDecoration.setDrawable(horizontalDivider)
         rvOts!!.addItemDecoration(horizontalDecoration)
@@ -319,7 +317,7 @@ class OtsFragment: Fragment(), ILoadDataView {
 
 
     private fun launchOptions(){
-        activity!!.alert(R.string.lbl_end_instalation) {
+        requireActivity().alert(R.string.lbl_end_instalation) {
             title = "Alerta"
             positiveButton(R.string.lbl_confirm) {
                 callNotificationFinish(notificationModel!!.code,
@@ -337,7 +335,7 @@ class OtsFragment: Fragment(), ILoadDataView {
                                        codeTechnical: String){
         val finishFragment = NotificationFinishFragment.newInstance(codeNotification,
                 codeTechnical)
-        activity!!.supportFragmentManager
+        requireActivity().supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.flContent, finishFragment,
                         finishFragment.javaClass.simpleName)
@@ -364,7 +362,7 @@ class OtsFragment: Fragment(), ILoadDataView {
 
     private fun executeEmail(emailModel: EmailModel){
         val emailFragment = EmailFragment.newInstance(emailModel)
-        activity!!.supportFragmentManager
+        requireActivity().supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.flContent, emailFragment,
                         emailFragment.javaClass.simpleName)

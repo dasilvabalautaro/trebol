@@ -1,5 +1,6 @@
 package com.hiddenodds.trebol.presentation.view.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.core.widget.NestedScrollView
 import android.view.LayoutInflater
@@ -11,34 +12,41 @@ import butterknife.ButterKnife
 import com.hiddenodds.trebol.R
 import com.hiddenodds.trebol.presentation.components.ItemTabAdapter
 import com.hiddenodds.trebol.presentation.model.GuideModel
-import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
-
 
 class TabMaintenanceFragment: TabBaseFragment(){
     private val sufix = "_t1"
     private var adapter: ItemTabAdapter? = null
     private var flagChange = false
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.sv_tab)
     @JvmField var svTab: NestedScrollView? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.rv_verification)
     @JvmField var rvVerification: RecyclerView? = null
 
-    init {
+    /*init {
 
-        val message = observableMessageLoad.map { s -> s }
+        val message = observableMessageMaintenance.map { l -> l }
         disposable.add(message.observeOn(AndroidSchedulers.mainThread())
-                .subscribe { s ->
+                .subscribe { l ->
                     kotlin.run {
-                        if (s == YES){
+                        *//*if (s == YES){
+                            runBlocking {
+                                delay(500L)
+                            }
                             setDataToControl(adapter!!, rvVerification!!)
 
                             println("SETDATACONTROL Reactive Maintenance")
-                        }
+                        }*//*
+
+                        setDataToControl(adapter!!, rvVerification!!, l)
+
+                        println("SETDATACONTROL Reactive Maintenance")
                     }
                 })
-    }
+    }*/
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -52,6 +60,11 @@ class TabMaintenanceFragment: TabBaseFragment(){
         ButterKnife.bind(this, view)
         setupRecyclerView(rvVerification!!)
         setAdapter()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setDataToControl(adapter!!, rvVerification!!)
     }
 
     fun setTableToBitmap(){
@@ -177,12 +190,12 @@ class TabMaintenanceFragment: TabBaseFragment(){
         return flag
     }
 
-    override fun buildListOfData(): ArrayList<GuideModel>{
+    override fun buildListOfData(): java.util.ArrayList<GuideModel> {
         val lbl = "maintenance"
         val free = listOf(0, 1, 8, 10, 11, 12, 13)
 
         val items: ArrayList<GuideModel> = ArrayList()
-        val labels = context!!
+        val labels = requireContext()
                 .resources.getStringArray(R.array.lbl_maintenance)
         val values: ArrayList<String> = ArrayList()
         values.add(maintenanceModel!!.maintenance1)
@@ -199,6 +212,45 @@ class TabMaintenanceFragment: TabBaseFragment(){
         values.add(maintenanceModel!!.maintenance12)
         values.add(maintenanceModel!!.maintenance13)
         values.add(maintenanceModel!!.maintenance14)
+
+        for (i in labels.indices){
+            val guideModel = GuideModel()
+            guideModel.description = labels[i]
+            guideModel.value = values[i]
+            val index = i + 1
+            guideModel.nameField = "$lbl$index"
+            val e = free.filter { it == i}
+            if (e.isNotEmpty()){
+                guideModel.free = 1
+            }
+            items.add(guideModel)
+        }
+
+        return items
+    }
+
+    override fun buildListOfData(values: ArrayList<String>): ArrayList<GuideModel>{
+        val lbl = "maintenance"
+        val free = listOf(0, 1, 8, 10, 11, 12, 13)
+
+        val items: ArrayList<GuideModel> = ArrayList()
+        val labels = requireContext()
+                .resources.getStringArray(R.array.lbl_maintenance)
+        /*val values: ArrayList<String> = ArrayList()
+        values.add(maintenanceModel!!.maintenance1)
+        values.add(maintenanceModel!!.maintenance2)
+        values.add(maintenanceModel!!.maintenance3)
+        values.add(maintenanceModel!!.maintenance4)
+        values.add(maintenanceModel!!.maintenance5)
+        values.add(maintenanceModel!!.maintenance6)
+        values.add(maintenanceModel!!.maintenance7)
+        values.add(maintenanceModel!!.maintenance8)
+        values.add(maintenanceModel!!.maintenance9)
+        values.add(maintenanceModel!!.maintenance10)
+        values.add(maintenanceModel!!.maintenance11)
+        values.add(maintenanceModel!!.maintenance12)
+        values.add(maintenanceModel!!.maintenance13)
+        values.add(maintenanceModel!!.maintenance14)*/
 
         for (i in labels.indices){
             val guideModel = GuideModel()

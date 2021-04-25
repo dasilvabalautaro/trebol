@@ -3,7 +3,6 @@ package com.hiddenodds.trebol.model.persistent.database
 import android.content.Context
 import com.hiddenodds.trebol.R
 import com.hiddenodds.trebol.model.interfaces.IPersistent
-import io.realm.CompactOnLaunchCallback
 import io.realm.Realm
 import io.realm.RealmConfiguration
 

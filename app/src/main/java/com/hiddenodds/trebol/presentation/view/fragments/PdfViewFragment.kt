@@ -1,5 +1,6 @@
 package com.hiddenodds.trebol.presentation.view.fragments
 
+import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -15,9 +16,8 @@ import com.hiddenodds.trebol.tools.ChangeFormat
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 
-
-
 class PdfViewFragment: Fragment(){
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.pdfView)
     @JvmField var pdfView: PDFView? = null
 
@@ -37,20 +37,13 @@ class PdfViewFragment: Fragment(){
         }
     }
 
-    private val codeNotification: String? by lazy { this.arguments!!
+    private val codeNotification: String? by lazy { this.requireArguments()
             .getString(PdfViewFragment.inputNotification) }
-    private val codeTechnical: String? by lazy { this.arguments!!
+    private val codeTechnical: String? by lazy { this.requireArguments()
             .getString(PdfViewFragment.inputTechnical) }
 
-    private val emailModel: EmailModel? by lazy {this.arguments!!
+    private val emailModel: EmailModel? by lazy {this.requireArguments()
             .getSerializable(PdfViewFragment.inputEmailModel) as EmailModel}
-
-    //private val codeNotification: String? = this.arguments!!.getString(inputNotification)
-    //private val codeTechnical: String? = this.arguments!!.getString(inputTechnical)
-
-
-    /*private val emailModel: EmailModel = this.arguments!!
-            .getSerializable(inputEmailModel) as EmailModel*/
 
     private var uri: Uri? = null
     private var itemMenuSave: MenuItem? = null
@@ -62,7 +55,7 @@ class PdfViewFragment: Fragment(){
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         val root: View = inflater.inflate(R.layout.view_pdf,
                 container,false)
         ButterKnife.bind(this, root)
@@ -70,19 +63,20 @@ class PdfViewFragment: Fragment(){
         return root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onStart() {
+        super.onStart()
         if (codeTechnical != null) {
             ChangeFormat.deleteCacheTechnical(codeTechnical!!)
         }
-        (activity!! as MainActivity).displayHome(false)
+        (requireActivity() as MainActivity).displayHome(false)
+
     }
 
     override fun onResume() {
         super.onResume()
         GlobalScope.async {
             uri = ManageFile.getFile("$codeNotification.pdf")
-            activity!!.runOnUiThread {
+            requireActivity().runOnUiThread {
                 pdfView!!.fromUri(uri).load()
                 emailModel?.clip ?: "$codeNotification.pdf"
             }
@@ -112,7 +106,7 @@ class PdfViewFragment: Fragment(){
 
     private fun executeEmail(emailModel: EmailModel){
         val emailFragment = EmailFragment.newInstance(emailModel)
-        activity!!.supportFragmentManager
+        requireActivity().supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.flContent, emailFragment,
                         emailFragment.javaClass.simpleName)

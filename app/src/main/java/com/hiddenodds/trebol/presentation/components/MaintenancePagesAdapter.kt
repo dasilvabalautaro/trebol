@@ -2,25 +2,26 @@ package com.hiddenodds.trebol.presentation.components
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
-import androidx.viewpager.widget.ViewPager
+import androidx.lifecycle.Lifecycle
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.hiddenodds.trebol.presentation.view.fragments.TabMaintenanceFragment
 import com.hiddenodds.trebol.presentation.view.fragments.TabObservationFragment
 import com.hiddenodds.trebol.presentation.view.fragments.TabTestFragment
 import com.hiddenodds.trebol.presentation.view.fragments.TabVerificationFragment
 
-
-class MaintenancePagesAdapter(manager: FragmentManager,
-                              pager: ViewPager):
-        FragmentStatePagerAdapter(manager) {
+class MaintenancePagesAdapter(manager: FragmentManager, lifecycle: Lifecycle):
+        FragmentStateAdapter(manager, lifecycle) {
 
     var maintenance: TabMaintenanceFragment? = null
     var observation: TabObservationFragment? = null
     var test: TabTestFragment? = null
     var verification: TabVerificationFragment? = null
 
+    override fun getItemCount(): Int {
+        return 4
+    }
 
-    override fun getItem(position: Int): Fragment {
+    override fun createFragment(position: Int): Fragment {
         when(position){
             0 ->{
                 if (verification == null) verification = TabVerificationFragment()
@@ -41,10 +42,6 @@ class MaintenancePagesAdapter(manager: FragmentManager,
             }
         }
         return observation!!
-    }
-
-    override fun getCount(): Int {
-        return 4
     }
 
 }

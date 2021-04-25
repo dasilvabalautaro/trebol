@@ -12,10 +12,6 @@ import java.net.URL
 class ConnectionNetwork(val context: Context) {
     private var isConnect = false
 
-    init {
-        //verifyConnect()
-    }
-
     fun isOnline(): Boolean {
         val connectivityManager = context.getSystemService(
                 Context.CONNECTIVITY_SERVICE) as ConnectivityManager

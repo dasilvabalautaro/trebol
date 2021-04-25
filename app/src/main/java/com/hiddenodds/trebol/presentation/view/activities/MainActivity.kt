@@ -1,13 +1,18 @@
 package com.hiddenodds.trebol.presentation.view.activities
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.PersistableBundle
+import android.os.StrictMode
+import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import com.hiddenodds.trebol.R
 import butterknife.BindView
 import butterknife.ButterKnife
+import com.google.android.material.appbar.AppBarLayout
 import com.hiddenodds.trebol.App
+import com.hiddenodds.trebol.R
 import com.hiddenodds.trebol.model.persistent.caching.CachingLruRepository
 import com.hiddenodds.trebol.presentation.view.fragments.MenuFragment
 import com.hiddenodds.trebol.presentation.view.fragments.SignInFragment
@@ -16,26 +21,43 @@ import com.hiddenodds.trebol.tools.Constants
 import com.hiddenodds.trebol.tools.PreferenceHelper
 import com.hiddenodds.trebol.tools.PreferenceHelper.set
 import com.hiddenodds.trebol.tools.Variables
-import android.os.StrictMode
-import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.appbar.AppBarLayout
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() { //ActivityCompat.OnRequestPermissionsResultCallback
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.app_bar)
     @JvmField var appBarLayout: AppBarLayout? = null
 
-    private val ACTION_HOME = 16908332
+    private val actionHome = 16908332
+    //private val permissionRequestCode = 2296
 
+    /*private val startForResult = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val intent = result.data
+            Toast.makeText(this, "The permissions have be accepted!", Toast.LENGTH_SHORT).show()
+            
+        }
+    }*/
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         ButterKnife.bind(this)
+
+        /*if (!checkPermission()){
+            requestPermission()
+        }
+        else {
+            Toast.makeText(this, "Accept permission for storage access!", Toast.LENGTH_SHORT).show()
+        }*/
+
         supportActionBar!!.setDisplayShowTitleEnabled(false)
         supportActionBar!!.setDisplayHomeAsUpEnabled(false)
 
-        supportActionBar!!.setBackgroundDrawable(getDrawable(R.drawable.head_back))
+        supportActionBar!!.setBackgroundDrawable(
+                ContextCompat.getDrawable(
+                        this, R.drawable.head_back))
         val builder = StrictMode.VmPolicy.Builder()
         StrictMode.setVmPolicy(builder.build())
 
@@ -48,10 +70,10 @@ class MainActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(flag)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        val id = item!!.itemId
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
 
-        if (id == ACTION_HOME){
+        if (id == actionHome){
             Variables.endApp = false
             supportFragmentManager.popBackStack(null,
                     FragmentManager.POP_BACK_STACK_INCLUSIVE)
@@ -75,16 +97,6 @@ class MainActivity : AppCompatActivity() {
         //android.os.Process.killProcess(android.os.Process.myPid())
     }
 
-    /*@SuppressLint("PrivateResource")
-    private fun addFragment(newFragment: Fragment) {
-        supportFragmentManager
-                .beginTransaction()
-                .setCustomAnimations(R.anim.design_bottom_sheet_slide_in,
-                        R.anim.design_bottom_sheet_slide_out)
-                .replace(R.id.flContent, newFragment, newFragment.javaClass.simpleName)
-                .commit()
-    }*/
-
     private fun addFragment(newFragment: Fragment){
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
@@ -100,5 +112,53 @@ class MainActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
         outState.clear()
     }
+
+   /* private fun checkPermission(): Boolean {
+        return if (SDK_INT >= Build.VERSION_CODES.R) {
+            Environment.isExternalStorageManager()
+        } else {
+            val readExternal = ContextCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE)
+            val writeExternal = ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE)
+            readExternal == PackageManager.PERMISSION_GRANTED && writeExternal == PackageManager.PERMISSION_GRANTED
+        }
+    }*/
+
+    /*private fun requestPermission() {
+        if (SDK_INT >= Build.VERSION_CODES.R) {
+            try {
+                val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+                intent.addCategory("android.intent.category.DEFAULT")
+                intent.data = Uri.parse(String.format("package:%s", applicationContext.packageName))
+                startForResult.launch(intent)
+            } catch (e: Exception) {
+                val intent = Intent()
+                intent.action = Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION
+                startForResult.launch(intent)
+            }
+        } else {
+            //below android 11
+            ActivityCompat.requestPermissions(this, arrayOf(WRITE_EXTERNAL_STORAGE), permissionRequestCode)
+        }
+
+    }*/
+    
+   /* override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<out String>,
+                                            grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        when (requestCode) {
+            permissionRequestCode -> if (grantResults.isNotEmpty()) {
+                
+                if(grantResults[0] == PackageManager.PERMISSION_GRANTED && 
+                        grantResults[1] == PackageManager.PERMISSION_GRANTED){
+                    Toast.makeText(this, "Accept permission for storage access!", Toast.LENGTH_SHORT).show()
+                }else{
+                    Toast.makeText(this, "Allow permission for storage access!", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+        }
+    }*/
 }
 

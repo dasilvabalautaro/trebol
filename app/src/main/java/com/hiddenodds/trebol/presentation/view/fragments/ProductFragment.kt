@@ -1,5 +1,6 @@
 package com.hiddenodds.trebol.presentation.view.fragments
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,8 +25,10 @@ import kotlinx.coroutines.async
 
 class ProductFragment: NotificationFragment(), ILoadDataView {
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.rv_products)
     @JvmField var rvProducts: RecyclerView? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.sv_product)
     @JvmField var svProduct: SearchView? = null
 
@@ -42,9 +45,9 @@ class ProductFragment: NotificationFragment(), ILoadDataView {
         }
     }
 
-    private val codeNotification: String? by lazy { this.arguments!!
+    private val codeNotification: String? by lazy { this.requireArguments()
             .getString(inputNotification) }
-    private val codeTechnical: String? by lazy { this.arguments!!
+    private val codeTechnical: String? by lazy { this.requireArguments()
             .getString(inputTechnical) }
 
 
@@ -54,10 +57,6 @@ class ProductFragment: NotificationFragment(), ILoadDataView {
     private var inputMethodManager: InputMethodManager ? = null
 
     init {
-        /*observableList.subscribe {
-            listMaterialSelect
-        }*/
-
         val list = observableList.map { l -> l }
         disposable.add(list.observeOn(AndroidSchedulers.mainThread())
                 .subscribe { l ->
@@ -65,13 +64,13 @@ class ProductFragment: NotificationFragment(), ILoadDataView {
                         if (l.isNotEmpty()){
 
                             removeFragmentProduct()
-                            val frg = activity!!.supportFragmentManager
+                            val frg = requireActivity().supportFragmentManager
                                     .findFragmentByTag(OrderFragment::class
                                             .java.simpleName)
-                            activity!!.supportFragmentManager
+                            requireActivity().supportFragmentManager
                                     .popBackStack(OrderFragment::class.java.simpleName,
                                             1)
-                            activity!!.supportFragmentManager
+                            requireActivity().supportFragmentManager
                                     .beginTransaction()
                                     .replace(R.id.flContent, frg!!)
                                     .commit()
@@ -84,7 +83,7 @@ class ProductFragment: NotificationFragment(), ILoadDataView {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         val root: View = inflater.inflate(R.layout.view_list_product,
                 container,false)
         ButterKnife.bind(this, root)
@@ -98,20 +97,17 @@ class ProductFragment: NotificationFragment(), ILoadDataView {
         Thread.sleep(1000)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onStart() {
+        super.onStart()
         materialPresenter.view = this
         setupRecyclerView()
         svProduct!!.queryHint = resources.getString(R.string.lbl_hint_search)
         GlobalScope.async {
             materialPresenter.executeGetMaterial()
         }
-        inputMethodManager = context!!
+        inputMethodManager = requireContext()
                 .getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-    }
 
-    override fun onStart() {
-        super.onStart()
         svProduct!!.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
             override fun onQueryTextChange(newText: String): Boolean {
@@ -149,9 +145,9 @@ class ProductFragment: NotificationFragment(), ILoadDataView {
 
     private fun setupRecyclerView(){
         rvProducts!!.setHasFixedSize(true)
-        rvProducts!!.layoutManager = LinearLayoutManager(activity!!,
+        rvProducts!!.layoutManager = LinearLayoutManager(requireActivity(),
                 LinearLayoutManager.VERTICAL, false)
-        ChangeFormat.addDecorationRecycler(rvProducts!!, context!!)
+        ChangeFormat.addDecorationRecycler(rvProducts!!, requireContext())
         adapter = ItemProductAdapter{
             val materialModel = MaterialModel()
             materialModel.code = it.code
@@ -166,11 +162,11 @@ class ProductFragment: NotificationFragment(), ILoadDataView {
     }
 
     override fun showMessage(message: String) {
-        context!!.toast(message)
+        requireContext().toast(message)
     }
 
     override fun showError(message: String) {
-        context!!.toast(message)
+        requireContext().toast(message)
     }
 
     override fun <T> executeTask(obj: T) {
@@ -182,14 +178,14 @@ class ProductFragment: NotificationFragment(), ILoadDataView {
             GlobalScope.async {
                 listMaterial = ArrayList(objList.filterIsInstance<MaterialModel>() as ArrayList)
                 adapter!!.setObjectList(listMaterial!!)
-                activity!!.runOnUiThread {
+                requireActivity().runOnUiThread {
                     rvProducts!!.scrollToPosition(0)
                 }
 
             }
 
         }else{
-            context!!.toast(context!!.getString(R.string.list_not_found))
+            requireContext().toast(requireContext().getString(R.string.list_not_found))
         }
 
     }

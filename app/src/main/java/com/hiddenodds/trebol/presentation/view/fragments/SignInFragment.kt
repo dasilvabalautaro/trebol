@@ -1,5 +1,6 @@
 package com.hiddenodds.trebol.presentation.view.fragments
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
@@ -35,12 +36,16 @@ import java.util.*
 import javax.inject.Inject
 
 class SignInFragment: Fragment(), ILoadDataView {
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.edt_user)
     @JvmField var edt_user: EditText? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.edt_password)
     @JvmField var edt_password: EditText? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.btn_ok)
     @JvmField var btn_ok: Button? = null
+    @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.btn_ok)
     fun getTechnicalMaster(){
         if (validateInput()){
@@ -48,15 +53,13 @@ class SignInFragment: Fragment(), ILoadDataView {
                     .executeGetTechnicalMaster(edt_user?.text!!.trim().toString(),
                             edt_password?.text!!.trim().toString())
         }else{
-            context!!.toast(context!!.resources
+            requireContext().toast(requireContext().resources
                     .getString(R.string.input_error))
         }
-
-
     }
 
     val Fragment.app: App
-        get() = activity!!.application as App
+        get() = requireActivity().application as App
 
     private val component by lazy { app.
             getAppComponent().plus(PresenterModule())}
@@ -76,39 +79,21 @@ class SignInFragment: Fragment(), ILoadDataView {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         val root: View = inflater.inflate(R.layout.sign_in,
                 container,false)
         ButterKnife.bind(this, root)
         return root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         technicalRemotePresenter.view = this
         technicalMasterPresenter.view = this
         typeNotificationRemotePresenter.view = this
 
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            ChangeFormat.setHeightPercent(btn_ok!!, 0.15f)
-
-        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            ChangeFormat.setHeightPercent(btn_ok!!, 0.10f)
-
-        }
-    }
-
-
-
-    override fun onResume() {
-        super.onResume()
-
         try {
-            val prefs = PreferenceHelper.customPrefs(context!!,
+            val prefs = PreferenceHelper.customPrefs(requireContext(),
                     Constants.PREFERENCE_TREBOL)
             val techKey: Boolean? = prefs[Constants.TECHNICAL_DB, false]
             if (techKey == null || !techKey){
@@ -126,22 +111,28 @@ class SignInFragment: Fragment(), ILoadDataView {
         }catch (ie: IllegalStateException){
             println(ie.message)
         }
+    }
 
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            ChangeFormat.setHeightPercent(btn_ok!!, 0.15f)
 
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            ChangeFormat.setHeightPercent(btn_ok!!, 0.10f)
+
+        }
     }
 
     override fun showMessage(message: String) {
         val config: RealmConfiguration = Realm.getDefaultConfiguration()!!
         println(config.path + " " + Realm.getGlobalInstanceCount(config).toString())
-
-        context!!.toast(message)
+        requireContext().toast(message)
     }
 
     override fun showError(message: String) {
-        /*technicalRemotePresenter.destroy()
-        typeNotificationRemotePresenter.destroy()*/
         if (context != null){
-            context!!.toast(message)
+            requireContext().toast(message)
         }
 
     }
@@ -167,7 +158,7 @@ class SignInFragment: Fragment(), ILoadDataView {
                 Variables.codeTechMaster = (obj as TechnicalModel).code
                 Variables.listTechnicals = ArrayList((obj as TechnicalModel).trd)
 
-                context!!.toast(context!!.resources.getString(R.string.welcome) +
+                requireContext().toast(requireContext().resources.getString(R.string.welcome) +
                         "\n" + nameTech)
                 callMenu()
 
@@ -201,7 +192,7 @@ class SignInFragment: Fragment(), ILoadDataView {
 
     private fun callMenu(){
         val fragmentMenu = MenuFragment()
-        activity!!.supportFragmentManager
+        requireActivity().supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.flContent, fragmentMenu,
                         fragmentMenu.javaClass.simpleName)

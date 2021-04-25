@@ -1,5 +1,6 @@
 package com.hiddenodds.trebol.presentation.view.fragments
 
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -26,17 +27,23 @@ import java.util.*
 
 
 class NotificationFinishFragment: NotificationFragment(), ILoadDataView {
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.tv_serie)
     @JvmField var tvSerie: TextView? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.et_client)
     @JvmField var etClient: EditText? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.signatureClient)
     @JvmField var signatureClient: SignaturePad? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.bt_email)
     @JvmField var btEmail: Button? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.tv_subtitle)
     @JvmField var tvSubtitle: TextView? = null
 
+    @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.bt_pdf)
     fun savePdf() = runBlocking{
         val job = GlobalScope.async {
@@ -44,11 +51,11 @@ class NotificationFinishFragment: NotificationFragment(), ILoadDataView {
             val client = etClient!!.text.toString()
             pdfEndTask.inflateView()
             codeNotification?.let { pdfEndTask.setData(it, client, nameFileSignature) }
-            pdfEndTask.saveImage("$codeNotification$PRE_FIX")
+            pdfEndTask.saveImage("$codeNotification$preFix")
         }
         job.join()
 
-        activity!!.runOnUiThread {
+        requireActivity().runOnUiThread {
             viewPdf()
         }
     }
@@ -56,19 +63,21 @@ class NotificationFinishFragment: NotificationFragment(), ILoadDataView {
 
 
 
+    @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.bt_save)
     fun saveSignature(){
         val signatureBitmap: Bitmap? = signatureClient!!.signatureBitmap
         if (signatureBitmap != null){
             manageImage.image = signatureBitmap
             manageImage.code = nameFileSignature
-            manageImage.addFileToGallery(activity!!)
+            manageImage.addFileToGallery(requireActivity())
 
         }else{
-            context!!.toast(context!!.getString(R.string.image_not_found))
+            requireContext().toast(requireContext().getString(R.string.image_not_found))
         }
     }
 
+    @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.bt_clear)
     fun clearSignature(){
         signatureClient!!.clear()
@@ -76,6 +85,7 @@ class NotificationFinishFragment: NotificationFragment(), ILoadDataView {
 
     }
 
+    @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.bt_email)
     fun buildEmail(){
         val emailModel = bluidEmailModel()
@@ -89,7 +99,7 @@ class NotificationFinishFragment: NotificationFragment(), ILoadDataView {
             }
             executeEmail(emailModel)
         }else{
-            context!!.toast(context!!.getString(R.string.input_error))
+            requireContext().toast(requireContext().getString(R.string.input_error))
         }
 
     }
@@ -107,26 +117,26 @@ class NotificationFinishFragment: NotificationFragment(), ILoadDataView {
         }
     }
 
-    private val codeNotification: String? by lazy { this.arguments!!
+    private val codeNotification: String? by lazy { this.requireArguments()
             .getString(inputNotification) }
-    private val codeTechnical: String? by lazy { this.arguments!!
+    private val codeTechnical: String? by lazy { this.requireArguments()
             .getString(inputTechnical) }
 
     private var technicalModel: TechnicalModel? = null
     private var notificationModel: NotificationModel? = null
-    private val PRE_FIX = "end"
+    private val preFix = "end"
     private var nameFileSignature = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         val root: View = inflater.inflate(R.layout.view_end_install,
                 container,false)
         ButterKnife.bind(this, root)
         return root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onStart() {
+        super.onStart()
         technicalPresenter.view = this
         updateFieldNotificationPresenter.view = this
         signaturePresenter.view = this
@@ -139,18 +149,16 @@ class NotificationFinishFragment: NotificationFragment(), ILoadDataView {
     }
 
     override fun showMessage(message: String) {
-        if (message == context!!.getString(R.string.change_field)){
-            /*val tech = technicalModel!!.code
-            Variables.changeTechnical = tech*/
-            context!!.toast(context!!.getString(R.string.change_good))
+        if (message == requireContext().getString(R.string.change_field)){
+            requireContext().toast(requireContext().getString(R.string.change_good))
 
         }else{
-            context!!.toast(message)
+            requireContext().toast(message)
         }
     }
 
     override fun showError(message: String) {
-        context!!.toast(message)
+        requireContext().toast(message)
     }
 
     override fun <T> executeTask(obj: T) {
@@ -170,7 +178,7 @@ class NotificationFinishFragment: NotificationFragment(), ILoadDataView {
                 .technicalModel!!.notifications)
         GlobalScope.async {
             notificationModel = codeNotification?.let { getNotification(it, listNotification) }
-            activity!!.runOnUiThread {
+            requireActivity().runOnUiThread {
                 setControls(notificationModel)
 
             }
@@ -184,25 +192,25 @@ class NotificationFinishFragment: NotificationFragment(), ILoadDataView {
     }
 
     private fun viewPdf(){
-        if (ManageFile.isFileExist("$codeNotification$PRE_FIX.pdf")){
+        if (ManageFile.isFileExist("$codeNotification$preFix.pdf")){
             val pdfViewFragment = PdfViewFragment
-                    .newInstance(codeNotification + PRE_FIX,
+                    .newInstance(codeNotification + preFix,
                             codeTechnical, bluidEmailModel())
-            activity!!.supportFragmentManager
+            requireActivity().supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.flContent, pdfViewFragment,
                             pdfViewFragment.javaClass.simpleName)
                     .commit()
         }else{
-            context!!.toast(context!!.getString(R.string.file_not_found))
+            requireContext().toast(requireContext().getString(R.string.file_not_found))
         }
     }
 
     private fun setSignature(codeNotification: String){
         manageImage.code = codeNotification
-        val bitmap = manageImage.getFileOfGallery(activity!!)
+        val bitmap = manageImage.getFileOfGallery(requireActivity())
         if (bitmap != null){
-            activity!!.runOnUiThread {
+            requireActivity().runOnUiThread {
                 signatureClient!!.signatureBitmap = bitmap
             }
         }
@@ -254,7 +262,7 @@ class NotificationFinishFragment: NotificationFragment(), ILoadDataView {
                 "Reciba un Cordial Saludo.\n" +
                 "Trebol Group Providers S.L."
         emailModel.client = etClient!!.text.toString()
-        emailModel.clip = notificationModel!!.code + PRE_FIX + ".pdf"
+        emailModel.clip = notificationModel!!.code + preFix + ".pdf"
         return emailModel
     }
 

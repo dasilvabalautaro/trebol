@@ -1,5 +1,6 @@
 package com.hiddenodds.trebol.presentation.view.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.core.widget.NestedScrollView
 import android.view.LayoutInflater
@@ -21,21 +22,25 @@ class TabVerificationFragment: TabBaseFragment(){
     private var adapter: ItemTabAdapter? = null
     private var flagChange = false
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.sv_tab)
     @JvmField var svTab: NestedScrollView? = null
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.rv_verification)
     @JvmField var rvVerification: RecyclerView? = null
 
     init {
-        val message = observableMessageLoad.map { s -> s }
+        val message = observableMessageLoad.map { l -> l }
         disposable.add(message.observeOn(AndroidSchedulers.mainThread())
-                .subscribe { s ->
+                .subscribe { l ->
                     kotlin.run {
-                        if (s == YES){
+                        /*if (s == YES){
                             setDataToControl(adapter!!, rvVerification!!)
 
                             println("SETDATACONTROL Reactive")
-                        }
+                        }*/
+                        setDataToControl(adapter!!, rvVerification!!, l)
+                        println("SETDATACONTROL Reactive")
                     }
                 })
 
@@ -76,6 +81,7 @@ class TabVerificationFragment: TabBaseFragment(){
             flagChange = updateField(it.nameField, it.value)
         }
         rvVerification!!.adapter = adapter
+
     }
 
     override fun updateField(nameField: String, value: String): Boolean{
@@ -178,15 +184,19 @@ class TabVerificationFragment: TabBaseFragment(){
 
         return flag
     }
-    
-    override fun buildListOfData(): ArrayList<GuideModel>{
+
+    override fun buildListOfData(): java.util.ArrayList<GuideModel> {
+        TODO("Not yet implemented")
+    }
+
+    override fun buildListOfData(values: ArrayList<String>): ArrayList<GuideModel>{
         val lbl = "verification"
         val free = listOf(2, 3, 5)
 
         val items: ArrayList<GuideModel> = ArrayList()
-        val labels = context!!
+        val labels = requireContext()
                 .resources.getStringArray(R.array.lbl_verification)
-        val values: ArrayList<String> = ArrayList()
+        /*val values: ArrayList<String> = ArrayList()
         values.add(maintenanceModel!!.verification1)
         values.add(maintenanceModel!!.verification2)
         values.add(maintenanceModel!!.verification3)
@@ -201,7 +211,7 @@ class TabVerificationFragment: TabBaseFragment(){
         values.add(maintenanceModel!!.verification12)
         values.add(maintenanceModel!!.verification13)
         values.add(maintenanceModel!!.verification14)
-
+*/
         for (i in labels.indices){
             val guideModel = GuideModel()
             guideModel.description = labels[i]
@@ -214,7 +224,6 @@ class TabVerificationFragment: TabBaseFragment(){
             }
             items.add(guideModel)
         }
-
 
         return items
     }
